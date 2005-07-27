@@ -1,0 +1,17 @@
+
+CVS: ----------------------------------------------------------------------
+CVS: Please enter a log message. It's hard to keep track of what has been
+CVS: changed if you don't specify something here. Note that you can use a
+CVS: number of special keywords in your CVS log (each of which should be given
+CVS: on a line of their own). Please make sure you use any which are applicable
+CVS: to your commit:
+CVS: 
+CVS: BUGS:nnnnn             Marks bug #nnnnn as closed. Also marks this bug
+CVS:                        as fixed in KDE's changelog.
+CVS: CCBUGS:nnnnn           Send a copy of the commit log to bug report nnnnn.
+CVS: FEATURE:nnnnn          Marks feature #nnnnn as done. Also marks this
+CVS:                        feature as implemented in KDE's changelog.
+CVS: CCMAIL:foo@example.com Sends a copy of the commit log to foo@example.com
+CVS: GUI:                   Use this keyword if your commit requires a change
+CVS:                        to the application's manual.
+CVS: ----------------------------------------------------------------------
