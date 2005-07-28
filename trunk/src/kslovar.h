@@ -37,8 +37,6 @@ class KHTMLPart;
 class QSplitter;
 class DBHandler;
 
-//typedef struct sqlite3;
-
 /**
  * @short Application Main Window
  * @author Gregor Kališnik <gregor@podnapisi.net>

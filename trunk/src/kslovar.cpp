@@ -43,10 +43,6 @@
 #include <kmainwindow.h>
 #include <klocale.h>
 
-#include <iostream>
-
-using namespace std;
-
 #define TOOLBAR_ID_HOME 0
 #define TOOLBAR_ID_BACK 1
 #define TOOLBAR_ID_FORWARD 2
