@@ -85,6 +85,7 @@ KSlovar::KSlovar()
   split = new QSplitter( horiz );
   
   QVBox * vert = new QVBox( split );
+  vert->setMaximumWidth(200);
   
   search = new KLineEdit( vert );
   list = new KListBox( vert );
