@@ -219,7 +219,7 @@ void KSlovar::slotNextPhrase()
 {
   int& temp = forward.first();
   
-  addHistory();
+  addHistory(FALSE);
   
   selectedPhrase = selectedPhrase.setNum(temp);
   
@@ -242,11 +242,17 @@ void KSlovar::slotHome()
   slotShow();
 }
 
-void KSlovar::addHistory()
+void KSlovar::addHistory(bool deleteForward)
 {
   if(!selectedPhrase.isEmpty())
   {
     it = back.prepend( selectedPhrase.toInt() );
+  }
+  
+  if(deleteForward)
+  {
+    forward.clear();
+    toolBar()->setItemEnabled( TOOLBAR_ID_FORWARD, FALSE);
   }
 }
 

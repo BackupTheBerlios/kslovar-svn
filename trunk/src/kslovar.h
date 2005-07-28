@@ -82,7 +82,7 @@ public slots:
   void slotPrevPhrase();
   void slotNextPhrase();
   void slotHome();
-  void addHistory();
+  void addHistory(bool deleteForward=TRUE);
     
 private:
   QStringList phrases;
