@@ -35,20 +35,19 @@ class KLineEdit;
 class KListBox;
 class KHTMLPart;
 class QSplitter;
+class DBHandler;
+
+//typedef struct sqlite3;
 
 /**
  * @short Application Main Window
  * @author Gregor Kališnik <gregor@podnapisi.net>
- * @version 0.1
+ * @version 0.0.2
  */
 class KSlovar : public KMainWindow
 {
     Q_OBJECT
-public:
-  QStringList phrases;
-  QString dictionary;
-  QString selectedDictionary;
-  
+public:  
     /**
      * Default Constructor
      */
@@ -60,18 +59,46 @@ public:
     virtual ~KSlovar();
     
 public slots:
+  /**
+  * A slot that opens a dictionary from disk.
+  */
   void slotFileOpen();
+  /**
+  * Slot that searches for a phrase in SQLite database.
+  */
   void slotShow();
+  /**
+  * Method that search for a given keyphrase and print result on the list.
+  */
   void slotSearch();
+  /**
+  * Method for showing a phrase using the list.
+  */
   void slotShowList();
-//  void openURLRequest(const KURL &url, const KParts::URLArgs & );
+  /**
+  * Method for showing a phrase using the browser.
+  */
+  void slotShowBrowser(const KURL &url, const KParts::URLArgs &);
+  void slotPrevPhrase();
+  void slotNextPhrase();
+  void slotHome();
+  void addHistory();
     
 private:
+  QStringList phrases;
+  QString dictionary;
+  QString selectedPhrase;
+  QValueList<int> back;
+  QValueList<int> forward;
+  QValueList<int>::iterator it;
+  QValueList<int>::iterator itForward;
+  
   
   KLineEdit *search;
   KListBox *list;
   KHTMLPart *browser;
   QSplitter *split;
+  DBHandler *dictionaryDB;
   
 };
 

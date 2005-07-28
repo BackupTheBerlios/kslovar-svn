@@ -18,54 +18,37 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+class QString;
+typedef struct sqlite3;
 
-#include "kslovar.h"
-#include <kapplication.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
-#include <klocale.h>
+/**
+* class to read dictionaries from SQLite databases
+* @short Database handling class
+* @author Gregor Kališnik <gregor@podnapisi.net>
+*/
 
-static const char description[] =
-    I18N_NOOP("A Dictionary");
-
-static const char version[] = "0.0.2";
-
-static KCmdLineOptions options[] =
+class DBHandler
 {
-//    { "+[URL]", I18N_NOOP( "Document to open" ), 0 },
-    KCmdLineLastOption
+  public:
+    
+    /**
+    * Class's constructor that opens a connection to the database
+    * @param databasePath Path to the databases
+    */
+    DBHandler(QString databasePath);
+    /**
+    * Method to read from databases
+    * @param sqlQuery Query to execute. One at the time!
+    * @return Returns the text of the phrase or false
+    * @todo Improve error handling
+    */
+    QString query(QString sqlQuery);
+    
+    /**
+    * Desctructor that closes the connection
+    */
+    ~DBHandler();
+    
+  private:
+    sqlite3 *db;
 };
-
-int main(int argc, char **argv)
-{
-    KAboutData about("kslovar", I18N_NOOP("KSlovar"), version, description,
-		     KAboutData::License_GPL, "(C) 2005 Gregor Kališnik", 0, 0, "gregor@podnapisi.net");
-    about.addAuthor( "Gregor Kališnik", 0, "gregor@podnapisi.net" );
-    KCmdLineArgs::init(argc, argv, &about);
-    KCmdLineArgs::addCmdLineOptions( options );
-    KApplication app;
-    KSlovar *mainWin = 0;
-
-    if (app.isRestored())
-    {
-        RESTORE(KSlovar);
-    }
-    else
-    {
-        // no session.. just start up normally
-        KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
-        /// @todo do something with the command line args here
-
-        mainWin = new KSlovar();
-        app.setMainWidget( mainWin );
-        mainWin->show();
-        mainWin->resize(1000, 800);
-
-        args->clear();
-    }
-
-    // mainWin has WDestructiveClose flag by default, so it will delete itself.
-    return app.exec();
-}
-

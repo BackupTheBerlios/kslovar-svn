@@ -20,6 +20,7 @@
 
 
 #include "kslovar.h"
+#include "dbhandler.h"
 
 #include <kpopupmenu.h>
 #include <kmenubar.h>
@@ -37,13 +38,18 @@
 #include <kiconloader.h>
 #include <qstringlist.h>
 #include <kmessagebox.h>
-#include <qsqldatabase.h>
+#include <kparts/browserextension.h>
+
+#include <kmainwindow.h>
+#include <klocale.h>
+
 #include <iostream>
 
 using namespace std;
 
-#include <kmainwindow.h>
-#include <klocale.h>
+#define TOOLBAR_ID_HOME 0
+#define TOOLBAR_ID_BACK 1
+#define TOOLBAR_ID_FORWARD 2
 
 KSlovar::KSlovar()
     : KMainWindow( 0, "KSlovar" )
@@ -57,14 +63,26 @@ KSlovar::KSlovar()
   
   KPopupMenu *help = helpMenu( );
   
-  KMenuBar * meni = menuBar();
-  meni->insertItem( i18n( "&File" ), filemenu );
-  meni->insertItem( i18n( "&Help" ), help );
+  KMenuBar * menu = menuBar();
+  menu->insertItem( i18n( "&File" ), filemenu );
+  menu->insertItem( i18n( "&Help" ), help );
+  
+  KToolBar *toolbar = new KToolBar(this);
+  toolbar->insertButton(BarIcon("back"), TOOLBAR_ID_BACK,
+                        SIGNAL(clicked(int)),this,SLOT(slotPrevPhrase()),
+                        FALSE, i18n("Go to previous phrase"));
+  toolbar->insertButton(BarIcon("forward"), TOOLBAR_ID_FORWARD,
+                        SIGNAL(clicked(int)),this,SLOT(slotNextPhrase()),
+                        FALSE, i18n("Go to next phrase"));
+  toolbar->insertButton(BarIcon("gohome"), TOOLBAR_ID_HOME,
+                        SIGNAL(clicked(int)),this,SLOT(slotHome()),
+                        FALSE, i18n("Go to first page"));
+  
+  addToolBar(toolbar);
   
   QHBox * horiz = new QHBox( this );
   
   split = new QSplitter( horiz );
-  split->setOpaqueResize();
   
   QVBox * vert = new QVBox( split );
   
@@ -77,7 +95,7 @@ KSlovar::KSlovar()
   browser->write("<h1>Welcome message.</h1> Need to change it :P");
   browser->end();
   
-//  connect( browser->browserExtension(), SIGNAL( openURLRequest( const KURL &, const KParts::URLArgs & ) ), this, SLOT( openURLRequest(const KURL &, const KParts::URLArgs & ) ) );
+  connect( browser->browserExtension(), SIGNAL( openURLRequest( const KURL &, const KParts::URLArgs & ) ), this, SLOT( slotShowBrowser(const KURL &, const KParts::URLArgs &) ) );
   
   connect(list, SIGNAL( selected(int) ), this, SLOT( slotShowList() ) );
   connect(search, SIGNAL ( returnPressed(const QString&) ), this, SLOT( slotSearch() ) );
@@ -119,98 +137,35 @@ void KSlovar::slotFileOpen()
       KMessageBox::error(this, i18n("Couldn't read the dictionary!") );
     }
     file.close();
+    dictionaryDB = new DBHandler(dictionary);
+    
+    toolBar()->setItemEnabled( TOOLBAR_ID_HOME, TRUE);
+    slotHome();
   }
 }
 
 void KSlovar::slotShow()
 {
-  QSqlDatabase *defaultDB = QSqlDatabase::addDatabase( "QSQLITE" );
-  defaultDB->setDatabaseName( dictionary );
-  
-  QString query="SELECT text FROM dictionary WHERE id='";
-  query=query.append(selectedDictionary);
-  query=query.append("' LIMIT 1;");
-  
-  defaultDB->open();
-  
-  QString error=defaultDB->lastError().text();
-  /*if(  )
-  {*/
-  QSqlQuery q(query, defaultDB);
-  if( q.next() )
-  {
-    
-    browser->begin();
-    browser->write( q.value(0).toString() );
-    browser->setEncoding("utf-8", true);
-    browser->end();
-  }
-  //}
-}
 
-/*void KSlovar::slotShow()
-{
-  QDomDocument d;
-  QFile file( dictionary );
-  if ( !file.open( IO_ReadOnly ) )
+  QString query1="SELECT text FROM dictionary WHERE id='";
+  query1=query1.append(selectedPhrase);
+  query1=query1.append("' LIMIT 1;");
+  
+  QString output=dictionaryDB->query(query1);
+  
+  browser->begin();
+  browser->write(output);
+  browser->end();
+  
+  if(!back.isEmpty())
   {
-    KMessageBox::error(this, i18n("Couldn't read the dictionary!") );
-    return;
+    toolBar()->setItemEnabled( TOOLBAR_ID_BACK, TRUE);
   }
-  if ( !d.setContent( &file ) )
-  {
-    file.close();
-    KMessageBox::error(this, i18n("This is not a dictionary!") );
-    return;
-  }
-  file.close();
-  
-  QDomElement dElem = d.documentElement();
-  
-  for(QDomNode n = dElem.firstChild(); !n.isNull(); n = n.nextSibling())
-  {
-    if( n.isElement() )
-    {
-      QDomElement e = n.toElement();
-      if( ( e.tagName() == "index" ) && ( e.text() == selectedDictionary ) )
-      {
-        n = n.nextSibling();
-        e = n.toElement();
-        
-        QString text = e.text();
-        
-        for(n = e.firstChild(); !n.isNull(); n = n.nextSibling())
-        {
-          if( n.isElement() )
-          {
-            e = n.toElement();
-            QString formated = "<";
-            formated = formated.append( e.tagName() );
-            formated = formated.append(">");
-            formated = formated.append( e.text() );
-            formated = formated.append("</");
-            formated = formated.append( e.tagName() );
-            formated = formated.append(">");
-            text = text.replace(e.text(), formated);
-          }
-        }
-        
-        browser->begin();
-        browser->write( text );
-        browser->end();
-        
-        break;
-      }
-    }
-  }
-  
-  
-}*/
+}
 
 void KSlovar::slotSearch()
 {
   list->clear();
-  //QStringList rezultati = phrases.grep( search->text() );
   
   for(QStringList::Iterator rezultat = phrases.begin(); rezultat != phrases.end(); rezultat++)
   {
@@ -224,21 +179,76 @@ void KSlovar::slotSearch()
 
 void KSlovar::slotShowList()
 {
+  addHistory();
   
   QStringList list1 = phrases.grep( list->currentText() );
   
   QString text=list1.join(0L).remove( QRegExp ("/\\D.+$") );
-  selectedDictionary = text.remove( QRegExp ("^.+\\D/") );
+  selectedPhrase = text.remove( QRegExp ("^.+\\D/") );
   
   slotShow();
 }
-///@karkol... To sploh ne dela... :P
-/*void KSlovar::openURLRequest(const KURL &url, const KParts::URLArgs & )
+
+void KSlovar::slotShowBrowser(const KURL &url, const KParts::URLArgs &)
 {
-  selectedDictionary = url.url();
+  addHistory();
+  
+  selectedPhrase = url.host();
   
   slotShow();
-}*/
+}
+
+void KSlovar::slotPrevPhrase()
+{
+  int& temp = back.first();
+  itForward = forward.prepend( selectedPhrase.toInt() );
+  selectedPhrase = selectedPhrase.setNum(temp);
+  
+  it = back.remove(it);
+  
+  if(back.isEmpty())
+  {
+    toolBar()->setItemEnabled( TOOLBAR_ID_BACK, FALSE);
+  }
+  toolBar()->setItemEnabled( TOOLBAR_ID_FORWARD, TRUE);
+  
+  slotShow();
+}
+
+void KSlovar::slotNextPhrase()
+{
+  int& temp = forward.first();
+  
+  addHistory();
+  
+  selectedPhrase = selectedPhrase.setNum(temp);
+  
+  itForward = forward.remove(itForward);
+  
+  if(forward.isEmpty())
+  {
+    toolBar()->setItemEnabled( TOOLBAR_ID_FORWARD, FALSE);
+  }
+  
+  slotShow();
+}
+
+void KSlovar::slotHome()
+{
+  addHistory();
+  
+  selectedPhrase = selectedPhrase.setNum(0);
+  
+  slotShow();
+}
+
+void KSlovar::addHistory()
+{
+  if(!selectedPhrase.isEmpty())
+  {
+    it = back.prepend( selectedPhrase.toInt() );
+  }
+}
 
 KSlovar::~KSlovar()
 {

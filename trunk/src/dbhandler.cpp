@@ -18,54 +18,35 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include "dbhandler.h"
+#include "sqlite/sqlite3.h"
 
-#include "kslovar.h"
-#include <kapplication.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
-#include <klocale.h>
+#include <qstring.h>
 
-static const char description[] =
-    I18N_NOOP("A Dictionary");
-
-static const char version[] = "0.0.2";
-
-static KCmdLineOptions options[] =
+DBHandler::DBHandler(QString databasePath)
 {
-//    { "+[URL]", I18N_NOOP( "Document to open" ), 0 },
-    KCmdLineLastOption
-};
-
-int main(int argc, char **argv)
-{
-    KAboutData about("kslovar", I18N_NOOP("KSlovar"), version, description,
-		     KAboutData::License_GPL, "(C) 2005 Gregor Kališnik", 0, 0, "gregor@podnapisi.net");
-    about.addAuthor( "Gregor Kališnik", 0, "gregor@podnapisi.net" );
-    KCmdLineArgs::init(argc, argv, &about);
-    KCmdLineArgs::addCmdLineOptions( options );
-    KApplication app;
-    KSlovar *mainWin = 0;
-
-    if (app.isRestored())
-    {
-        RESTORE(KSlovar);
-    }
-    else
-    {
-        // no session.. just start up normally
-        KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
-        /// @todo do something with the command line args here
-
-        mainWin = new KSlovar();
-        app.setMainWidget( mainWin );
-        mainWin->show();
-        mainWin->resize(1000, 800);
-
-        args->clear();
-    }
-
-    // mainWin has WDestructiveClose flag by default, so it will delete itself.
-    return app.exec();
+  
+  sqlite3_open(databasePath, &db);
 }
 
+QString DBHandler::query(QString sqlQuery)
+{
+  if( sqlQuery.isEmpty() )
+  {
+    return false;
+  }
+  
+  sqlite3_stmt *stmt;
+  const char *tail;
+  
+  sqlite3_prepare(db, sqlQuery, sqlQuery.length(), &stmt, &tail);
+  
+  sqlite3_step(stmt);
+  
+  return QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 0 ) );
+}
+
+DBHandler::~DBHandler()
+{
+  sqlite3_close(db);
+}
