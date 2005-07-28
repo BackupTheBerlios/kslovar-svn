@@ -79,15 +79,39 @@ public slots:
   * Method for showing a phrase using the browser.
   */
   void slotShowBrowser(const KURL &url, const KParts::URLArgs &);
+  /**
+  * Method for looking previously selected phrases.
+  */
   void slotPrevPhrase();
+  /**
+  * @see KSlovar#slotPrevPhrase().
+  */
   void slotNextPhrase();
+  /**
+  * Method to go show first page.
+  */
   void slotHome();
+  /**
+  * Updating history
+  */
   void addHistory(bool deleteForward=TRUE);
     
 private:
+  /**
+  * Index of phrases.
+  */
   QStringList phrases;
+  /**
+  * Path to the dictionary's database file.
+  */
   QString dictionary;
+  /**
+  * Currently selected phrase.
+  */
   QString selectedPhrase;
+  /**
+  * History managment variables
+  */
   QValueList<int> back;
   QValueList<int> forward;
   QValueList<int>::iterator it;

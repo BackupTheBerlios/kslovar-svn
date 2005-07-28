@@ -26,7 +26,7 @@
 #include <klocale.h>
 
 static const char description[] =
-    I18N_NOOP("A Dictionary");
+    I18N_NOOP("A dictionary for KDE");
 
 static const char version[] = "0.0.2";
 
