@@ -40,7 +40,7 @@ class DBHandler;
 /**
  * @short Application Main Window
  * @author Gregor Kališnik <gregor@podnapisi.net>
- * @version 0.0.2
+ * @version 0.0.3
  */
 class KSlovar : public KMainWindow
 {
@@ -68,7 +68,7 @@ public slots:
   /**
   * Method that search for a given keyphrase and print result on the list.
   */
-  void slotSearch();
+  void slotSearch(const QString &text);
   /**
   * Method for showing a phrase using the list.
   */

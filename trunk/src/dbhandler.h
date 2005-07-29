@@ -19,10 +19,12 @@
  ***************************************************************************/
 
 class QString;
+class QStringList;
 typedef struct sqlite3;
+typedef struct sqlite3_stmt sqlite3_stmt;
 
 /**
-* class to read dictionaries from SQLite databases
+* class to read and write dictionaries from SQLite databases
 * @short Database handling class
 * @author Gregor Kališnik <gregor@podnapisi.net>
 */
@@ -37,13 +39,17 @@ class DBHandler
     */
     DBHandler(QString databasePath);
     /**
-    * Method to read from databases
-    * @param sqlQuery Query to execute. One at the time!
+    * Method to read text from database
+    * @param id id of the phrase
     * @return Returns the text of the phrase or false
     * @todo Improve error handling
     */
-    QString query(QString sqlQuery);
-    
+    QString readText(QString id);
+    /**
+    * Method to read the index from databases
+    * @return returns the index
+    */
+    QStringList readIndex();
     /**
     * Desctructor that closes the connection
     */
@@ -51,4 +57,11 @@ class DBHandler
     
   private:
     sqlite3 *db;
+    
+    /**
+    * Query excetution method
+    * @param sqlQuery Query to excetute
+    * @retval output Returns the result of the SQL query (statement)
+    */
+    void query(QString sqlQuery, sqlite3_stmt ** output);
 };

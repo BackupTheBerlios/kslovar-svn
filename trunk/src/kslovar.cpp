@@ -95,7 +95,7 @@ KSlovar::KSlovar()
   connect( browser->browserExtension(), SIGNAL( openURLRequest( const KURL &, const KParts::URLArgs & ) ), this, SLOT( slotShowBrowser(const KURL &, const KParts::URLArgs &) ) );
   
   connect(list, SIGNAL( selected(int) ), this, SLOT( slotShowList() ) );
-  connect(search, SIGNAL ( returnPressed(const QString&) ), this, SLOT( slotSearch() ) );
+  connect(search, SIGNAL ( textChanged ( const QString & ) ), this, SLOT( slotSearch( const QString & ) ) );
   
   
   setCentralWidget( horiz );
@@ -103,38 +103,39 @@ KSlovar::KSlovar()
 
 void KSlovar::slotFileOpen()
 {
-  QString path=KFileDialog::getOpenFileName(QString::null, "*", this);
+  QString path=KFileDialog::getOpenFileName(QString::null, "*.db", this);
   
   if( !path.isEmpty() )
   {
   
-    dictionary = path;
-    dictionary.append( ".db" );
+    /*dictionary = path;
+    dictionary.append( ".db" );*/
     QFile file( path );
     if( file.open(IO_ReadOnly) )
     {
-      QTextStream stream( &file );
       QString temp;
-      if(stream.readLine() != "[dictionary]")
+      file.readLine(temp, 50);
+      if( !temp.startsWith("SQLite format 3") )
       {
-        KMessageBox::error(this, i18n("This is not a dictionary!") );
+        KMessageBox::error(this, i18n("This is not a valid dictionary!") );
         return;
       }
       list->clear();
-      phrases=0;
-      while( !stream.atEnd() )
-      {
-        temp=stream.readLine();
-        phrases+=temp;
-        list->insertItem( temp.remove( QRegExp ("/.+$") ) );
-      }
     }
     else
     {
       KMessageBox::error(this, i18n("Couldn't read the dictionary!") );
+      return;
     }
     file.close();
-    dictionaryDB = new DBHandler(dictionary);
+    dictionaryDB = new DBHandler(path);
+    
+    phrases = dictionaryDB->readIndex();
+    for(QStringList::Iterator phrase = phrases.begin(); phrase != phrases.end(); phrase++)
+    {
+      QString rez = *phrase;
+      list->insertItem(rez.remove( QRegExp ("/.+$") ));
+    }
     
     toolBar()->setItemEnabled( TOOLBAR_ID_HOME, TRUE);
     slotHome();
@@ -144,11 +145,7 @@ void KSlovar::slotFileOpen()
 void KSlovar::slotShow()
 {
 
-  QString query1="SELECT text FROM dictionary WHERE id='";
-  query1=query1.append(selectedPhrase);
-  query1=query1.append("' LIMIT 1;");
-  
-  QString output=dictionaryDB->query(query1);
+  QString output=dictionaryDB->readText(selectedPhrase);
   
   browser->begin();
   browser->write(output);
@@ -160,14 +157,14 @@ void KSlovar::slotShow()
   }
 }
 
-void KSlovar::slotSearch()
+void KSlovar::slotSearch(const QString &text)
 {
   list->clear();
   
   for(QStringList::Iterator rezultat = phrases.begin(); rezultat != phrases.end(); rezultat++)
   {
     QString rez = *rezultat;
-    if( ( rez.contains( search->text() ) ) )
+    if( ( rez.contains( text ) ) )
     {
       list->insertItem(rez.remove( QRegExp ("/.+$") ));
     }

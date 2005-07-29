@@ -22,6 +22,8 @@
 #include "sqlite/sqlite3.h"
 
 #include <qstring.h>
+#include <qstringlist.h>
+
 
 DBHandler::DBHandler(QString databasePath)
 {
@@ -29,21 +31,58 @@ DBHandler::DBHandler(QString databasePath)
   sqlite3_open(databasePath, &db);
 }
 
-QString DBHandler::query(QString sqlQuery)
+QString DBHandler::readText(QString id)
 {
-  if( sqlQuery.isEmpty() )
-  {
-    return false;
-  }
-  
   sqlite3_stmt *stmt;
-  const char *tail;
   
-  sqlite3_prepare(db, sqlQuery, sqlQuery.length(), &stmt, &tail);
+  QString query1="SELECT text FROM dictionary WHERE id='";
+  query1=query1.append(id);
+  query1=query1.append("' LIMIT 1;");
+  
+  query(query1, &stmt);
   
   sqlite3_step(stmt);
   
   return QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 0 ) );
+}
+
+void DBHandler::query(QString sqlQuery, sqlite3_stmt ** output)
+{
+  if( sqlQuery.isEmpty() )
+  {
+//    return false;
+  }
+  
+  const char *tail;
+  
+  sqlite3_prepare(db, sqlQuery, sqlQuery.length(), output, &tail);
+  
+  //return output;
+}
+
+QStringList DBHandler::readIndex()
+{
+  int error;
+  QString temp;
+  QStringList output;
+  
+  sqlite3_stmt *stmt;
+  
+  query("SELECT id, name, search FROM phrases ORDER BY search ASC ;", &stmt);
+  
+  while(true)
+  {
+    error = sqlite3_step(stmt);
+    if ( error == SQLITE_DONE || error == SQLITE_ERROR )
+    {
+      break;
+    }
+    temp = QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 1 ) );
+    temp = temp + "/" + QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 0 ) ) + "/" + QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 2 ) );
+    output << temp;
+  }
+  
+  return output;
 }
 
 DBHandler::~DBHandler()
