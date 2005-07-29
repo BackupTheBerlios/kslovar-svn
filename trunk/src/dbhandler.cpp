@@ -50,14 +50,12 @@ void DBHandler::query(QString sqlQuery, sqlite3_stmt ** output)
 {
   if( sqlQuery.isEmpty() )
   {
-//    return false;
+    //kdError << "[DBHandler] Query is not assigned!";
   }
   
   const char *tail;
   
   sqlite3_prepare(db, sqlQuery, sqlQuery.length(), output, &tail);
-  
-  //return output;
 }
 
 QStringList DBHandler::readIndex()

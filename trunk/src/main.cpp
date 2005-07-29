@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 {
     KAboutData about("kslovar", I18N_NOOP("KSlovar"), version, description,
 		     KAboutData::License_GPL, "(C) 2005 Gregor Kališnik", 0, 0, "gregor@podnapisi.net");
-    about.addAuthor( "Gregor Kališnik", 0, "gregor@podnapisi.net" );
+    about.addAuthor( "Gregor Kališnik", I18N_NOOP("Lead developer"), "gregor@podnapisi.net" );
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions( options );
     KApplication app;
