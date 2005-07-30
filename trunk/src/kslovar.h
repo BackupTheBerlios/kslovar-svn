@@ -36,11 +36,14 @@ class KListBox;
 class KHTMLPart;
 class QSplitter;
 class DBHandler;
+class KProgressDialog;
+class KProgress;
+class CreateDictionary;
 
 /**
  * @short Application Main Window
  * @author Gregor Kališnik <gregor@podnapisi.net>
- * @version 0.0.3
+ * @version 0.0.5
  */
 class KSlovar : public KMainWindow
 {
@@ -93,6 +96,7 @@ public slots:
   * Updating history
   */
   void addHistory(bool deleteForward=TRUE);
+  void slotNewDictionary();
     
 private:
   /**
@@ -121,6 +125,9 @@ private:
   KHTMLPart *browser;
   QSplitter *split;
   DBHandler *dictionaryDB;
+  KProgressDialog * progress;
+  KProgress * progressBar;
+  CreateDictionary * dictionarydlg;
   
 };
 

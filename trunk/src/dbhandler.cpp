@@ -23,6 +23,8 @@
 
 #include <qstring.h>
 #include <qstringlist.h>
+#include <kprogress.h>
+#include <klocale.h>
 
 
 DBHandler::DBHandler(QString databasePath)
@@ -58,7 +60,7 @@ void DBHandler::query(QString sqlQuery, sqlite3_stmt ** output)
   sqlite3_prepare(db, sqlQuery, sqlQuery.length(), output, &tail);
 }
 
-QStringList DBHandler::readIndex()
+QStringList DBHandler::readIndex(int * count)
 {
   int error;
   QString temp;
@@ -67,6 +69,7 @@ QStringList DBHandler::readIndex()
   sqlite3_stmt *stmt;
   
   query("SELECT id, name, search FROM phrases ORDER BY search ASC ;", &stmt);
+  
   
   while(true)
   {
@@ -78,6 +81,7 @@ QStringList DBHandler::readIndex()
     temp = QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 1 ) );
     temp = temp + "/" + QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 0 ) ) + "/" + QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 2 ) );
     output << temp;
+    *count++;
   }
   
   return output;

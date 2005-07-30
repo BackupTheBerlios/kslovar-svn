@@ -21,6 +21,7 @@
 
 #include "kslovar.h"
 #include "dbhandler.h"
+#include "createdictionary.h"
 
 #include <kpopupmenu.h>
 #include <kmenubar.h>
@@ -39,6 +40,8 @@
 #include <qstringlist.h>
 #include <kmessagebox.h>
 #include <kparts/browserextension.h>
+#include <kprogress.h>
+#include <qwidget.h>
 
 #include <kmainwindow.h>
 #include <klocale.h>
@@ -54,8 +57,11 @@ KSlovar::KSlovar()
   
   
   KPopupMenu * filemenu = new KPopupMenu;
+  filemenu->insertItem(KGlobal::iconLoader()->loadIcon("filenew", KIcon::NoGroup), i18n("&New dictionary"), 1 );
   filemenu->insertItem(KGlobal::iconLoader()->loadIcon("fileopen", KIcon::NoGroup), i18n( "&Open" ), this, SLOT( slotFileOpen() ) );
   filemenu->insertItem(KGlobal::iconLoader()->loadIcon("exit", KIcon::NoGroup), i18n( "&Quit" ), kapp, SLOT( quit() ) );
+  
+  filemenu->connectItem(1, this, SLOT(slotNewDictionary()));
   
   KPopupMenu *help = helpMenu( );
   
@@ -107,6 +113,12 @@ void KSlovar::slotFileOpen()
   
   if( !path.isEmpty() )
   {
+    
+    /*progress = new KProgressDialog(this, "Progress", i18n("Reading index"), i18n("Please wait..."));
+    progress->setAutoClose(true);
+    progress->showCancelButton(false);
+    progress->setMinimumDuration(0);
+    progressBar = progress->progressBar();*/
   
     /*dictionary = path;
     dictionary.append( ".db" );*/
@@ -130,12 +142,21 @@ void KSlovar::slotFileOpen()
     file.close();
     dictionaryDB = new DBHandler(path);
     
-    phrases = dictionaryDB->readIndex();
+    int steps=0;
+    int step=0;
+    
+    phrases = dictionaryDB->readIndex(&steps);
+    //progressBar->setTotalSteps(steps);
+    
+    
     for(QStringList::Iterator phrase = phrases.begin(); phrase != phrases.end(); phrase++)
     {
+      step++;
       QString rez = *phrase;
       list->insertItem(rez.remove( QRegExp ("/.+$") ));
+      //progressBar->setProgress(step);
     }
+    //progressBar->setProgress(steps);
     
     toolBar()->setItemEnabled( TOOLBAR_ID_HOME, TRUE);
     slotHome();
@@ -248,6 +269,12 @@ void KSlovar::addHistory(bool deleteForward)
     forward.clear();
     toolBar()->setItemEnabled( TOOLBAR_ID_FORWARD, FALSE);
   }
+}
+
+void KSlovar::slotNewDictionary()
+{
+  dictionarydlg = new CreateDictionary();
+  dictionarydlg->show();
 }
 
 KSlovar::~KSlovar()

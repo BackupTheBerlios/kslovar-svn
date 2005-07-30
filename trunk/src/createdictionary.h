@@ -17,55 +17,27 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef CREATEDICTIONARY_H
+#define CREATEDICTIONARY_H
 
+#include "createdictionarydlg.h"
 
-#include "kslovar.h"
-#include <kapplication.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
-#include <klocale.h>
+class KToolBar;
 
-static const char description[] =
-    I18N_NOOP("A dictionary for KDE");
+class CreateDictionary: public KCreateDictionary {
+Q_OBJECT
+public:
+    CreateDictionary(QWidget *parent = 0, const char *name = 0);
+public slots:
+    virtual void slotUnder();
+    virtual void slotItalic();
+    virtual void slotBold();
+    virtual void slotCreate();
+    virtual void slotFont();
 
-static const char version[] = "0.0.5 SVN";
-
-static KCmdLineOptions options[] =
-{
-//    { "+[URL]", I18N_NOOP( "Document to open" ), 0 },
-    KCmdLineLastOption
+private:
+    QString font;
+    KToolBar *toolbar;
 };
 
-int main(int argc, char **argv)
-{
-    KAboutData about("kslovar", I18N_NOOP("KSlovar"), version, description,
-		     KAboutData::License_GPL, "(C) 2005 Gregor Kališnik", 0, 0, "gregor@podnapisi.net");
-    about.addAuthor( "Gregor Kališnik", I18N_NOOP("Lead developer"), "gregor@podnapisi.net" );
-    KCmdLineArgs::init(argc, argv, &about);
-    KCmdLineArgs::addCmdLineOptions( options );
-    KApplication app;
-    KSlovar *mainWin = 0;
-
-    if (app.isRestored())
-    {
-        RESTORE(KSlovar);
-    }
-    else
-    {
-        // no session.. just start up normally
-        KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
-        /// @todo do something with the command line args here
-
-        mainWin = new KSlovar();
-        app.setMainWidget( mainWin );
-        mainWin->show();
-        mainWin->resize(1000, 800);
-
-        args->clear();
-    }
-
-    // mainWin has WDestructiveClose flag by default, so it will delete itself.
-    return app.exec();
-}
-
+#endif

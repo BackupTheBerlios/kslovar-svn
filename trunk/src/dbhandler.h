@@ -20,6 +20,8 @@
 
 class QString;
 class QStringList;
+class KProgressDialog;
+class KProgress;
 typedef struct sqlite3;
 typedef struct sqlite3_stmt sqlite3_stmt;
 
@@ -49,7 +51,7 @@ class DBHandler
     * Method to read the index from databases
     * @return returns the index
     */
-    QStringList readIndex();
+    QStringList readIndex(int * count);
     /**
     * Desctructor that closes the connection
     */
