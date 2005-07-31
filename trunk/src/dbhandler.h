@@ -55,6 +55,7 @@ class DBHandler
     /**
     * Desctructor that closes the connection
     */
+    void createDictionary(QString text);
     ~DBHandler();
     
   private:
@@ -65,5 +66,5 @@ class DBHandler
     * @param sqlQuery Query to excetute
     * @retval output Returns the result of the SQL query (statement)
     */
-    void query(QString sqlQuery, sqlite3_stmt ** output);
+    void query(QString sqlQuery, sqlite3_stmt ** output, bool returnResult=true);
 };

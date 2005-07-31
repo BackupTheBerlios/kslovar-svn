@@ -17,27 +17,42 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CREATEDICTIONARY_H
-#define CREATEDICTIONARY_H
 
-#include "createdictionarydlg.h"
+#ifndef _CREATEDICTIONARY_H_
+#define _CREATEDICTIONARY_H_
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <kdialog.h>
 
 class KToolBar;
+class KLineEdit;
+class KTextEdit;
+class DBHandler;
 
-class CreateDictionary: public KCreateDictionary {
-Q_OBJECT
-public:
-    CreateDictionary(QWidget *parent = 0, const char *name = 0);
-public slots:
+class CreateDictionary : public KDialog
+{
+  Q_OBJECT
+
+  public:
+    CreateDictionary();
+    
+  public slots:
     virtual void slotUnder();
     virtual void slotItalic();
     virtual void slotBold();
     virtual void slotCreate();
-    virtual void slotFont();
-
-private:
-    QString font;
+    virtual void slotFontSize();
+    
+  private:
     KToolBar *toolbar;
+    KLineEdit *nameEdit;
+    KTextEdit *pageEdit;
+    DBHandler *dictionaryDB;
+    QString fontSize;
+    
 };
 
 #endif

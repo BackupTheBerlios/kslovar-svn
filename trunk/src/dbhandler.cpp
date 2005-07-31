@@ -26,6 +26,8 @@
 #include <kprogress.h>
 #include <klocale.h>
 
+#include <kdebug.h>
+
 
 DBHandler::DBHandler(QString databasePath)
 {
@@ -48,16 +50,23 @@ QString DBHandler::readText(QString id)
   return QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 0 ) );
 }
 
-void DBHandler::query(QString sqlQuery, sqlite3_stmt ** output)
+void DBHandler::query(QString sqlQuery, sqlite3_stmt ** output, bool returnResult)
 {
   if( sqlQuery.isEmpty() )
   {
     //kdError << "[DBHandler] Query is not assigned!";
   }
   
+  if(returnResult)
+  {
   const char *tail;
   
   sqlite3_prepare(db, sqlQuery, sqlQuery.length(), output, &tail);
+  }
+  else
+  {
+    sqlite3_exec(db, sqlQuery, NULL, NULL, NULL);
+  }
 }
 
 QStringList DBHandler::readIndex(int * count)
@@ -85,6 +94,14 @@ QStringList DBHandler::readIndex(int * count)
   }
   
   return output;
+}
+
+void DBHandler::createDictionary(QString text)
+{
+  QString query1="BEGIN TRANSACTION; CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , audio VARCHAR( 36 ));";
+  query1=query1+"INSERT INTO dictionary VALUES(0, '"+text+"', NULL);CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name VARCHAR( 36 ) , search VARCHAR( 36 )); COMMIT;";
+  
+  query(query1, NULL, false);
 }
 
 DBHandler::~DBHandler()

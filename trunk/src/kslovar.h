@@ -59,6 +59,11 @@ public:
      */
     virtual ~KSlovar();
     
+    /**
+     * Index of phrases.
+     */
+    QStringList phrases;
+    
 public slots:
   /**
   * A slot that opens a dictionary from disk.
@@ -92,17 +97,9 @@ public slots:
   * Method to go show first page.
   */
   void slotHome();
-  /**
-  * Updating history
-  */
-  void addHistory(bool deleteForward=TRUE);
   void slotNewDictionary();
     
 private:
-  /**
-  * Index of phrases.
-  */
-  QStringList phrases;
   /**
   * Path to the dictionary's database file.
   */
@@ -128,6 +125,11 @@ private:
   KProgressDialog * progress;
   KProgress * progressBar;
   CreateDictionary * dictionarydlg;
+  
+  /**
+   * Updating history
+   */
+  void addHistory(bool deleteForward=TRUE);
   
 };
 

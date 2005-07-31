@@ -160,6 +160,7 @@ void KSlovar::slotFileOpen()
     
     toolBar()->setItemEnabled( TOOLBAR_ID_HOME, TRUE);
     slotHome();
+    back.clear();
   }
 }
 
@@ -275,6 +276,7 @@ void KSlovar::slotNewDictionary()
 {
   dictionarydlg = new CreateDictionary();
   dictionarydlg->show();
+  dictionarydlg->resize(700, 700);
 }
 
 KSlovar::~KSlovar()

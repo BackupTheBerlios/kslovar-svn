@@ -21,8 +21,7 @@ KDE_ICON = AUTO
 bin_PROGRAMS = kslovar
 
 # the application source, library search path, and link libraries
-kslovar_SOURCES = main.cpp kslovar.cpp dbhandler.cpp createdictionarydlg.ui \
-	createdictionary.cpp
+kslovar_SOURCES = main.cpp kslovar.cpp dbhandler.cpp createdictionary.cpp
 kslovar_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 kslovar_LDADD = -lsqlite3 -lkhtml $(LIB_KDEUI)
 
