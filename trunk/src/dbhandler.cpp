@@ -33,6 +33,7 @@ DBHandler::DBHandler(QString databasePath)
 {
   
   sqlite3_open(databasePath, &db);
+  sqlite3_busy_timeout(db, 0);
 }
 
 QString DBHandler::readText(QString id)
@@ -46,22 +47,23 @@ QString DBHandler::readText(QString id)
   query(query1, &stmt);
   
   sqlite3_step(stmt);
-  
-  return QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 0 ) );
+  QString output=QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 0 ) );
+  sqlite3_reset(stmt);
+  return output;
 }
 
 void DBHandler::query(QString sqlQuery, sqlite3_stmt ** output, bool returnResult)
 {
   if( sqlQuery.isEmpty() )
   {
-    //kdError << "[DBHandler] Query is not assigned!";
+    kdError() << "[DBHandler] Query is not assigned!";
   }
   
   if(returnResult)
   {
-  const char *tail;
+    const char *tail;
   
-  sqlite3_prepare(db, sqlQuery, sqlQuery.length(), output, &tail);
+    sqlite3_prepare(db, sqlQuery, sqlQuery.length(), output, &tail);
   }
   else
   {
@@ -77,8 +79,7 @@ QStringList DBHandler::readIndex(int * count)
   
   sqlite3_stmt *stmt;
   
-  query("SELECT id, name, search FROM phrases ORDER BY search ASC ;", &stmt);
-  
+  query("SELECT id, name, search FROM phrases ORDER BY search ASC;", &stmt);
   
   while(true)
   {
@@ -92,14 +93,22 @@ QStringList DBHandler::readIndex(int * count)
     output << temp;
     *count++;
   }
-  
+  sqlite3_reset(stmt);
   return output;
 }
 
-void DBHandler::createDictionary(QString text)
+void DBHandler::saveDictionary(QString text, bool create)
 {
-  QString query1="BEGIN TRANSACTION; CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , audio VARCHAR( 36 ));";
+  QString query1;
+  if(create)
+  {
+  query1="BEGIN TRANSACTION; CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , audio VARCHAR( 36 ));";
   query1=query1+"INSERT INTO dictionary VALUES(0, '"+text+"', NULL);CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name VARCHAR( 36 ) , search VARCHAR( 36 )); COMMIT;";
+  }
+  else
+  {
+    query1="UPDATE dictionary SET text='"+text+"' WHERE id='0';";
+  }
   
   query(query1, NULL, false);
 }

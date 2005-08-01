@@ -55,7 +55,7 @@ class DBHandler
     /**
     * Desctructor that closes the connection
     */
-    void createDictionary(QString text);
+    void saveDictionary(QString text, bool create=true);
     ~DBHandler();
     
   private:

@@ -41,7 +41,8 @@
 #include <kmessagebox.h>
 #include <kparts/browserextension.h>
 #include <kprogress.h>
-#include <qwidget.h>
+
+#include <kdebug.h>
 
 #include <kmainwindow.h>
 #include <klocale.h>
@@ -58,15 +59,20 @@ KSlovar::KSlovar()
   
   KPopupMenu * filemenu = new KPopupMenu;
   filemenu->insertItem(KGlobal::iconLoader()->loadIcon("filenew", KIcon::NoGroup), i18n("&New dictionary"), 1 );
+  filemenu->insertSeparator();
   filemenu->insertItem(KGlobal::iconLoader()->loadIcon("fileopen", KIcon::NoGroup), i18n( "&Open" ), this, SLOT( slotFileOpen() ) );
   filemenu->insertItem(KGlobal::iconLoader()->loadIcon("exit", KIcon::NoGroup), i18n( "&Quit" ), kapp, SLOT( quit() ) );
-  
   filemenu->connectItem(1, this, SLOT(slotNewDictionary()));
+  
+  KPopupMenu *editmenu=new KPopupMenu;
+  editmenu->insertItem(KGlobal::iconLoader()->loadIcon("edit", KIcon::NoGroup), i18n("E&dit dictionary"), 2 );
+  editmenu->connectItem(2, this, SLOT(slotEditDictionary()));
   
   KPopupMenu *help = helpMenu( );
   
   KMenuBar * menu = menuBar();
   menu->insertItem( i18n( "&File" ), filemenu );
+  menu->insertItem(i18n("&Edit"), editmenu);
   menu->insertItem( i18n( "&Help" ), help );
   
   KToolBar *toolbar = new KToolBar(this);
@@ -109,7 +115,7 @@ KSlovar::KSlovar()
 
 void KSlovar::slotFileOpen()
 {
-  QString path=KFileDialog::getOpenFileName(QString::null, "*.db", this);
+  path=KFileDialog::getOpenFileName(QString::null, "*.db", this);
   
   if( !path.isEmpty() )
   {
@@ -161,6 +167,8 @@ void KSlovar::slotFileOpen()
     toolBar()->setItemEnabled( TOOLBAR_ID_HOME, TRUE);
     slotHome();
     back.clear();
+    toolBar()->setItemEnabled( TOOLBAR_ID_BACK, FALSE);
+    toolBar()->setItemEnabled( TOOLBAR_ID_FORWARD, FALSE);
   }
 }
 
@@ -275,6 +283,29 @@ void KSlovar::addHistory(bool deleteForward)
 void KSlovar::slotNewDictionary()
 {
   dictionarydlg = new CreateDictionary();
+  dictionarydlg->show();
+  dictionarydlg->resize(700, 700);
+}
+
+void KSlovar::slotEditDictionary()
+{
+  QString text=dictionaryDB->readText(QString("0"));
+  QString name=text;
+  /*kdDebug() << "output: " << output << endl;
+  QString text=output.remove(QRegExp("<h1>.+</h1>"));
+  kdDebug() << "text: "<< text << endl;
+  QString name=output1.remove(text);
+  kdDebug() << "name: " << name << endl;
+  name=name.remove("<h1>").remove("</h1>");
+  kdDebug() << "name: " << name << endl;
+  kdDebug() << "output: " << output << endl;*/
+  
+  text.remove(QRegExp("<h1>.+</h1>"));
+  name.remove(text).remove("<h1>").remove("</h1>");
+  
+  dictionarydlg = new CreateDictionary(name, text);
+  dictionarydlg->path=path;
+  dictionarydlg->dictionaryDB=dictionaryDB;
   dictionarydlg->show();
   dictionarydlg->resize(700, 700);
 }

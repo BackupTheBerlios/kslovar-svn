@@ -36,52 +36,58 @@
 #include <qfileinfo.h>
 #include <kcombobox.h>
 
-CreateDictionary::CreateDictionary()
+#include <kdebug.h>
+
+CreateDictionary::CreateDictionary(QString name, QString page)
   : KDialog(0, "CreateDictionary")
 {
   setCaption(i18n("Create dictionary"));
-  
   QStringList fontSize;
   fontSize << "8" << "10" << "12" << "14" << "16";
   
   QVBoxLayout *all=new QVBoxLayout(this);
   
   toolbar = new KToolBar(this);
-  toolbar->insertButton(BarIcon("text_bold"), 0,
-                        SIGNAL(clicked(int)),this,SLOT(slotBold()),
-                        TRUE, i18n("Go to previous phrase"));
-  toolbar->insertButton(BarIcon("text_italic"), 1,
-                        SIGNAL(clicked(int)),this,SLOT(slotItalic()),
-                        TRUE, i18n("Go to next phrase"));
-  toolbar->insertButton(BarIcon("text_under"), 2,
-                        SIGNAL(clicked(int)),this,SLOT(slotUnder()),
-                        TRUE, i18n("Go to first page"));
+  toolbar->insertButton(BarIcon("filesave"), 4, SIGNAL(clicked(int)), this, SLOT(slotSave()), FALSE, i18n("Save"));
+  toolbar->insertButton(BarIcon("filesaveas"), 5, SIGNAL(clicked(int)), this, SLOT(slotSaveAs()), TRUE, i18n("Save as"));
   toolbar->insertSeparator();
+  toolbar->insertButton(BarIcon("text_bold"), 0, SIGNAL(clicked(int)), this, SLOT(slotBold()), TRUE, i18n("Go to previous phrase"));
+  toolbar->insertButton(BarIcon("text_italic"), 1, SIGNAL(clicked(int)), this, SLOT(slotItalic()), TRUE, i18n("Go to next phrase"));
+  toolbar->insertButton(BarIcon("text_under"), 2, SIGNAL(clicked(int)), this, SLOT(slotUnder()), TRUE, i18n("Go to first page"));
   toolbar->insertCombo(fontSize, 3, true, SIGNAL(activated(int)), this, SLOT(slotFontSize()));
   toolbar->setCurrentComboItem(3, 2);
+  toolbar->insertSeparator();
+  toolbar->insertButton(BarIcon("fileclose"), 6, SIGNAL(clicked(int)), this, SLOT(close()), TRUE, i18n("Close"));
   
   all->addWidget(toolbar);
   
-  QVBoxLayout *name=new QVBoxLayout(this);
+  QVBoxLayout *nameLayout=new QVBoxLayout(this);
   KActiveLabel *nameLabel=new KActiveLabel(i18n("Name"), this);
   nameLabel->setMaximumHeight(22);
-  name->addWidget(nameLabel);
+  nameLayout->addWidget(nameLabel);
   nameEdit=new KLineEdit(this);
-  name->addWidget(nameEdit);
+  nameLayout->addWidget(nameEdit);
   
-  all->addLayout(name);
+  all->addLayout(nameLayout);
   
-  QVBoxLayout *edit=new QVBoxLayout(this);
+  QVBoxLayout *editLayout=new QVBoxLayout(this);
   KActiveLabel *pageLabel=new KActiveLabel(i18n("First page"), this);
   pageLabel->setMaximumHeight(22);
-  edit->addWidget(pageLabel);
+  editLayout->addWidget(pageLabel);
   pageEdit=new KTextEdit(this);
   pageEdit->setAlignment(Qt::AlignJustify);
-  edit->addWidget(pageEdit);
+  editLayout->addWidget(pageEdit);
   
-  all->addLayout(edit);
+  all->addLayout(editLayout);
   
-  QHBoxLayout *buttons=new QHBoxLayout(this);
+  if((!name.isEmpty()) && (!page.isEmpty()))
+  {
+    nameEdit->setText(name);
+    pageEdit->setText(page);
+    pageEdit->setTextFormat(PlainText);
+  }
+  
+ /* QHBoxLayout *buttons=new QHBoxLayout(this);
   KPushButton *createButton=new KPushButton(i18n("Create"), this);
   buttons->addWidget(createButton);
   buttons->addStretch();
@@ -91,15 +97,20 @@ CreateDictionary::CreateDictionary()
   all->addLayout(buttons);
   
   connect(createButton, SIGNAL(clicked()), this, SLOT(slotCreate()));
-  connect(cancelButton, SIGNAL(clicked()), this, SLOT(close()));
+  connect(cancelButton, SIGNAL(clicked()), this, SLOT(close()));*/
+  connect(pageEdit, SIGNAL(textChanged()), this, SLOT(slotChanged()));
+  connect(nameEdit, SIGNAL(textChanged(const QString &)), this, SLOT(slotChanged()));
+  kdDebug() << path << endl;
 }
 
-void CreateDictionary::slotCreate()
+void CreateDictionary::slotSaveAs()
 {
+  QString backup=path;
   pageEdit->setTextFormat(RichText);
-  QString path=KFileDialog::getSaveFileName(QString::null, "*.db", this);
+  path=KFileDialog::getSaveFileName(QString::null, "*.db", this);
   if(path.isEmpty())
   {
+    path=backup;
     return;
   }
   if(QFileInfo(path).exists())
@@ -116,9 +127,8 @@ void CreateDictionary::slotCreate()
   QString page="<h1>";
   page=page+nameEdit->text()+"</h1>"+pageEdit->text();
   
-  dictionaryDB->createDictionary(page);
-  KMessageBox::information(this, i18n("Dictionary was created successfully"), i18n("Information"));
-  close();
+  dictionaryDB->saveDictionary(page);
+  toolbar->setItemEnabled( 4, FALSE);
 }
 
 void CreateDictionary::slotUnder()
@@ -163,6 +173,28 @@ void CreateDictionary::slotFontSize()
   QString size = selectedFontSize->currentText();
   
   pageEdit->setPointSize(size.toInt());
+}
+
+void CreateDictionary::slotSave()
+{
+  if(path.isEmpty())
+  {
+    slotSaveAs();
+    return;
+  }
+  //dictionaryDB=new DBHandler(path);
+  
+  pageEdit->setTextFormat(RichText);
+  QString page="<h1>";
+  page=page+nameEdit->text()+"</h1>"+pageEdit->text();
+  
+  dictionaryDB->saveDictionary(page, false);
+  toolbar->setItemEnabled( 4, FALSE);
+}
+
+void CreateDictionary::slotChanged()
+{
+  toolbar->setItemEnabled( 4, TRUE);
 }
 
 #include "createdictionary.moc"

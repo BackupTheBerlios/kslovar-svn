@@ -37,20 +37,24 @@ class CreateDictionary : public KDialog
   Q_OBJECT
 
   public:
-    CreateDictionary();
+    CreateDictionary(QString name=NULL, QString page=NULL);
+    
+    QString path;
+    DBHandler *dictionaryDB;
     
   public slots:
     virtual void slotUnder();
     virtual void slotItalic();
     virtual void slotBold();
-    virtual void slotCreate();
+    virtual void slotSaveAs();
     virtual void slotFontSize();
+    virtual void slotSave();
+    virtual void slotChanged();
     
   private:
     KToolBar *toolbar;
     KLineEdit *nameEdit;
     KTextEdit *pageEdit;
-    DBHandler *dictionaryDB;
     QString fontSize;
     
 };

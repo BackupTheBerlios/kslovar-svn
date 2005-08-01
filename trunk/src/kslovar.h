@@ -98,12 +98,13 @@ public slots:
   */
   void slotHome();
   void slotNewDictionary();
+  void slotEditDictionary();
     
 private:
   /**
   * Path to the dictionary's database file.
   */
-  QString dictionary;
+  QString path;
   /**
   * Currently selected phrase.
   */
