@@ -39,6 +39,7 @@ class DBHandler;
 class KProgressDialog;
 class KProgress;
 class CreateDictionary;
+class KAction;
 
 /**
  * @short Application Main Window
@@ -64,7 +65,7 @@ public:
      */
     QStringList phrases;
     
-public slots:
+private slots:
   /**
   * A slot that opens a dictionary from disk.
   */
@@ -112,8 +113,8 @@ private:
   /**
   * History managment variables
   */
-  QValueList<int> back;
-  QValueList<int> forward;
+  QValueList<int> backHistory;
+  QValueList<int> forwardHistory;
   QValueList<int>::iterator it;
   QValueList<int>::iterator itForward;
   
@@ -127,10 +128,24 @@ private:
   KProgress * progressBar;
   CreateDictionary * dictionarydlg;
   
+  KAction *newDictionary;
+  KAction *openDictionary;
+  KAction *editDictionary;
+  KAction *quit;
+  KAction *back;
+  KAction *forward;
+  KAction *home;
+  
   /**
    * Updating history
    */
-  void addHistory(bool deleteForward=TRUE);
+  void addHistory(bool deleteForward=true);
+  
+  
+  void registerButtons();
+  void addMenu();
+  void addToolbar();
+  void disableNavButtons();
   
 };
 

@@ -41,52 +41,23 @@
 #include <kmessagebox.h>
 #include <kparts/browserextension.h>
 #include <kprogress.h>
+#include <kshortcut.h>
+#include <kaction.h>
 
 #include <kdebug.h>
 
 #include <kmainwindow.h>
 #include <klocale.h>
 
-#define TOOLBAR_ID_HOME 0
-#define TOOLBAR_ID_BACK 1
-#define TOOLBAR_ID_FORWARD 2
-
 KSlovar::KSlovar()
     : KMainWindow( 0, "KSlovar" )
 {
   setCaption( "KSlovar" );
   
-  
-  KPopupMenu * filemenu = new KPopupMenu;
-  filemenu->insertItem(KGlobal::iconLoader()->loadIcon("filenew", KIcon::NoGroup), i18n("&New dictionary"), 1 );
-  filemenu->insertSeparator();
-  filemenu->insertItem(KGlobal::iconLoader()->loadIcon("fileopen", KIcon::NoGroup), i18n( "&Open" ), this, SLOT( slotFileOpen() ) );
-  filemenu->insertItem(KGlobal::iconLoader()->loadIcon("exit", KIcon::NoGroup), i18n( "&Quit" ), kapp, SLOT( quit() ) );
-  filemenu->connectItem(1, this, SLOT(slotNewDictionary()));
-  
-  KPopupMenu *editmenu=new KPopupMenu;
-  editmenu->insertItem(KGlobal::iconLoader()->loadIcon("edit", KIcon::NoGroup), i18n("E&dit dictionary"), 2 );
-  editmenu->connectItem(2, this, SLOT(slotEditDictionary()));
-  
-  KPopupMenu *help = helpMenu( );
-  
-  KMenuBar * menu = menuBar();
-  menu->insertItem( i18n( "&File" ), filemenu );
-  menu->insertItem(i18n("&Edit"), editmenu);
-  menu->insertItem( i18n( "&Help" ), help );
-  
-  KToolBar *toolbar = new KToolBar(this);
-  toolbar->insertButton(BarIcon("back"), TOOLBAR_ID_BACK,
-                        SIGNAL(clicked(int)),this,SLOT(slotPrevPhrase()),
-                        FALSE, i18n("Go to previous phrase"));
-  toolbar->insertButton(BarIcon("forward"), TOOLBAR_ID_FORWARD,
-                        SIGNAL(clicked(int)),this,SLOT(slotNextPhrase()),
-                        FALSE, i18n("Go to next phrase"));
-  toolbar->insertButton(BarIcon("gohome"), TOOLBAR_ID_HOME,
-                        SIGNAL(clicked(int)),this,SLOT(slotHome()),
-                        FALSE, i18n("Go to first page"));
-  
-  addToolBar(toolbar);
+  registerButtons();
+  addMenu();
+  addToolbar();
+  disableNavButtons();
   
   QHBox * horiz = new QHBox( this );
   
@@ -163,12 +134,13 @@ void KSlovar::slotFileOpen()
       //progressBar->setProgress(step);
     }
     //progressBar->setProgress(steps);
-    
-    toolBar()->setItemEnabled( TOOLBAR_ID_HOME, TRUE);
+
+    home->setEnabled(true);
+    back->setEnabled(false);
+    forward->setEnabled(false);
+    editDictionary->setEnabled(true);
     slotHome();
-    back.clear();
-    toolBar()->setItemEnabled( TOOLBAR_ID_BACK, FALSE);
-    toolBar()->setItemEnabled( TOOLBAR_ID_FORWARD, FALSE);
+    backHistory.clear();
   }
 }
 
@@ -181,9 +153,10 @@ void KSlovar::slotShow()
   browser->write(output);
   browser->end();
   
-  if(!back.isEmpty())
+  if(!backHistory.isEmpty())
   {
-    toolBar()->setItemEnabled( TOOLBAR_ID_BACK, TRUE);
+    //toolBar()->setItemEnabled( TOOLBAR_ID_BACK, TRUE);
+    back->setEnabled(true);
   }
 }
 
@@ -224,34 +197,37 @@ void KSlovar::slotShowBrowser(const KURL &url, const KParts::URLArgs &)
 
 void KSlovar::slotPrevPhrase()
 {
-  int& temp = back.first();
-  itForward = forward.prepend( selectedPhrase.toInt() );
+  int& temp = backHistory.first();
+  itForward = forwardHistory.prepend( selectedPhrase.toInt() );
   selectedPhrase = selectedPhrase.setNum(temp);
   
-  it = back.remove(it);
+  it = backHistory.remove(it);
   
-  if(back.isEmpty())
+  if(backHistory.isEmpty())
   {
-    toolBar()->setItemEnabled( TOOLBAR_ID_BACK, FALSE);
+    //toolBar()->setItemEnabled( TOOLBAR_ID_BACK, FALSE);
+    back->setEnabled(false);
   }
-  toolBar()->setItemEnabled( TOOLBAR_ID_FORWARD, TRUE);
+  //toolBar()->setItemEnabled( TOOLBAR_ID_FORWARD, TRUE);
+  forward->setEnabled(true);
   
   slotShow();
 }
 
 void KSlovar::slotNextPhrase()
 {
-  int& temp = forward.first();
+  int& temp = forwardHistory.first();
   
   addHistory(FALSE);
   
   selectedPhrase = selectedPhrase.setNum(temp);
   
-  itForward = forward.remove(itForward);
+  itForward = forwardHistory.remove(itForward);
   
-  if(forward.isEmpty())
+  if(forwardHistory.isEmpty())
   {
-    toolBar()->setItemEnabled( TOOLBAR_ID_FORWARD, FALSE);
+    //toolBar()->setItemEnabled( TOOLBAR_ID_FORWARD, FALSE);
+    forward->setEnabled(false);
   }
   
   slotShow();
@@ -270,13 +246,14 @@ void KSlovar::addHistory(bool deleteForward)
 {
   if(!selectedPhrase.isEmpty())
   {
-    it = back.prepend( selectedPhrase.toInt() );
+    it = backHistory.prepend( selectedPhrase.toInt() );
   }
   
   if(deleteForward)
   {
-    forward.clear();
-    toolBar()->setItemEnabled( TOOLBAR_ID_FORWARD, FALSE);
+    forwardHistory.clear();
+    //toolBar()->setItemEnabled( TOOLBAR_ID_FORWARD, FALSE);
+    forward->setEnabled(false);
   }
 }
 
@@ -291,14 +268,6 @@ void KSlovar::slotEditDictionary()
 {
   QString text=dictionaryDB->readText(QString("0"));
   QString name=text;
-  /*kdDebug() << "output: " << output << endl;
-  QString text=output.remove(QRegExp("<h1>.+</h1>"));
-  kdDebug() << "text: "<< text << endl;
-  QString name=output1.remove(text);
-  kdDebug() << "name: " << name << endl;
-  name=name.remove("<h1>").remove("</h1>");
-  kdDebug() << "name: " << name << endl;
-  kdDebug() << "output: " << output << endl;*/
   
   text.remove(QRegExp("<h1>.+</h1>"));
   name.remove(text).remove("<h1>").remove("</h1>");
@@ -308,6 +277,56 @@ void KSlovar::slotEditDictionary()
   dictionarydlg->dictionaryDB=dictionaryDB;
   dictionarydlg->show();
   dictionarydlg->resize(700, 700);
+}
+
+void KSlovar::registerButtons()
+{
+  newDictionary = new KAction(i18n("&New dictionary"), "filenew", KShortcut(KKey("CTRL+n")), this, SLOT(slotNewDictionary()), actionCollection(), "newDictionary");
+  openDictionary = KStdAction::open(this, SLOT(slotFileOpen()), actionCollection());
+  quit = KStdAction::quit(kapp, SLOT(quit()), actionCollection());
+  
+  back=KStdAction::back(this, SLOT(slotPrevPhrase()), actionCollection());
+  forward=KStdAction::forward(this, SLOT(slotNextPhrase()), actionCollection());
+  home=KStdAction::home(this, SLOT(slotHome()), actionCollection());
+  
+  editDictionary = new KAction(i18n("&Edit dictionary"), "edit", KShortcut(KKey("CTRL+e")), this, SLOT(slotEditDictionary()), actionCollection(), "editDictionary");
+}
+
+void KSlovar::addMenu()
+{
+  KPopupMenu * filemenu = new KPopupMenu;
+  newDictionary->plug(filemenu);
+  openDictionary->plug(filemenu);
+  filemenu->insertSeparator();
+  quit->plug(filemenu);
+  
+  KPopupMenu *editmenu=new KPopupMenu;
+  editDictionary->plug(editmenu);
+  
+  KPopupMenu *help = helpMenu( );
+  
+  KMenuBar * menu = menuBar();
+  menu->insertItem( i18n( "&File" ), filemenu );
+  menu->insertItem(i18n("&Edit"), editmenu);
+  menu->insertItem( i18n( "&Help" ), help );
+}
+
+void KSlovar::addToolbar()
+{
+  KToolBar *toolbar = new KToolBar(this);
+  back->plug(toolbar);
+  forward->plug(toolbar);
+  home->plug(toolbar);
+  
+  addToolBar(toolbar);
+}
+
+void KSlovar::disableNavButtons()
+{
+  back->setEnabled(false);
+  forward->setEnabled(false);
+  home->setEnabled(false);
+  editDictionary->setEnabled(false);
 }
 
 KSlovar::~KSlovar()
