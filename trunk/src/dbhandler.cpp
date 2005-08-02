@@ -107,8 +107,8 @@ void DBHandler::saveDictionary(QString text, bool create)
   QString query1;
   if(create)
   {
-  query1="BEGIN TRANSACTION; CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , audio VARCHAR( 36 ));";
-  query1=query1+"INSERT INTO dictionary VALUES(0, '"+text+"', NULL);CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name VARCHAR( 36 ) , search VARCHAR( 36 )); COMMIT;";
+    query1="BEGIN TRANSACTION; CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT ); CREATE TABLE user_dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , rand INTEGER , new INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name VARCHAR( 36 ) , search VARCHAR( 36 ) , ido INTEGER UNIQUE , idu INTEGER UNIQUE ); ";
+    query1=query1+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' ); COMMIT;";
   }
   else
   {
