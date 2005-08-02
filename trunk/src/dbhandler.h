@@ -56,10 +56,13 @@ class DBHandler
     * Desctructor that closes the connection
     */
     void saveDictionary(QString text, bool create=true);
+    static DBHandler *Instance(QString path);
     ~DBHandler();
     
   private:
-    sqlite3 *db;
+    sqlite3 *m_db;
+    static QString m_currentPath;
+    static DBHandler *m_instance;
     
     /**
     * Query excetution method

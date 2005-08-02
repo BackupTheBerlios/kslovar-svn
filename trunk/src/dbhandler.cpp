@@ -28,12 +28,12 @@
 
 #include <kdebug.h>
 
+DBHandler *DBHandler::m_instance=0L;
+QString DBHandler::m_currentPath=0L;
 
 DBHandler::DBHandler(QString databasePath)
 {
-  
-  sqlite3_open(databasePath, &db);
-  sqlite3_busy_timeout(db, 0);
+  sqlite3_open(databasePath, &m_db);
 }
 
 QString DBHandler::readText(QString id)
@@ -63,11 +63,11 @@ void DBHandler::query(QString sqlQuery, sqlite3_stmt ** output, bool returnResul
   {
     const char *tail;
   
-    sqlite3_prepare(db, sqlQuery, sqlQuery.length(), output, &tail);
+    sqlite3_prepare(m_db, sqlQuery, sqlQuery.length(), output, &tail);
   }
   else
   {
-    sqlite3_exec(db, sqlQuery, NULL, NULL, NULL);
+    sqlite3_exec(m_db, sqlQuery, NULL, NULL, NULL);
   }
 }
 
@@ -113,7 +113,18 @@ void DBHandler::saveDictionary(QString text, bool create)
   query(query1, NULL, false);
 }
 
+DBHandler *DBHandler::Instance(QString path)
+{
+  if((!m_instance) || (m_currentPath!=path))
+  {
+    m_instance=new DBHandler(path);
+  }
+  
+  return m_instance;
+}
+
 DBHandler::~DBHandler()
 {
-  sqlite3_close(db);
+  sqlite3_close(m_db);
+  m_instance=0L;
 }

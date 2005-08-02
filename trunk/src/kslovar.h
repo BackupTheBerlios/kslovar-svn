@@ -105,36 +105,35 @@ private:
   /**
   * Path to the dictionary's database file.
   */
-  QString path;
+  QString m_path;
   /**
   * Currently selected phrase.
   */
-  QString selectedPhrase;
+  QString m_selectedPhrase;
   /**
   * History managment variables
   */
-  QValueList<int> backHistory;
-  QValueList<int> forwardHistory;
-  QValueList<int>::iterator it;
-  QValueList<int>::iterator itForward;
+  QValueList<int> m_backHistory;
+  QValueList<int> m_forwardHistory;
+  QValueList<int>::iterator m_it;
+  QValueList<int>::iterator m_itForward;
   
   
-  KLineEdit *search;
-  KListBox *list;
-  KHTMLPart *browser;
-  QSplitter *split;
-  DBHandler *dictionaryDB;
-  KProgressDialog * progress;
-  KProgress * progressBar;
-  CreateDictionary * dictionarydlg;
+  KLineEdit *m_search;
+  KListBox *m_list;
+  KHTMLPart *m_browser;
+  QSplitter *m_split;
+  KProgressDialog *m_progress;
+  KProgress *m_progressBar;
+  CreateDictionary *m_dictionarydlg;
   
-  KAction *newDictionary;
-  KAction *openDictionary;
-  KAction *editDictionary;
-  KAction *quit;
-  KAction *back;
-  KAction *forward;
-  KAction *home;
+  KAction *m_newDictionary;
+  KAction *m_openDictionary;
+  KAction *m_editDictionary;
+  KAction *m_quit;
+  KAction *m_back;
+  KAction *m_forward;
+  KAction *m_home;
   
   /**
    * Updating history

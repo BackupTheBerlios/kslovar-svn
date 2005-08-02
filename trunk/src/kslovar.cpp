@@ -61,24 +61,24 @@ KSlovar::KSlovar()
   
   QHBox * horiz = new QHBox( this );
   
-  split = new QSplitter( horiz );
+  m_split = new QSplitter( horiz );
   
-  QVBox * vert = new QVBox( split );
+  QVBox * vert = new QVBox( m_split );
   vert->setMaximumWidth(200);
   
-  search = new KLineEdit( vert );
-  list = new KListBox( vert );
+  m_search = new KLineEdit( vert );
+  m_list = new KListBox( vert );
   
-  browser=new KHTMLPart( split );
-  browser->setEncoding("utf-8", true);
-  browser->begin();
-  browser->write("<h1>Welcome message.</h1> Need to change it :P");
-  browser->end();
+  m_browser=new KHTMLPart( m_split );
+  m_browser->setEncoding("utf-8", true);
+  m_browser->begin();
+  m_browser->write("<h1>Welcome message.</h1> Need to change it :P");
+  m_browser->end();
   
-  connect( browser->browserExtension(), SIGNAL( openURLRequest( const KURL &, const KParts::URLArgs & ) ), this, SLOT( slotShowBrowser(const KURL &, const KParts::URLArgs &) ) );
+  connect( m_browser->browserExtension(), SIGNAL( openURLRequest( const KURL &, const KParts::URLArgs & ) ), this, SLOT( slotShowBrowser(const KURL &, const KParts::URLArgs &) ) );
   
-  connect(list, SIGNAL( selected(int) ), this, SLOT( slotShowList() ) );
-  connect(search, SIGNAL ( textChanged ( const QString & ) ), this, SLOT( slotSearch( const QString & ) ) );
+  connect(m_list, SIGNAL( selected(int) ), this, SLOT( slotShowList() ) );
+  connect(m_search, SIGNAL ( textChanged ( const QString & ) ), this, SLOT( slotSearch( const QString & ) ) );
   
   
   setCentralWidget( horiz );
@@ -86,9 +86,9 @@ KSlovar::KSlovar()
 
 void KSlovar::slotFileOpen()
 {
-  path=KFileDialog::getOpenFileName(QString::null, "*.db", this);
+  m_path=KFileDialog::getOpenFileName(QString::null, "*.db", this);
   
-  if( !path.isEmpty() )
+  if( !m_path.isEmpty() )
   {
     
     /*progress = new KProgressDialog(this, "Progress", i18n("Reading index"), i18n("Please wait..."));
@@ -97,9 +97,7 @@ void KSlovar::slotFileOpen()
     progress->setMinimumDuration(0);
     progressBar = progress->progressBar();*/
   
-    /*dictionary = path;
-    dictionary.append( ".db" );*/
-    QFile file( path );
+    QFile file( m_path );
     if( file.open(IO_ReadOnly) )
     {
       QString temp;
@@ -109,7 +107,7 @@ void KSlovar::slotFileOpen()
         KMessageBox::error(this, i18n("This is not a valid dictionary!") );
         return;
       }
-      list->clear();
+      m_list->clear();
     }
     else
     {
@@ -117,12 +115,11 @@ void KSlovar::slotFileOpen()
       return;
     }
     file.close();
-    dictionaryDB = new DBHandler(path);
     
     int steps=0;
     int step=0;
     
-    phrases = dictionaryDB->readIndex(&steps);
+    phrases = DBHandler::Instance(m_path)->readIndex(&steps);
     //progressBar->setTotalSteps(steps);
     
     
@@ -130,46 +127,45 @@ void KSlovar::slotFileOpen()
     {
       step++;
       QString rez = *phrase;
-      list->insertItem(rez.remove( QRegExp ("/.+$") ));
+      m_list->insertItem(rez.remove( QRegExp ("/.+$") ));
       //progressBar->setProgress(step);
     }
     //progressBar->setProgress(steps);
 
-    home->setEnabled(true);
-    back->setEnabled(false);
-    forward->setEnabled(false);
-    editDictionary->setEnabled(true);
+    m_home->setEnabled(true);
+    m_back->setEnabled(false);
+    m_forward->setEnabled(false);
+    m_editDictionary->setEnabled(true);
     slotHome();
-    backHistory.clear();
+    m_backHistory.clear();
   }
 }
 
 void KSlovar::slotShow()
 {
 
-  QString output=dictionaryDB->readText(selectedPhrase);
+  QString output=DBHandler::Instance(m_path)->readText(m_selectedPhrase);
   
-  browser->begin();
-  browser->write(output);
-  browser->end();
+  m_browser->begin();
+  m_browser->write(output);
+  m_browser->end();
   
-  if(!backHistory.isEmpty())
+  if(!m_backHistory.isEmpty())
   {
-    //toolBar()->setItemEnabled( TOOLBAR_ID_BACK, TRUE);
-    back->setEnabled(true);
+    m_back->setEnabled(true);
   }
 }
 
 void KSlovar::slotSearch(const QString &text)
 {
-  list->clear();
+  m_list->clear();
   
   for(QStringList::Iterator rezultat = phrases.begin(); rezultat != phrases.end(); rezultat++)
   {
     QString rez = *rezultat;
     if( ( rez.contains( text ) ) )
     {
-      list->insertItem(rez.remove( QRegExp ("/.+$") ));
+      m_list->insertItem(rez.remove( QRegExp ("/.+$") ));
     }
   }
 }
@@ -178,10 +174,10 @@ void KSlovar::slotShowList()
 {
   addHistory();
   
-  QStringList list1 = phrases.grep( list->currentText() );
+  QStringList list1 = phrases.grep( m_list->currentText() );
   
   QString text=list1.join(0L).remove( QRegExp ("/\\D.+$") );
-  selectedPhrase = text.remove( QRegExp ("^.+\\D/") );
+  m_selectedPhrase = text.remove( QRegExp ("^.+\\D/") );
   
   slotShow();
 }
@@ -190,44 +186,41 @@ void KSlovar::slotShowBrowser(const KURL &url, const KParts::URLArgs &)
 {
   addHistory();
   
-  selectedPhrase = url.host();
+  m_selectedPhrase = url.host();
   
   slotShow();
 }
 
 void KSlovar::slotPrevPhrase()
 {
-  int& temp = backHistory.first();
-  itForward = forwardHistory.prepend( selectedPhrase.toInt() );
-  selectedPhrase = selectedPhrase.setNum(temp);
+  int& temp = m_backHistory.first();
+  m_itForward = m_forwardHistory.prepend( m_selectedPhrase.toInt() );
+  m_selectedPhrase = m_selectedPhrase.setNum(temp);
   
-  it = backHistory.remove(it);
+  m_it = m_backHistory.remove(m_it);
   
-  if(backHistory.isEmpty())
+  if(m_backHistory.isEmpty())
   {
-    //toolBar()->setItemEnabled( TOOLBAR_ID_BACK, FALSE);
-    back->setEnabled(false);
+    m_back->setEnabled(false);
   }
-  //toolBar()->setItemEnabled( TOOLBAR_ID_FORWARD, TRUE);
-  forward->setEnabled(true);
+  m_forward->setEnabled(true);
   
   slotShow();
 }
 
 void KSlovar::slotNextPhrase()
 {
-  int& temp = forwardHistory.first();
+  int& temp = m_forwardHistory.first();
   
   addHistory(FALSE);
   
-  selectedPhrase = selectedPhrase.setNum(temp);
+  m_selectedPhrase = m_selectedPhrase.setNum(temp);
   
-  itForward = forwardHistory.remove(itForward);
+  m_itForward = m_forwardHistory.remove(m_itForward);
   
-  if(forwardHistory.isEmpty())
+  if(m_forwardHistory.isEmpty())
   {
-    //toolBar()->setItemEnabled( TOOLBAR_ID_FORWARD, FALSE);
-    forward->setEnabled(false);
+    m_forward->setEnabled(false);
   }
   
   slotShow();
@@ -237,71 +230,69 @@ void KSlovar::slotHome()
 {
   addHistory();
   
-  selectedPhrase = selectedPhrase.setNum(0);
+  m_selectedPhrase = m_selectedPhrase.setNum(0);
   
   slotShow();
 }
 
 void KSlovar::addHistory(bool deleteForward)
 {
-  if(!selectedPhrase.isEmpty())
+  if(!m_selectedPhrase.isEmpty())
   {
-    it = backHistory.prepend( selectedPhrase.toInt() );
+    m_it = m_backHistory.prepend( m_selectedPhrase.toInt() );
   }
   
   if(deleteForward)
   {
-    forwardHistory.clear();
-    //toolBar()->setItemEnabled( TOOLBAR_ID_FORWARD, FALSE);
-    forward->setEnabled(false);
+    m_forwardHistory.clear();
+    m_forward->setEnabled(false);
   }
 }
 
 void KSlovar::slotNewDictionary()
 {
-  dictionarydlg = new CreateDictionary();
-  dictionarydlg->show();
-  dictionarydlg->resize(700, 700);
+  m_dictionarydlg = new CreateDictionary();
+  m_dictionarydlg->show();
+  m_dictionarydlg->resize(700, 700);
 }
 
 void KSlovar::slotEditDictionary()
 {
-  QString text=dictionaryDB->readText(QString("0"));
+  QString text=DBHandler::Instance(m_path)->readText(QString("0"));
   QString name=text;
   
   text.remove(QRegExp("<h1>.+</h1>"));
   name.remove(text).remove("<h1>").remove("</h1>");
   
-  dictionarydlg = new CreateDictionary(name, text);
-  dictionarydlg->path=path;
-  dictionarydlg->dictionaryDB=dictionaryDB;
-  dictionarydlg->show();
-  dictionarydlg->resize(700, 700);
+  m_dictionarydlg = new CreateDictionary(name, text);
+  m_dictionarydlg->setPath(m_path);
+  m_dictionarydlg->show();
+  m_dictionarydlg->resize(700, 700);
 }
 
 void KSlovar::registerButtons()
 {
-  newDictionary = new KAction(i18n("&New dictionary"), "filenew", KShortcut(KKey("CTRL+n")), this, SLOT(slotNewDictionary()), actionCollection(), "newDictionary");
-  openDictionary = KStdAction::open(this, SLOT(slotFileOpen()), actionCollection());
-  quit = KStdAction::quit(kapp, SLOT(quit()), actionCollection());
+  m_newDictionary = new KAction(i18n("&New dictionary"), "filenew", KShortcut(KKey("CTRL+n")), this, SLOT(slotNewDictionary()), actionCollection(), "newDictionary");
+  m_openDictionary = KStdAction::open(this, SLOT(slotFileOpen()), actionCollection());
+  m_quit = KStdAction::quit(kapp, SLOT(quit()), actionCollection());
   
-  back=KStdAction::back(this, SLOT(slotPrevPhrase()), actionCollection());
-  forward=KStdAction::forward(this, SLOT(slotNextPhrase()), actionCollection());
-  home=KStdAction::home(this, SLOT(slotHome()), actionCollection());
+  m_back=KStdAction::back(this, SLOT(slotPrevPhrase()), actionCollection());
+  m_forward=KStdAction::forward(this, SLOT(slotNextPhrase()), actionCollection());
+  m_home=KStdAction::home(this, SLOT(slotHome()), actionCollection());
   
-  editDictionary = new KAction(i18n("&Edit dictionary"), "edit", KShortcut(KKey("CTRL+e")), this, SLOT(slotEditDictionary()), actionCollection(), "editDictionary");
+  m_editDictionary = new KAction(i18n("&Edit dictionary"), "edit", KShortcut(KKey("CTRL+e")), this, SLOT(slotEditDictionary()), actionCollection(), "editDictionary");
 }
 
 void KSlovar::addMenu()
 {
   KPopupMenu * filemenu = new KPopupMenu;
-  newDictionary->plug(filemenu);
-  openDictionary->plug(filemenu);
+  m_newDictionary->plug(filemenu);
+  m_openDictionary->plug(filemenu);
   filemenu->insertSeparator();
-  quit->plug(filemenu);
+  m_quit->plug(filemenu);
   
   KPopupMenu *editmenu=new KPopupMenu;
-  editDictionary->plug(editmenu);
+  m_editDictionary->plug(editmenu);
   
   KPopupMenu *help = helpMenu( );
   
@@ -314,19 +305,19 @@ void KSlovar::addMenu()
 void KSlovar::addToolbar()
 {
   KToolBar *toolbar = new KToolBar(this);
-  back->plug(toolbar);
-  forward->plug(toolbar);
-  home->plug(toolbar);
+  m_back->plug(toolbar);
+  m_forward->plug(toolbar);
+  m_home->plug(toolbar);
   
   addToolBar(toolbar);
 }
 
 void KSlovar::disableNavButtons()
 {
-  back->setEnabled(false);
-  forward->setEnabled(false);
-  home->setEnabled(false);
-  editDictionary->setEnabled(false);
+  m_back->setEnabled(false);
+  m_forward->setEnabled(false);
+  m_home->setEnabled(false);
+  m_editDictionary->setEnabled(false);
 }
 
 KSlovar::~KSlovar()

@@ -35,6 +35,9 @@
 #include <qdir.h>
 #include <qfileinfo.h>
 #include <kcombobox.h>
+#include <kaction.h>
+#include <kshortcut.h>
+#include <kactioncollection.h>
 
 #include <kdebug.h>
 
@@ -42,31 +45,21 @@ CreateDictionary::CreateDictionary(QString name, QString page)
   : KDialog(0, "CreateDictionary")
 {
   setCaption(i18n("Create dictionary"));
-  QStringList fontSize;
-  fontSize << "8" << "10" << "12" << "14" << "16";
+  
+  registerButtons();
   
   QVBoxLayout *all=new QVBoxLayout(this);
   
-  toolbar = new KToolBar(this);
-  toolbar->insertButton(BarIcon("filesave"), 4, SIGNAL(clicked(int)), this, SLOT(slotSave()), FALSE, i18n("Save"));
-  toolbar->insertButton(BarIcon("filesaveas"), 5, SIGNAL(clicked(int)), this, SLOT(slotSaveAs()), TRUE, i18n("Save as"));
-  toolbar->insertSeparator();
-  toolbar->insertButton(BarIcon("text_bold"), 0, SIGNAL(clicked(int)), this, SLOT(slotBold()), TRUE, i18n("Go to previous phrase"));
-  toolbar->insertButton(BarIcon("text_italic"), 1, SIGNAL(clicked(int)), this, SLOT(slotItalic()), TRUE, i18n("Go to next phrase"));
-  toolbar->insertButton(BarIcon("text_under"), 2, SIGNAL(clicked(int)), this, SLOT(slotUnder()), TRUE, i18n("Go to first page"));
-  toolbar->insertCombo(fontSize, 3, true, SIGNAL(activated(int)), this, SLOT(slotFontSize()));
-  toolbar->setCurrentComboItem(3, 2);
-  toolbar->insertSeparator();
-  toolbar->insertButton(BarIcon("fileclose"), 6, SIGNAL(clicked(int)), this, SLOT(close()), TRUE, i18n("Close"));
+  registerToolbar();
   
-  all->addWidget(toolbar);
+  all->addWidget(m_toolbar);
   
   QVBoxLayout *nameLayout=new QVBoxLayout(this);
   KActiveLabel *nameLabel=new KActiveLabel(i18n("Name"), this);
   nameLabel->setMaximumHeight(22);
   nameLayout->addWidget(nameLabel);
-  nameEdit=new KLineEdit(this);
-  nameLayout->addWidget(nameEdit);
+  m_nameEdit=new KLineEdit(this);
+  nameLayout->addWidget(m_nameEdit);
   
   all->addLayout(nameLayout);
   
@@ -74,127 +67,149 @@ CreateDictionary::CreateDictionary(QString name, QString page)
   KActiveLabel *pageLabel=new KActiveLabel(i18n("First page"), this);
   pageLabel->setMaximumHeight(22);
   editLayout->addWidget(pageLabel);
-  pageEdit=new KTextEdit(this);
-  pageEdit->setAlignment(Qt::AlignJustify);
-  editLayout->addWidget(pageEdit);
+  m_pageEdit=new KTextEdit(this);
+  m_pageEdit->setAlignment(Qt::AlignJustify);
+  editLayout->addWidget(m_pageEdit);
   
   all->addLayout(editLayout);
   
   if((!name.isEmpty()) && (!page.isEmpty()))
   {
-    nameEdit->setText(name);
-    pageEdit->setText(page);
-    pageEdit->setTextFormat(PlainText);
+    m_nameEdit->setText(name);
+    m_pageEdit->setText(page);
+    m_pageEdit->setTextFormat(PlainText);
   }
-  
- /* QHBoxLayout *buttons=new QHBoxLayout(this);
-  KPushButton *createButton=new KPushButton(i18n("Create"), this);
-  buttons->addWidget(createButton);
-  buttons->addStretch();
-  KPushButton *cancelButton=new KPushButton(i18n("Cancel"), this);
-  buttons->addWidget(cancelButton);
-  
-  all->addLayout(buttons);
-  
-  connect(createButton, SIGNAL(clicked()), this, SLOT(slotCreate()));
-  connect(cancelButton, SIGNAL(clicked()), this, SLOT(close()));*/
-  connect(pageEdit, SIGNAL(textChanged()), this, SLOT(slotChanged()));
-  connect(nameEdit, SIGNAL(textChanged(const QString &)), this, SLOT(slotChanged()));
-  kdDebug() << path << endl;
+
+  connect(m_pageEdit, SIGNAL(textChanged()), this, SLOT(slotChanged()));
+  connect(m_nameEdit, SIGNAL(textChanged(const QString &)), this, SLOT(slotChanged()));
 }
 
 void CreateDictionary::slotSaveAs()
 {
-  QString backup=path;
-  pageEdit->setTextFormat(RichText);
-  path=KFileDialog::getSaveFileName(QString::null, "*.db", this);
-  if(path.isEmpty())
+  QString backup=m_path;
+  m_pageEdit->setTextFormat(RichText);
+  m_path=KFileDialog::getSaveFileName(QString::null, "*.db", this);
+  if(m_path.isEmpty())
   {
-    path=backup;
+    m_path=backup;
     return;
   }
-  if(QFileInfo(path).exists())
+  if(QFileInfo(m_path).exists())
   {
     int res = KMessageBox::warningContinueCancel(this, i18n("The file already exists. Overwrite?"), i18n("Create"));
     if (res==KMessageBox::Cancel)
     {
       return;
     }
-    QFile::remove(path);
+    QFile::remove(m_path);
   }
-  dictionaryDB=new DBHandler(path);
   
   QString page="<h1>";
-  page=page+nameEdit->text()+"</h1>"+pageEdit->text();
+  page=page+m_nameEdit->text()+"</h1>"+m_pageEdit->text();
   
-  dictionaryDB->saveDictionary(page);
-  toolbar->setItemEnabled( 4, FALSE);
+  DBHandler::Instance(m_path)->saveDictionary(page);
+  m_save->setEnabled(false);
 }
 
 void CreateDictionary::slotUnder()
 {
-  if(pageEdit->underline())
+  if(m_pageEdit->underline())
   {
-    pageEdit->setUnderline(false);
+    m_pageEdit->setUnderline(false);
   }
   else
   {
-    pageEdit->setUnderline(true);
+    m_pageEdit->setUnderline(true);
   }
 }
 
 void CreateDictionary::slotItalic()
 {
-  if(pageEdit->italic())
+  if(m_pageEdit->italic())
   {
-    pageEdit->setItalic(false);
+    m_pageEdit->setItalic(false);
   }
   else
   {
-    pageEdit->setItalic(true);
+    m_pageEdit->setItalic(true);
   }
 }
 
 void CreateDictionary::slotBold()
 {
-  if(pageEdit->bold())
+  if(m_pageEdit->bold())
   {
-    pageEdit->setBold(false);
+    m_pageEdit->setBold(false);
   }
   else
   {
-    pageEdit->setBold(true);
+    m_pageEdit->setBold(true);
   }
 }
 
 void CreateDictionary::slotFontSize()
 {
-  KComboBox * selectedFontSize = toolbar->getCombo(3);
+  KComboBox * selectedFontSize = m_toolbar->getCombo(3);
   QString size = selectedFontSize->currentText();
   
-  pageEdit->setPointSize(size.toInt());
+  m_pageEdit->setPointSize(size.toInt());
 }
 
 void CreateDictionary::slotSave()
 {
-  if(path.isEmpty())
+  if(m_path.isEmpty())
   {
     slotSaveAs();
     return;
   }
-  //dictionaryDB=new DBHandler(path);
   
-  pageEdit->setTextFormat(RichText);
+  m_pageEdit->setTextFormat(RichText);
   QString page="<h1>";
-  page=page+nameEdit->text()+"</h1>"+pageEdit->text();
+  page=page+m_nameEdit->text()+"</h1>"+m_pageEdit->text();
   
-  dictionaryDB->saveDictionary(page, false);
-  toolbar->setItemEnabled( 4, FALSE);
+  DBHandler::Instance(m_path)->saveDictionary(page, false);
+  m_save->setEnabled(false);
 }
 
 void CreateDictionary::slotChanged()
 {
-  toolbar->setItemEnabled( 4, TRUE);
+  m_save->setEnabled(true);
+}
+
+void CreateDictionary::setPath(QString filename)
+{
+  m_path=filename;
+}
+
+void CreateDictionary::registerButtons()
+{
+  m_bold=new KAction(i18n("&Bold"), "text_bold", KShortcut(KKey("CTRL+b")), this, SLOT(slotBold()), this, "bold");
+  m_italic=new KAction(i18n("&Italic"), "text_italic", KShortcut(KKey("CTRL+i")), this, SLOT(slotItalic()), this, "italic");
+  m_under=new KAction(i18n("&Underline"), "text_under", KShortcut(KKey("CTRL+u")), this, SLOT(slotUnder()), this, "under");
+  
+  m_save=new KAction(i18n("&Save"), "filesave", KShortcut(KKey("CTRL+s")), this, SLOT(slotSave()), this, "save");
+  m_saveAs=new KAction(i18n("Sa&ve As"), "filesaveas", KShortcut(KKey("CTRL+e")), this, SLOT(slotSaveAs()), this, "saveAs");
+  m_close=new KAction(i18n("C&lose"), "fileclose", KShortcut(KKey("CTRL+l")), this, SLOT(close()), this, "close");
+}
+
+void CreateDictionary::registerToolbar()
+{
+  QStringList fontSize;
+  fontSize << "8" << "10" << "12" << "14" << "16";
+  
+  m_toolbar = new KToolBar(this);
+  m_save->plug(m_toolbar);
+  m_saveAs->plug(m_toolbar);
+  m_toolbar->insertSeparator();
+  m_bold->plug(m_toolbar);
+  m_italic->plug(m_toolbar);
+  m_under->plug(m_toolbar);
+  m_toolbar->insertCombo(fontSize, 3, true, SIGNAL(activated(int)), this, SLOT(slotFontSize()));
+  m_toolbar->setCurrentComboItem(3, 2);
+  m_toolbar->insertSeparator();
+  m_save->setEnabled(false);
+  
+  m_close->plug(m_toolbar);
 }
 
 #include "createdictionary.moc"

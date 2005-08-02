@@ -28,7 +28,7 @@
 static const char description[] =
     I18N_NOOP("A dictionary for KDE");
 
-static const char version[] = "0.0.6 Alpha";
+static const char version[] = "0.0.6 20050802";
 
 static KCmdLineOptions options[] =
 {

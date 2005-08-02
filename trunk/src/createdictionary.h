@@ -31,6 +31,7 @@ class KToolBar;
 class KLineEdit;
 class KTextEdit;
 class DBHandler;
+class KAction;
 
 class CreateDictionary : public KDialog
 {
@@ -39,10 +40,9 @@ class CreateDictionary : public KDialog
   public:
     CreateDictionary(QString name=NULL, QString page=NULL);
     
-    QString path;
-    DBHandler *dictionaryDB;
+    void setPath(QString filename);
     
-  public slots:
+  private slots:
     virtual void slotUnder();
     virtual void slotItalic();
     virtual void slotBold();
@@ -52,11 +52,20 @@ class CreateDictionary : public KDialog
     virtual void slotChanged();
     
   private:
-    KToolBar *toolbar;
-    KLineEdit *nameEdit;
-    KTextEdit *pageEdit;
-    QString fontSize;
+    KToolBar *m_toolbar;
+    KLineEdit *m_nameEdit;
+    KTextEdit *m_pageEdit;
+    QString m_path;
     
+    KAction *m_save;
+    KAction *m_saveAs;
+    KAction *m_bold;
+    KAction *m_italic;
+    KAction *m_under;
+    KAction *m_close;
+    
+    void registerButtons();
+    void registerToolbar();
 };
 
 #endif
