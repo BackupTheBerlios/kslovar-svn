@@ -23,7 +23,7 @@ bin_PROGRAMS = kslovar
 # the application source, library search path, and link libraries
 kslovar_SOURCES = main.cpp kslovar.cpp dbhandler.cpp createdictionary.cpp
 kslovar_LDFLAGS = $(KDE_RPATH) $(all_libraries)
-kslovar_LDADD = -lsqlite3 -lkhtml $(LIB_KDEUI)
+kslovar_LDADD = -lkdeprint -lsqlite3 -lkhtml $(LIB_KDEUI)
 
 # this is where the desktop file will go 
 shelldesktopdir   = $(kde_appsdir)/Utilities

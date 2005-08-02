@@ -41,6 +41,22 @@ class KProgress;
 class CreateDictionary;
 class KAction;
 
+class history
+{
+  public:
+    history() {}
+    history( int id, bool user ) : idd(id), userd(user)
+    {}
+    
+    int id() const { return idd; };
+    bool user() const { return userd; };
+  private:
+    int idd;
+    bool userd;
+};
+
+typedef QValueList<history> historyList;
+
 /**
  * @short Application Main Window
  * @author Gregor Kališnik <gregor@podnapisi.net>
@@ -60,20 +76,11 @@ public:
      */
     virtual ~KSlovar();
     
-    /**
-     * Index of phrases.
-     */
-    QStringList phrases;
-    
 private slots:
   /**
   * A slot that opens a dictionary from disk.
   */
   void slotFileOpen();
-  /**
-  * Slot that searches for a phrase in SQLite database.
-  */
-  void slotShow();
   /**
   * Method that search for a given keyphrase and print result on the list.
   */
@@ -100,8 +107,17 @@ private slots:
   void slotHome();
   void slotNewDictionary();
   void slotEditDictionary();
+  void slotClose();
+  void slotFind();
+  void slotFindNext();
+  void slotPrint();
+  void slotSelectAll();
     
 private:
+  /**
+  * Index of phrases.
+  */
+  QStringList phrases;
   /**
   * Path to the dictionary's database file.
   */
@@ -113,10 +129,14 @@ private:
   /**
   * History managment variables
   */
-  QValueList<int> m_backHistory;
+  /*QValueList<int> m_backHistory;
   QValueList<int> m_forwardHistory;
   QValueList<int>::iterator m_it;
-  QValueList<int>::iterator m_itForward;
+  QValueList<int>::iterator m_itForward;*/
+  historyList m_backHistory;
+  historyList m_forwardHistory;
+  historyList::iterator m_it;
+  historyList::iterator m_itForward;
   
   
   KLineEdit *m_search;
@@ -126,6 +146,9 @@ private:
   KProgressDialog *m_progress;
   KProgress *m_progressBar;
   CreateDictionary *m_dictionarydlg;
+  QString m_welcomeMessage;
+  QString m_currentText;
+  bool m_userDictionary;
   
   KAction *m_newDictionary;
   KAction *m_openDictionary;
@@ -134,12 +157,20 @@ private:
   KAction *m_back;
   KAction *m_forward;
   KAction *m_home;
+  KAction *m_close;
+  KAction *m_find;
+  KAction *m_findNext;
+  KAction *m_print;
+  KAction *m_selectAll;
   
   /**
    * Updating history
    */
   void addHistory(bool deleteForward=true);
-  
+  /**
+   * Slot that searches for a phrase in SQLite database and displays it.
+   */
+  void showDictionary();
   
   void registerButtons();
   void addMenu();

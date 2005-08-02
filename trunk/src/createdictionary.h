@@ -38,7 +38,7 @@ class CreateDictionary : public KDialog
   Q_OBJECT
 
   public:
-    CreateDictionary(QString name=NULL, QString page=NULL);
+    CreateDictionary(QString name=0L, QString page=0L);
     
     void setPath(QString filename);
     
