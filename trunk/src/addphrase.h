@@ -25,12 +25,31 @@
 #include <config.h>
 #endif
 
-#include <kdialog.h>
+#include <kdialogbase.h>
 
-class AddPhrase : public KDialog
+class KIconLoader;
+class AddPhraseWdt;
+class KSpell;
+class KSlovar;
+
+class AddPhrase : public KDialogBase
 {
+  Q_OBJECT
   public:
-    AddPhrase(bool create=true);
+    AddPhrase(QWidget *parent, QString caption, KSlovar *instance);
+    
+  private slots:
+    void slotAddExplanation();
+    void slotRemoveExplanation();
+    void slotAddWord();
+    void slotRemoveWord();
+    
+  private:
+    AddPhraseWdt *m_mainWidget;
+    KSpell *m_spell;
+    KSlovar *m_mainWindow;
+    
+    void populateAvailableList();
 };
 
 #endif

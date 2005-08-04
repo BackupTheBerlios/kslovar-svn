@@ -19,20 +19,80 @@
  ***************************************************************************/
 
 #include "addphrase.h"
+#include "ui/addphrasewdt.h"
+#include "kslovar.h"
 
-#include <kdialog.h>
+#include <kdialogbase.h>
 #include <klocale.h>
+#include <qlayout.h>
+#include <qwidget.h>
+#include <qgroupbox.h>
+#include <klineedit.h>
+#include <klistview.h>
+#include <kpushbutton.h>
+#include <kicondialog.h>
+#include <kiconloader.h>
+#include <kspell.h>
+#include <klistbox.h>
+#include <qregexp.h>
+#include <qlabel.h>
+#include <kmessagebox.h>
 
-AddPhrase::AddPhrase(bool create) : KDialog(0, "AddPhrase")
+#include <kdebug.h>
+
+
+AddPhrase::AddPhrase(QWidget *parent, QString caption, KSlovar *instance) : KDialogBase(parent, "AddPhrase", true, caption)
 {
-  if(create)
+  KMessageBox::information(this, "This doesn't work. Really. You can't do with this nothing. It will produce only bigger blackness! But it's still cool to see what is going to be ;). O, there is going to be a spell check too! ;).", "Don't bother");
+  m_mainWindow=instance;
+  KIconLoader *icons=new KIconLoader();
+  
+  m_mainWidget=new AddPhraseWdt(this);
+  m_spell=new KSpell(m_mainWidget->explanationList, i18n("Spell check"), this, SLOT(slotSpellCheck()));
+  
+  m_mainWidget->availableLabel->setText(i18n("List of available words"));
+  m_mainWidget->addedLabel->setText(i18n("List of selected words"));
+  m_mainWidget->rightButton->setIconSet(icons->loadIconSet("forward", KIcon::Toolbar));
+  m_mainWidget->leftButton->setIconSet(icons->loadIconSet("back", KIcon::Toolbar));
+  populateAvailableList();
+  
+  setMainWidget(m_mainWidget);
+  connect(m_mainWidget->addButton, SIGNAL(clicked()), this, SLOT(slotAddExplanation()));
+  connect(m_mainWidget->removeButton, SIGNAL(clicked()), this, SLOT(slotRemoveExplanation()));
+  connect(m_mainWidget->rightButton, SIGNAL(clicked()), this, SLOT(slotAddWord()));
+  connect(m_mainWidget->leftButton, SIGNAL(clicked()), this, SLOT(slotRemoveWord()));
+}
+
+void AddPhrase::slotAddExplanation()
+{
+  new KListViewItem(m_mainWidget->explanationList, i18n("Type an explanation."), i18n("Type an example."));
+}
+
+void AddPhrase::slotRemoveExplanation()
+{
+  m_mainWidget->explanationList->takeItem(m_mainWidget->explanationList->currentItem());
+}
+
+void AddPhrase::populateAvailableList()
+{
+  QStringList words=m_mainWindow->getPhrases();
+  for(QStringList::iterator it = words.begin(); it != words.end(); it++)
   {
-    setCaption(i18n("Add phrase"));
-  }
-  else
-  {
-    setCaption(i18n("Edit phrase"));
+    QString word = *it;
+    m_mainWidget->availableList->insertItem(word.remove( QRegExp ("/.+$") ));
   }
 }
 
-//#include "addphrase.moc"
+void AddPhrase::slotAddWord()
+{
+  m_mainWidget->selectedList->insertItem(m_mainWidget->availableList->currentText());
+  m_mainWidget->availableList->removeItem(m_mainWidget->availableList->currentItem());
+}
+
+void AddPhrase::slotRemoveWord()
+{
+  m_mainWidget->availableList->insertItem(m_mainWidget->selectedList->currentText());
+  m_mainWidget->selectedList->removeItem(m_mainWidget->selectedList->currentItem());
+}
+
+#include "addphrase.moc"

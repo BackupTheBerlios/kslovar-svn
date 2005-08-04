@@ -1,6 +1,6 @@
 INCLUDES = $(all_includes)
 METASOURCES = AUTO
-libsqlite_la_LDFLAGS = $(all_libraries)
+libsqlite_la_LDFLAGS = $(LIBPTHREAD)
 noinst_LTLIBRARIES = libsqlite.la
 libsqlite_la_SOURCES = alter.c attach.c auth.c btree.c build.c date.c delete.c \
 	expr.c func.c hash.c insert.c legacy.c main.c opcodes.c os_unix.c os_win.c \

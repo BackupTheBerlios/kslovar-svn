@@ -53,11 +53,11 @@
 #include <kmainwindow.h>
 #include <klocale.h>
 
+//KSlovar *KSlovar::m_instance=0L;
+
 KSlovar::KSlovar()
     : KMainWindow( 0, "KSlovar" )
 {
-  setCaption( "KSlovar" );
-  
   m_welcomeMessage=i18n("<h1>Welcome message.</h1> Need to change it :P");
   
   registerButtons();
@@ -123,11 +123,11 @@ void KSlovar::slotFileOpen()
     int steps=0;
     int step=0;
     
-    phrases = DBHandler::Instance(m_path)->readIndex(&steps);
+    m_phrases = DBHandler::Instance(m_path)->readIndex(&steps);
     //progressBar->setTotalSteps(steps);
     
     
-    for(QStringList::Iterator phrase = phrases.begin(); phrase != phrases.end(); phrase++)
+    for(QStringList::iterator phrase = m_phrases.begin(); phrase != m_phrases.end(); phrase++)
     {
       step++;
       QString rez = *phrase;
@@ -142,7 +142,7 @@ void KSlovar::slotFileOpen()
     m_editDictionary->setEnabled(true);
     m_close->setEnabled(true);
     m_addPhrase->setEnabled(true);
-    m_editPhrase->setEnabled(true);
+    //m_editPhrase->setEnabled(true);
     
     slotHome();
     m_backHistory.clear();
@@ -169,7 +169,7 @@ void KSlovar::slotSearch(const QString &text)
 {
   m_list->clear();
   
-  for(QStringList::Iterator rezultat = phrases.begin(); rezultat != phrases.end(); rezultat++)
+  for(QStringList::Iterator rezultat = m_phrases.begin(); rezultat != m_phrases.end(); rezultat++)
   {
     QString rez = *rezultat;
     if( ( rez.contains( text ) ) )
@@ -184,7 +184,7 @@ void KSlovar::slotShowList()
   addHistory();
   
   QString result;
-  QStringList list1 = phrases.grep( m_list->currentText() );
+  QStringList list1 = m_phrases.grep( m_list->currentText() );
   
   for(QStringList::Iterator phrase = list1.begin(); phrase != list1.end(); phrase++)
   {
@@ -316,9 +316,9 @@ void KSlovar::addHistory(bool deleteForward)
 
 void KSlovar::slotNewDictionary()
 {
-  m_dictionarydlg = new CreateDictionary();
-  m_dictionarydlg->show();
+  m_dictionarydlg = new CreateDictionary(this, "Create Dictionary");
   m_dictionarydlg->resize(700, 700);
+  m_dictionarydlg->show();
 }
 
 void KSlovar::slotEditDictionary()
@@ -329,10 +329,10 @@ void KSlovar::slotEditDictionary()
   text.remove(QRegExp("<h1>.+</h1>"));
   name.remove(text).remove("<h1>").remove("</h1>");
   
-  m_dictionarydlg = new CreateDictionary(name, text, false);
+  m_dictionarydlg = new CreateDictionary(this, "Edit Dictionary", name, text);
   m_dictionarydlg->setPath(m_path);
-  m_dictionarydlg->show();
   m_dictionarydlg->resize(700, 700);
+  m_dictionarydlg->show();
 }
 
 void KSlovar::registerButtons()
@@ -424,7 +424,7 @@ void KSlovar::disableNavButtons()
 void KSlovar::slotClose()
 {
   disableNavButtons();
-  phrases.empty();
+  m_phrases.empty();
   m_backHistory.empty();
   m_forwardHistory.empty();
   m_selectedPhrase="";
@@ -480,18 +480,34 @@ void KSlovar::slotSelectAll()
 
 void KSlovar::slotAddPhrase()
 {
-  m_phrasedlg=new AddPhrase();
+  m_phrasedlg=new AddPhrase(this, "Add word", this);
+  m_phrasedlg->resize(700, 700);
   m_phrasedlg->show();
 }
 
 void KSlovar::slotEditPhrase()
 {
-  m_phrasedlg=new AddPhrase(false);
+  m_phrasedlg=new AddPhrase(this, "Edit word", this);
+  m_phrasedlg->resize(700, 700);
   m_phrasedlg->show();
 }
 
 void KSlovar::slotRemovePhrase()
 {
+}
+
+/*KSlovar *KSlovar::instance()
+{
+  if(!m_instance)
+  {
+    m_instance=new KSlovar();
+  }
+  return m_instance;
+}*/
+
+QStringList KSlovar::getPhrases()
+{
+  return m_phrases;
 }
 
 KSlovar::~KSlovar()

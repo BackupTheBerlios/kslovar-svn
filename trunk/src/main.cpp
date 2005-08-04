@@ -57,8 +57,8 @@ int main(int argc, char **argv)
 
         mainWin = new KSlovar();
         app.setMainWidget( mainWin );
-        mainWin->show();
         mainWin->resize(1000, 800);
+        mainWin->show();
 
         args->clear();
     }

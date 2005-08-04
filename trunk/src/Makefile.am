@@ -24,8 +24,8 @@ bin_PROGRAMS = kslovar
 kslovar_SOURCES = main.cpp kslovar.cpp dbhandler.cpp createdictionary.cpp \
 	addphrase.cpp
 kslovar_LDFLAGS = $(KDE_RPATH) $(all_libraries)
-kslovar_LDADD = $(top_builddir)/src/sqlite/libsqlite.la -lkdeprint -lkhtml \
-	$(LIB_KDEUI)
+kslovar_LDADD = $(top_builddir)/src/ui/libui.a \
+	$(top_builddir)/src/sqlite/libsqlite.la -lkdeprint -lkhtml $(LIB_KDEUI)
 
 # this is where the desktop file will go 
 shelldesktopdir   = $(kde_appsdir)/Utilities
@@ -42,4 +42,4 @@ shellrc_DATA = kslovarui.rc
 
 
 
-SUBDIRS = sqlite
+SUBDIRS = sqlite ui

@@ -66,12 +66,15 @@ typedef QValueList<history> historyList;*/
 class KSlovar : public KMainWindow
 {
     Q_OBJECT
-public:  
+public:
     /**
      * Default Constructor
      */
     KSlovar();
 
+    //static KSlovar *instance();
+    QStringList getPhrases();
+    
     /**
      * Default Destructor
      */
@@ -121,7 +124,7 @@ private:
   /**
   * Index of phrases.
   */
-  QStringList phrases;
+  QStringList m_phrases;
   /**
   * Path to the dictionary's database file.
   */

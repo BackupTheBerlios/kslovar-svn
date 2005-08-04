@@ -24,7 +24,7 @@
 #include <kdialog.h>
 #include <klocale.h>
 #include <qlayout.h>
-#include <kactivelabel.h>
+#include <qlabel.h>
 #include <ktoolbar.h>
 #include <klineedit.h>
 #include <ktextedit.h>
@@ -41,18 +41,9 @@
 
 #include <kdebug.h>
 
-CreateDictionary::CreateDictionary(QString name, QString page, bool create)
-  : KDialog(0, "CreateDictionary")
+CreateDictionary::CreateDictionary(QWidget *parent, QString caption, QString name, QString page)
+  : KDialog(parent, caption)
 {
-  if(create)
-  {
-  setCaption(i18n("Create dictionary"));
-  }
-  else
-  {
-    setCaption(i18n("Edit dictionary"));
-  }
-  
   registerButtons();
   
   QVBoxLayout *all=new QVBoxLayout(this);
@@ -62,8 +53,8 @@ CreateDictionary::CreateDictionary(QString name, QString page, bool create)
   all->addWidget(m_toolbar);
   
   QVBoxLayout *nameLayout=new QVBoxLayout(this);
-  KActiveLabel *nameLabel=new KActiveLabel(i18n("Name"), this);
-  nameLabel->setMaximumHeight(22);
+  QLabel *nameLabel=new QLabel(i18n("Name"), this);
+  //nameLabel->setMaximumHeight(22);
   nameLayout->addWidget(nameLabel);
   m_nameEdit=new KLineEdit(this);
   nameLayout->addWidget(m_nameEdit);
@@ -71,8 +62,8 @@ CreateDictionary::CreateDictionary(QString name, QString page, bool create)
   all->addLayout(nameLayout);
   
   QVBoxLayout *editLayout=new QVBoxLayout(this);
-  KActiveLabel *pageLabel=new KActiveLabel(i18n("First page"), this);
-  pageLabel->setMaximumHeight(22);
+  QLabel *pageLabel=new QLabel(i18n("First page"), this);
+  //pageLabel->setMaximumHeight(22);
   editLayout->addWidget(pageLabel);
   m_pageEdit=new KTextEdit(this);
   m_pageEdit->setAlignment(Qt::AlignJustify);
