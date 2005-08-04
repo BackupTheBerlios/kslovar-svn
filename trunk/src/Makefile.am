@@ -2,7 +2,7 @@
 INCLUDES = $(all_includes)
 
 # these are the headers for your project
-noinst_HEADERS = kslovar.h dbhandler.h createdictionary.h
+noinst_HEADERS = kslovar.h dbhandler.h createdictionary.h addphrase.h
 
 # let automoc handle all of the meta source files (moc)
 METASOURCES = AUTO
@@ -21,9 +21,11 @@ KDE_ICON = AUTO
 bin_PROGRAMS = kslovar
 
 # the application source, library search path, and link libraries
-kslovar_SOURCES = main.cpp kslovar.cpp dbhandler.cpp createdictionary.cpp
+kslovar_SOURCES = main.cpp kslovar.cpp dbhandler.cpp createdictionary.cpp \
+	addphrase.cpp
 kslovar_LDFLAGS = $(KDE_RPATH) $(all_libraries)
-kslovar_LDADD = -lkdeprint -lsqlite3 -lkhtml $(LIB_KDEUI)
+kslovar_LDADD = $(top_builddir)/src/sqlite/libsqlite.la -lkdeprint -lkhtml \
+	$(LIB_KDEUI)
 
 # this is where the desktop file will go 
 shelldesktopdir   = $(kde_appsdir)/Utilities
@@ -33,3 +35,11 @@ shelldesktop_DATA = kslovar.desktop
 shellrcdir   = $(kde_datadir)/kslovar
 shellrc_DATA = kslovarui.rc
 
+
+
+
+
+
+
+
+SUBDIRS = sqlite

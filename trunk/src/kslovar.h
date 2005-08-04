@@ -40,8 +40,9 @@ class KProgressDialog;
 class KProgress;
 class CreateDictionary;
 class KAction;
+class AddPhrase;
 
-class history
+/*class history
 {
   public:
     history() {}
@@ -55,7 +56,7 @@ class history
     bool userd;
 };
 
-typedef QValueList<history> historyList;
+typedef QValueList<history> historyList;*/
 
 /**
  * @short Application Main Window
@@ -112,6 +113,9 @@ private slots:
   void slotFindNext();
   void slotPrint();
   void slotSelectAll();
+  void slotAddPhrase();
+  void slotEditPhrase();
+  void slotRemovePhrase();
     
 private:
   /**
@@ -129,14 +133,14 @@ private:
   /**
   * History managment variables
   */
-  /*QValueList<int> m_backHistory;
-  QValueList<int> m_forwardHistory;
-  QValueList<int>::iterator m_it;
-  QValueList<int>::iterator m_itForward;*/
-  historyList m_backHistory;
+  /*historyList m_backHistory;
   historyList m_forwardHistory;
   historyList::iterator m_it;
-  historyList::iterator m_itForward;
+  historyList::iterator m_itForward;*/
+  QValueList<int> m_backHistory;
+  QValueList<int> m_forwardHistory;
+  QValueList<int>::iterator m_it;
+  QValueList<int>::iterator m_itForward;
   
   
   KLineEdit *m_search;
@@ -146,6 +150,7 @@ private:
   KProgressDialog *m_progress;
   KProgress *m_progressBar;
   CreateDictionary *m_dictionarydlg;
+  AddPhrase *m_phrasedlg;
   QString m_welcomeMessage;
   QString m_currentText;
   bool m_userDictionary;
@@ -162,6 +167,9 @@ private:
   KAction *m_findNext;
   KAction *m_print;
   KAction *m_selectAll;
+  KAction *m_addPhrase;
+  KAction *m_editPhrase;
+  KAction *m_removePhrase;
   
   /**
    * Updating history

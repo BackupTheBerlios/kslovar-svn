@@ -18,52 +18,19 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#ifndef _ADDPHRASE_H_
+#define _ADDPHRASE_H_
 
-#include "kslovar.h"
-#include <kapplication.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
-#include <klocale.h>
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-static const char description[] =
-    I18N_NOOP("A dictionary for KDE");
+#include <kdialog.h>
 
-static const char version[] = "0.1.0 20050803";
-
-static KCmdLineOptions options[] =
+class AddPhrase : public KDialog
 {
-//    { "+[URL]", I18N_NOOP( "Document to open" ), 0 },
-    KCmdLineLastOption
+  public:
+    AddPhrase(bool create=true);
 };
 
-int main(int argc, char **argv)
-{
-    KAboutData about("kslovar", I18N_NOOP("KSlovar"), version, description,
-		     KAboutData::License_GPL, "(C) 2005 Gregor Kališnik", 0, 0, "gregor@podnapisi.net");
-    about.addAuthor( "Gregor Kališnik", I18N_NOOP("Lead developer"), "gregor@podnapisi.net" );
-    KCmdLineArgs::init(argc, argv, &about);
-    KCmdLineArgs::addCmdLineOptions( options );
-    KApplication app;
-    KSlovar *mainWin = 0;
-
-    if (app.isRestored())
-    {
-        RESTORE(KSlovar);
-    }
-    else
-    {
-        // no session.. just start up normally
-        KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
-        mainWin = new KSlovar();
-        app.setMainWidget( mainWin );
-        mainWin->show();
-        mainWin->resize(1000, 800);
-
-        args->clear();
-    }
-
-    // mainWin has WDestructiveClose flag by default, so it will delete itself.
-    return app.exec();
-}
-
+#endif

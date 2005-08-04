@@ -22,6 +22,7 @@
 #include "kslovar.h"
 #include "dbhandler.h"
 #include "createdictionary.h"
+#include "addphrase.h"
 
 #include <kpopupmenu.h>
 #include <kmenubar.h>
@@ -80,7 +81,7 @@ KSlovar::KSlovar()
   
   connect( m_browser->browserExtension(), SIGNAL( openURLRequest( const KURL &, const KParts::URLArgs & ) ), this, SLOT( slotShowBrowser(const KURL &, const KParts::URLArgs &) ) );
   
-  connect(m_list, SIGNAL( clicked(QListBoxItem *) ), this, SLOT( slotShowList() ) );
+  connect(m_list, SIGNAL( selectionChanged() ), this, SLOT( slotShowList() ) );
   connect(m_search, SIGNAL ( textChanged ( const QString & ) ), this, SLOT( slotSearch( const QString & ) ) );
   
   
@@ -140,6 +141,9 @@ void KSlovar::slotFileOpen()
     m_forward->setEnabled(false);
     m_editDictionary->setEnabled(true);
     m_close->setEnabled(true);
+    m_addPhrase->setEnabled(true);
+    m_editPhrase->setEnabled(true);
+    
     slotHome();
     m_backHistory.clear();
   }
@@ -148,7 +152,7 @@ void KSlovar::slotFileOpen()
 void KSlovar::showDictionary()
 {
 
-  QString output=DBHandler::Instance(m_path)->readText(m_selectedPhrase, m_userDictionary);
+  QString output=DBHandler::Instance(m_path)->readText(m_selectedPhrase);
   m_currentText=output;
   
   m_browser->begin();
@@ -191,20 +195,20 @@ void KSlovar::slotShowList()
     }
   }
   
-  QString text=result;
-  QString backup=text;
+  //QString text=result;
+  //QString backup=text;
 
-  text.remove(QRegExp (".+/"));
+  /*text.remove(QRegExp (".+/"));
   if(text!="0")
   {
     m_selectedPhrase=text;
     m_userDictionary=true;
   }
   else
-  {
-    m_selectedPhrase=backup.remove(QRegExp("/\\D.+$")).remove(QRegExp("^\\w+/"));
-    m_userDictionary=false;
-  }
+  {*/
+  m_selectedPhrase=result.remove(QRegExp("/\\D.+$")).remove(QRegExp("^\\w+/"));
+  //m_userDictionary=false;
+  //}
   showDictionary();
 }
 
@@ -212,10 +216,12 @@ void KSlovar::slotShowBrowser(const KURL &url, const KParts::URLArgs &)
 {
   addHistory();
   
-  int temp = url.host().toInt();
-  QString temp1;
+  //int temp = url.host().toInt();
+  //QString temp1;
   
-  for(QStringList::Iterator phrase = phrases.begin(); phrase != phrases.end(); phrase++)
+  m_selectedPhrase=url.host();
+  
+  /*for(QStringList::Iterator phrase = phrases.begin(); phrase != phrases.end(); phrase++)
   {
     QString search=temp1 = *phrase;
     if(search.remove(QRegExp("/\\D.+$")).remove(QRegExp("^\\w+/")).toInt()==temp)
@@ -233,19 +239,19 @@ void KSlovar::slotShowBrowser(const KURL &url, const KParts::URLArgs &)
       }
       break;
     }
-  }
+}*/
   
   showDictionary();
 }
 
 void KSlovar::slotPrevPhrase()
 {
-  int temp = m_backHistory.first().id();
-  bool temp1=m_backHistory.first().user();
-  m_itForward = m_forwardHistory.prepend( history(m_selectedPhrase.toInt(), m_userDictionary) );
-  //m_itForward = m_forwardHistory.user.prepend( m_selectedPhrase.toInt() );
+  int& temp = m_backHistory.first();
+  //bool temp1=m_backHistory.first().user();
+  //m_itForward = m_forwardHistory.prepend( history(m_selectedPhrase.toInt(), m_userDictionary) );
+  m_itForward = m_forwardHistory.prepend( m_selectedPhrase.toInt() );
   m_selectedPhrase = m_selectedPhrase.setNum(temp);
-  m_userDictionary=temp1;
+  //m_userDictionary=temp1;
   
   m_it = m_backHistory.remove(m_it);
   
@@ -260,13 +266,13 @@ void KSlovar::slotPrevPhrase()
 
 void KSlovar::slotNextPhrase()
 {
-  int temp = m_forwardHistory.first().id();
-  bool temp1= m_forwardHistory.first().user();
+  int& temp = m_forwardHistory.first();
+  //bool temp1= m_forwardHistory.first().user();
   
   addHistory(false);
   
   m_selectedPhrase = m_selectedPhrase.setNum(temp);
-  m_userDictionary=temp1;
+  //m_userDictionary=temp1;
   
   m_itForward = m_forwardHistory.remove(m_itForward);
   
@@ -280,10 +286,15 @@ void KSlovar::slotNextPhrase()
 
 void KSlovar::slotHome()
 {
+  if(m_selectedPhrase=="0")
+  {
+    return;
+  }
+  
   addHistory();
   
   m_selectedPhrase = m_selectedPhrase.setNum(0);
-  m_userDictionary=false;
+  //m_userDictionary=false;
   
   showDictionary();
 }
@@ -292,7 +303,8 @@ void KSlovar::addHistory(bool deleteForward)
 {
   if(!m_selectedPhrase.isEmpty())
   {
-    m_it = m_backHistory.prepend( history(m_selectedPhrase.toInt(), m_userDictionary) );
+    //m_it = m_backHistory.prepend( history(m_selectedPhrase.toInt(), m_userDictionary) );
+    m_it = m_backHistory.prepend(m_selectedPhrase.toInt());
   }
   
   if(deleteForward)
@@ -311,13 +323,13 @@ void KSlovar::slotNewDictionary()
 
 void KSlovar::slotEditDictionary()
 {
-  QString text=DBHandler::Instance(m_path)->readText(QString("0"), false);
+  QString text=DBHandler::Instance(m_path)->readText(QString("0"));
   QString name=text;
   
   text.remove(QRegExp("<h1>.+</h1>"));
   name.remove(text).remove("<h1>").remove("</h1>");
   
-  m_dictionarydlg = new CreateDictionary(name, text);
+  m_dictionarydlg = new CreateDictionary(name, text, false);
   m_dictionarydlg->setPath(m_path);
   m_dictionarydlg->show();
   m_dictionarydlg->resize(700, 700);
@@ -340,6 +352,10 @@ void KSlovar::registerButtons()
   m_findNext=KStdAction::findNext(this, SLOT(slotFindNext()), actionCollection());
   m_print=KStdAction::print(this, SLOT(slotPrint()), actionCollection());
   m_selectAll=KStdAction::selectAll(this, SLOT(slotSelectAll()), actionCollection());
+  
+  m_addPhrase=new KAction(i18n("&Add phrase"), "filenew", KShortcut(KKey("CTRL+a")), this, SLOT(slotAddPhrase()), actionCollection(), "addPhrase");
+  m_editPhrase=new KAction(i18n("Edi&t phrase"), "edit", KShortcut(KKey("CTRL+t")), this, SLOT(slotEditPhrase()), actionCollection(), "editPhrase");
+  m_removePhrase=new KAction(i18n("&Remove phrase"), "editdelete", KShortcut(KKey("CTRL+r")), this, SLOT(slotRemovePhrase()), actionCollection(), "removePhrase");
 }
 
 void KSlovar::addMenu()
@@ -356,6 +372,10 @@ void KSlovar::addMenu()
   KPopupMenu *editmenu=new KPopupMenu;
   m_editDictionary->plug(editmenu);
   m_selectAll->plug(editmenu);
+  editmenu->insertSeparator();
+  m_addPhrase->plug(editmenu);
+  m_editPhrase->plug(editmenu);
+  m_removePhrase->plug(editmenu);
   editmenu->insertSeparator();
   m_find->plug(editmenu);
   m_findNext->plug(editmenu);
@@ -396,6 +416,9 @@ void KSlovar::disableNavButtons()
   m_home->setEnabled(false);
   m_editDictionary->setEnabled(false);
   m_close->setEnabled(false);
+  m_addPhrase->setEnabled(false);
+  m_editPhrase->setEnabled(false);
+  m_removePhrase->setEnabled(false);
 }
 
 void KSlovar::slotClose()
@@ -453,6 +476,22 @@ void KSlovar::slotPrint()
 void KSlovar::slotSelectAll()
 {
   m_browser->selectAll();
+}
+
+void KSlovar::slotAddPhrase()
+{
+  m_phrasedlg=new AddPhrase();
+  m_phrasedlg->show();
+}
+
+void KSlovar::slotEditPhrase()
+{
+  m_phrasedlg=new AddPhrase(false);
+  m_phrasedlg->show();
+}
+
+void KSlovar::slotRemovePhrase()
+{
 }
 
 KSlovar::~KSlovar()

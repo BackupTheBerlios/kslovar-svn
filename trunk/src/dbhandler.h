@@ -46,7 +46,7 @@ class DBHandler
     * @return Returns the text of the phrase or false
     * @todo Improve error handling
     */
-    QString readText(QString id, bool user);
+    QString readText(QString id);
     /**
     * Method to read the index from databases
     * @return returns the index

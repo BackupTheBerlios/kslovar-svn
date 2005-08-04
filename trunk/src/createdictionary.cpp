@@ -41,10 +41,17 @@
 
 #include <kdebug.h>
 
-CreateDictionary::CreateDictionary(QString name, QString page)
+CreateDictionary::CreateDictionary(QString name, QString page, bool create)
   : KDialog(0, "CreateDictionary")
 {
+  if(create)
+  {
   setCaption(i18n("Create dictionary"));
+  }
+  else
+  {
+    setCaption(i18n("Edit dictionary"));
+  }
   
   registerButtons();
   

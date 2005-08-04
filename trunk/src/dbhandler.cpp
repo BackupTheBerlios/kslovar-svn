@@ -36,16 +36,16 @@ DBHandler::DBHandler(QString databasePath)
   sqlite3_open(databasePath, &m_db);
 }
 
-QString DBHandler::readText(QString id, bool user)
+QString DBHandler::readText(QString id)
 {
   sqlite3_stmt *stmt;
-  QString database="user_dictionary";
-  if(!user)
+  //QString database="user_dictionary";
+  /*if(!user)
   {
     database="dictionary";
-  }
+}*/
   
-  QString query1="SELECT text FROM "+database+" WHERE id='";
+  QString query1="SELECT text FROM dictionary WHERE id='";
   query1=query1.append(id);
   query1=query1.append("' LIMIT 1;");
   
@@ -84,7 +84,7 @@ QStringList DBHandler::readIndex(int * count)
   
   sqlite3_stmt *stmt;
   
-  query("SELECT name, search, ido, idu FROM phrases ORDER BY search ASC;", &stmt);
+  query("SELECT name, search, id FROM phrases ORDER BY search ASC;", &stmt);
   
   while(true)
   {
@@ -94,7 +94,7 @@ QStringList DBHandler::readIndex(int * count)
       break;
     }
     temp = QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 0 ) );
-    temp = temp + "/" + QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 2 ) ) + "/" + QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 1 ) )+"/"+QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 3 ) );
+    temp = temp + "/" + QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 2 ) ) + "/" + QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 1 ) );
     output << temp;
     *count++;
   }
@@ -107,7 +107,9 @@ void DBHandler::saveDictionary(QString text, bool create)
   QString query1;
   if(create)
   {
-    query1="BEGIN TRANSACTION; CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT ); CREATE TABLE user_dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , rand INTEGER , new INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name VARCHAR( 36 ) , search VARCHAR( 36 ) , ido INTEGER UNIQUE , idu INTEGER UNIQUE ); ";
+    /*query1="BEGIN TRANSACTION; CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT ); CREATE TABLE user_dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , rand INTEGER , new INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name VARCHAR( 36 ) , search VARCHAR( 36 ) , ido INTEGER UNIQUE , idu INTEGER UNIQUE ); ";
+    query1=query1+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' ); COMMIT;";*/
+    query1="BEGIN TRANSACTION; CREATE TABLE media ( id INTEGER PRIMARY KEY AUTOINCREMENT , mime TEXT , data BLOB ); CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , id_media INTEGER , modified INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT , search TEXT ); ";
     query1=query1+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' ); COMMIT;";
   }
   else
