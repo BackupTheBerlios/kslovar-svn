@@ -36,18 +36,18 @@ class AddPhrase : public KDialogBase
 {
   Q_OBJECT
   public:
-    AddPhrase(QWidget *parent, QString caption, KSlovar *instance);
+    AddPhrase(QWidget *parent, QString caption);
     
   private slots:
     void slotAddExplanation();
     void slotRemoveExplanation();
     void slotAddWord();
     void slotRemoveWord();
+    void slotBeginCheck();
     
   private:
     AddPhraseWdt *m_mainWidget;
     KSpell *m_spell;
-    KSlovar *m_mainWindow;
     
     void populateAvailableList();
 };

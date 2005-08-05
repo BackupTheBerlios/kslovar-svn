@@ -45,6 +45,24 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
+                    <widget class="QGroupBox" row="0" column="0">
+                        <property name="name">
+                            <cstring>groupBox1</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Word</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="KLineEdit" row="0" column="0">
+                                <property name="name">
+                                    <cstring>wordEdit</cstring>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
                     <widget class="QGroupBox" row="1" column="0">
                         <property name="name">
                             <cstring>groupBox2</cstring>
@@ -56,6 +74,23 @@
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
+                            <spacer row="3" column="1">
+                                <property name="name">
+                                    <cstring>spacer1</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Vertical</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>374</height>
+                                    </size>
+                                </property>
+                            </spacer>
                             <widget class="KPushButton" row="0" column="1">
                                 <property name="name">
                                     <cstring>addButton</cstring>
@@ -65,6 +100,28 @@
                                 </property>
                                 <property name="accel">
                                     <string>Alt+A</string>
+                                </property>
+                            </widget>
+                            <widget class="KPushButton" row="1" column="1">
+                                <property name="name">
+                                    <cstring>removeButton</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Re&amp;move</string>
+                                </property>
+                                <property name="accel">
+                                    <string>Alt+M</string>
+                                </property>
+                            </widget>
+                            <widget class="KPushButton" row="2" column="1">
+                                <property name="name">
+                                    <cstring>spellButton</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Spell chec&amp;k</string>
+                                </property>
+                                <property name="accel">
+                                    <string>Alt+K</string>
                                 </property>
                             </widget>
                             <widget class="KListView" row="0" column="0" rowspan="4" colspan="1">
@@ -95,52 +152,6 @@
                                 </property>
                                 <property name="itemsRenameable">
                                     <bool>true</bool>
-                                </property>
-                            </widget>
-                            <widget class="KPushButton" row="2" column="1">
-                                <property name="name">
-                                    <cstring>removeButton</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Re&amp;move</string>
-                                </property>
-                                <property name="accel">
-                                    <string>Alt+M</string>
-                                </property>
-                            </widget>
-                            <spacer row="3" column="1">
-                                <property name="name">
-                                    <cstring>spacer1</cstring>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Vertical</enum>
-                                </property>
-                                <property name="sizeType">
-                                    <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>20</width>
-                                        <height>21</height>
-                                    </size>
-                                </property>
-                            </spacer>
-                        </grid>
-                    </widget>
-                    <widget class="QGroupBox" row="0" column="0">
-                        <property name="name">
-                            <cstring>groupBox1</cstring>
-                        </property>
-                        <property name="title">
-                            <string>Word</string>
-                        </property>
-                        <grid>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="KLineEdit" row="0" column="0">
-                                <property name="name">
-                                    <cstring>wordEdit</cstring>
                                 </property>
                             </widget>
                         </grid>
@@ -269,10 +280,11 @@
 </widget>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>klistview.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>klineedit.h</includehint>
     <includehint>klistbox.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>

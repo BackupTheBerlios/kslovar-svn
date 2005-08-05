@@ -47,17 +47,21 @@
 #include <kprinter.h>
 #include <qpainter.h>
 #include <qpaintdevicemetrics.h>
+#include <ksconfig.h>
 
 #include <kdebug.h>
 
 #include <kmainwindow.h>
 #include <klocale.h>
 
-//KSlovar *KSlovar::m_instance=0L;
+KSlovar *KSlovar::m_instance=0L;
+KSpellConfig *KSlovar::m_spellInstance=0L;
 
 KSlovar::KSlovar()
     : KMainWindow( 0, "KSlovar" )
 {
+  m_spellInstance=new KSpellConfig;
+  m_instance=this;
   m_welcomeMessage=i18n("<h1>Welcome message.</h1> Need to change it :P");
   
   registerButtons();
@@ -356,6 +360,8 @@ void KSlovar::registerButtons()
   m_addPhrase=new KAction(i18n("&Add phrase"), "filenew", KShortcut(KKey("CTRL+a")), this, SLOT(slotAddPhrase()), actionCollection(), "addPhrase");
   m_editPhrase=new KAction(i18n("Edi&t phrase"), "edit", KShortcut(KKey("CTRL+t")), this, SLOT(slotEditPhrase()), actionCollection(), "editPhrase");
   m_removePhrase=new KAction(i18n("&Remove phrase"), "editdelete", KShortcut(KKey("CTRL+r")), this, SLOT(slotRemovePhrase()), actionCollection(), "removePhrase");
+
+  m_spellConfig = new KAction(i18n("Configure &spell check"), "spellcheck", KShortcut(KKey("CTRL+s")), this, SLOT(slotSpellConfig()), actionCollection(), "spellConfig");
 }
 
 void KSlovar::addMenu()
@@ -385,12 +391,16 @@ void KSlovar::addMenu()
   m_forward->plug(gomenu);
   m_home->plug(gomenu);
   
+  KPopupMenu *setmenu=new KPopupMenu;
+  //m_spellConfig->plug(setmenu);
+  
   KPopupMenu *help = helpMenu( );
   
   KMenuBar * menu = menuBar();
   menu->insertItem( i18n( "&File" ), filemenu );
   menu->insertItem(i18n("&Edit"), editmenu);
   menu->insertItem(i18n("&Go"), gomenu);
+  menu->insertItem(i18n("&Settings"), setmenu);
   menu->insertItem( i18n( "&Help" ), help );
 }
 
@@ -419,6 +429,7 @@ void KSlovar::disableNavButtons()
   m_addPhrase->setEnabled(false);
   m_editPhrase->setEnabled(false);
   m_removePhrase->setEnabled(false);
+  m_spellConfig->setEnabled(false);
 }
 
 void KSlovar::slotClose()
@@ -480,14 +491,14 @@ void KSlovar::slotSelectAll()
 
 void KSlovar::slotAddPhrase()
 {
-  m_phrasedlg=new AddPhrase(this, "Add word", this);
+  m_phrasedlg=new AddPhrase(this, "Add word");
   m_phrasedlg->resize(700, 700);
   m_phrasedlg->show();
 }
 
 void KSlovar::slotEditPhrase()
 {
-  m_phrasedlg=new AddPhrase(this, "Edit word", this);
+  m_phrasedlg=new AddPhrase(this, "Edit word");
   m_phrasedlg->resize(700, 700);
   m_phrasedlg->show();
 }
@@ -496,18 +507,29 @@ void KSlovar::slotRemovePhrase()
 {
 }
 
-/*KSlovar *KSlovar::instance()
+KSlovar *KSlovar::mainInstance()
 {
-  if(!m_instance)
-  {
-    m_instance=new KSlovar();
-  }
   return m_instance;
-}*/
+}
 
 QStringList KSlovar::getPhrases()
 {
   return m_phrases;
+}
+
+void KSlovar::slotSpellConfig()
+{
+  //m_spellInstance=new KSpellConfig();
+  m_spellInstance->show();
+}
+
+KSpellConfig *KSlovar::spellInstance()
+{
+  /*if(!m_spellInstance)
+  {
+    m_spellInstance=new KSpellConfig(0);
+}*/
+  return m_spellInstance;
 }
 
 KSlovar::~KSlovar()

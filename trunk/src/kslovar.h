@@ -41,6 +41,7 @@ class KProgress;
 class CreateDictionary;
 class KAction;
 class AddPhrase;
+class KSpellConfig;
 
 /*class history
 {
@@ -72,7 +73,8 @@ public:
      */
     KSlovar();
 
-    //static KSlovar *instance();
+    static KSlovar *mainInstance();
+    static KSpellConfig *spellInstance();
     QStringList getPhrases();
     
     /**
@@ -119,6 +121,7 @@ private slots:
   void slotAddPhrase();
   void slotEditPhrase();
   void slotRemovePhrase();
+  void slotSpellConfig();
     
 private:
   /**
@@ -157,6 +160,8 @@ private:
   QString m_welcomeMessage;
   QString m_currentText;
   bool m_userDictionary;
+  static KSlovar *m_instance;
+  static KSpellConfig *m_spellInstance;
   
   KAction *m_newDictionary;
   KAction *m_openDictionary;
@@ -173,6 +178,7 @@ private:
   KAction *m_addPhrase;
   KAction *m_editPhrase;
   KAction *m_removePhrase;
+  KAction *m_spellConfig;
   
   /**
    * Updating history
