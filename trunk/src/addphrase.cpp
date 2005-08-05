@@ -49,7 +49,6 @@ AddPhrase::AddPhrase(QWidget *parent, QString caption) : KDialogBase(parent, "Ad
   KIconLoader *icons=new KIconLoader();
   
   m_mainWidget=new AddPhraseWdt(this);
-  //m_spell=new KSpell(m_mainWidget->explanationList, i18n("Spell check"), this, SLOT(slotSpellCheck()));
   m_mainWidget->spellButton->setIconSet(icons->loadIconSet("spellcheck", KIcon::Toolbar));
   m_mainWidget->explanationList->setRenameable(1);
   
@@ -101,18 +100,36 @@ void AddPhrase::slotRemoveWord()
 
 void AddPhrase::slotBeginCheck()
 {
-  QListViewItem *current=m_mainWidget->explanationList->currentItem();
+  /*QListViewItem *current=m_mainWidget->explanationList->currentItem();
   if(!current)
   {
     return;
   }
   QString check;
   check=current->text(0)+" \n "+current->text(1);
-  KSpellConfig *speller=KSlovar::spellInstance();
-  KSpell::modalCheck(check, speller);
+  //KSpellConfig *speller=KSlovar::spellInstance();
+  KSpell::modalCheck(check);
   QStringList checked=QStringList::split(" \n ", check);
-  m_mainWidget->explanationList->currentItem()->setText(0, checked.first());
-  m_mainWidget->explanationList->currentItem()->setText(1, checked.last());
+  current->setText(0, checked.first());
+  current->setText(1, checked.last());*/
+  new KSpell(this, i18n("Spell Check"), this, SLOT(slotCheck(KSpell *)), 0, true, true);
+}
+
+void AddPhrase::slotCheck(KSpell *speller)
+{
+  connect(speller, SIGNAL(done(const QString&)), this, SLOT(slotEndCheck(const QString&)));
+  QListViewItem *current=m_mainWidget->explanationList->currentItem();
+  if(!current)
+  {
+    speller->cleanUp();
+    return;
+  }
+  speller->check(current->text(0));
+}
+
+void AddPhrase::slotEndCheck(const QString& checked)
+{
+  m_mainWidget->explanationList->currentItem()->setText(0, checked);
 }
 
 #include "addphrase.moc"

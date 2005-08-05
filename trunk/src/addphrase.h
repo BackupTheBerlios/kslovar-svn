@@ -44,10 +44,12 @@ class AddPhrase : public KDialogBase
     void slotAddWord();
     void slotRemoveWord();
     void slotBeginCheck();
+    void slotCheck(KSpell *speller);
+    void slotEndCheck(const QString& checked);
     
   private:
     AddPhraseWdt *m_mainWidget;
-    KSpell *m_spell;
+    //KSpell *m_spell;
     
     void populateAvailableList();
 };
