@@ -100,18 +100,6 @@ void AddPhrase::slotRemoveWord()
 
 void AddPhrase::slotBeginCheck()
 {
-  /*QListViewItem *current=m_mainWidget->explanationList->currentItem();
-  if(!current)
-  {
-    return;
-  }
-  QString check;
-  check=current->text(0)+" \n "+current->text(1);
-  //KSpellConfig *speller=KSlovar::spellInstance();
-  KSpell::modalCheck(check);
-  QStringList checked=QStringList::split(" \n ", check);
-  current->setText(0, checked.first());
-  current->setText(1, checked.last());*/
   new KSpell(this, i18n("Spell Check"), this, SLOT(slotCheck(KSpell *)), 0, true, true);
 }
 
@@ -124,12 +112,19 @@ void AddPhrase::slotCheck(KSpell *speller)
     speller->cleanUp();
     return;
   }
-  speller->check(current->text(0));
+  QString check;
+  check=current->text(0)+" \n "+current->text(1);
+  speller->check(check);
 }
 
 void AddPhrase::slotEndCheck(const QString& checked)
 {
-  m_mainWidget->explanationList->currentItem()->setText(0, checked);
+  QStringList check=QStringList::split(" \n ", checked);
+  m_mainWidget->explanationList->currentItem()->setText(0, check.first());
+  if(check.count()==2)
+  {
+    m_mainWidget->explanationList->currentItem()->setText(1, check.last());
+  }
 }
 
 #include "addphrase.moc"
