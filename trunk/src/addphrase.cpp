@@ -37,15 +37,14 @@
 #include <klistbox.h>
 #include <qregexp.h>
 #include <qlabel.h>
-#include <ksconfig.h>
+#include <qregexp.h>
 #include <kmessagebox.h>
 
 #include <kdebug.h>
 
 
-AddPhrase::AddPhrase(QWidget *parent, QString caption) : KDialogBase(parent, "AddPhrase", true, caption)
+AddPhrase::AddPhrase(QWidget *parent, QString caption) : KDialogBase(parent, "AddPhrase", true, caption, Ok|Cancel)
 {
-  KMessageBox::information(this, "This doesn't work. Really. You can't do with this nothing. It will produce only bigger blackness! But it's still cool to see what is going to be ;).", "Don't bother");
   KIconLoader *icons=new KIconLoader();
   
   m_mainWidget=new AddPhraseWdt(this);
@@ -57,6 +56,7 @@ AddPhrase::AddPhrase(QWidget *parent, QString caption) : KDialogBase(parent, "Ad
   m_mainWidget->rightButton->setIconSet(icons->loadIconSet("forward", KIcon::Toolbar));
   m_mainWidget->leftButton->setIconSet(icons->loadIconSet("back", KIcon::Toolbar));
   populateAvailableList();
+  enableButtonApply(false);
   
   setMainWidget(m_mainWidget);
   connect(m_mainWidget->addButton, SIGNAL(clicked()), this, SLOT(slotAddExplanation()));
@@ -78,8 +78,8 @@ void AddPhrase::slotRemoveExplanation()
 
 void AddPhrase::populateAvailableList()
 {
-  QStringList words=KSlovar::mainInstance()->getPhrases();
-  for(QStringList::iterator it = words.begin(); it != words.end(); it++)
+  m_words=KSlovar::mainInstance()->getPhrases();
+  for(QStringList::iterator it = m_words.begin(); it != m_words.end(); it++)
   {
     QString word = *it;
     m_mainWidget->availableList->insertItem(word.remove( QRegExp ("/.+$") ));
@@ -124,6 +124,86 @@ void AddPhrase::slotEndCheck(const QString& checked)
   if(check.count()==2)
   {
     m_mainWidget->explanationList->currentItem()->setText(1, check.last());
+  }
+}
+
+void AddPhrase::slotOk()
+{
+  QString explanations;
+  for(QListViewItem *count=m_mainWidget->explanationList->firstChild();count;count=count->nextSibling())
+  {
+    explanations+="<li>"+count->text(0)+" <i>"+count->text(1)+"</i></li>";
+  }
+  QString seealso=" ";
+  for(int count1=0;!m_mainWidget->selectedList->text(count1).isEmpty();count1++)
+  {
+    QString word=m_mainWidget->selectedList->text(count1);
+    for(QStringList::iterator it=m_words.begin();it!=m_words.end();it++)
+    {
+      QString search=*it;
+      if(search.remove(QRegExp("/.+$"))==word)
+      {
+        QString result=*it;
+        seealso+="<a href=http://"+result.remove(QRegExp("/\\D.+$")).remove(QRegExp("^\\w+/"))+">"+word+"</a> ";
+        break;
+      }
+    }
+  }
+  QString text;
+  text="<h1>"+m_mainWidget->wordEdit->text()+", "+m_mainWidget->typeEdit->text()+"</h1>"+"<p>"+explanations+"</p>"+"<p>See also: "+seealso+"</p>";
+  if(m_edit==true)
+  {
+    DBHandler::Instance(m_path)->saveWord(m_mainWidget->wordEdit->text(), text, false, m_id);
+  }
+  else
+  {
+    DBHandler::Instance(m_path)->saveWord(m_mainWidget->wordEdit->text(), text, true, 0L);
+  }
+  
+  close();
+}
+
+void AddPhrase::setPath(QString filename)
+{
+  m_path=filename;
+}
+
+void AddPhrase::setWord(QString text, QString id)
+{
+  m_text=text;
+  m_id=id;
+  m_edit=true;
+  populateAddPhraseDialog();
+}
+
+void AddPhrase::populateAddPhraseDialog()
+{
+  QString word=m_text;
+  word.remove(QRegExp("</h1>.+")).remove("<h1>");
+  QString type=word;
+  word.remove(QRegExp(",.+"));
+  type.remove(word+", ");
+  QString explanations=m_text;
+  explanations.remove(QRegExp(".+<p>\\B")).remove(QRegExp("</p>.+")). remove("<li>");
+  QString seealsos=m_text;
+  seealsos.remove(QRegExp(".+See also:  ")).remove("</p>").remove(QRegExp("<a href=http://\\d+>"));
+  QStringList explanation=QStringList::split("</li>", explanations);
+  QStringList seealso=QStringList::split("</a> ", seealsos);
+  
+  m_mainWidget->wordEdit->setText(word);
+  m_mainWidget->typeEdit->setText(type);
+  for(QStringList::iterator count=explanation.begin();count!=explanation.end();count++)
+  {
+    QString temp=*count;
+    temp.remove(QRegExp("<i>.+</i>"));
+    QString temp2=*count;
+    temp2.remove(temp).remove(QRegExp("<i>|</i>"));
+    new KListViewItem(m_mainWidget->explanationList, temp, temp2);
+  }
+  for(QStringList::iterator count=seealso.begin();count!=seealso.end();count++)
+  {
+    m_mainWidget->selectedList->insertItem(*count);
+    m_mainWidget->availableList->removeItem(m_mainWidget->availableList->index(m_mainWidget->availableList->findItem(*count, ExactMatch)));
   }
 }
 

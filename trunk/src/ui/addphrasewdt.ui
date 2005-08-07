@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>810</width>
-            <height>643</height>
+            <width>595</width>
+            <height>593</height>
         </rect>
     </property>
     <property name="sizePolicy">
@@ -63,7 +63,7 @@
                             </widget>
                         </grid>
                     </widget>
-                    <widget class="QGroupBox" row="1" column="0">
+                    <widget class="QGroupBox" row="2" column="0">
                         <property name="name">
                             <cstring>groupBox2</cstring>
                         </property>
@@ -152,6 +152,27 @@
                                 </property>
                                 <property name="itemsRenameable">
                                     <bool>true</bool>
+                                </property>
+                            </widget>
+                        </grid>
+                    </widget>
+                    <widget class="QGroupBox" row="1" column="0">
+                        <property name="name">
+                            <cstring>groupBox5</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Parts of speech</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="KLineEdit" row="0" column="0">
+                                <property name="name">
+                                    <cstring>typeEdit</cstring>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>test</string>
                                 </property>
                             </widget>
                         </grid>
@@ -285,6 +306,7 @@
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>klistview.h</includehint>
+    <includehint>klineedit.h</includehint>
     <includehint>klistbox.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>

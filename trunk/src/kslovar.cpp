@@ -55,12 +55,10 @@
 #include <klocale.h>
 
 KSlovar *KSlovar::m_instance=0L;
-KSpellConfig *KSlovar::m_spellInstance=0L;
 
 KSlovar::KSlovar()
     : KMainWindow( 0, "KSlovar" )
 {
-  m_spellInstance=new KSpellConfig;
   m_instance=this;
   m_welcomeMessage=i18n("<h1>Welcome message.</h1> Need to change it :P");
   
@@ -115,7 +113,7 @@ void KSlovar::slotFileOpen()
         KMessageBox::error(this, i18n("This is not a valid dictionary!") );
         return;
       }
-      m_list->clear();
+      slotClose();
     }
     else
     {
@@ -155,7 +153,17 @@ void KSlovar::slotFileOpen()
 
 void KSlovar::showDictionary()
 {
-
+  if(m_selectedPhrase!="0")
+  {
+    m_editPhrase->setEnabled(true);
+  }
+  else
+  {
+    m_editPhrase->setEnabled(false);
+  }
+  
+  m_selected=false;
+  
   QString output=DBHandler::Instance(m_path)->readText(m_selectedPhrase);
   m_currentText=output;
   
@@ -185,6 +193,10 @@ void KSlovar::slotSearch(const QString &text)
 
 void KSlovar::slotShowList()
 {
+  if(m_selected==true)
+  {
+    return;
+  }
   addHistory();
   
   QString result;
@@ -225,6 +237,9 @@ void KSlovar::slotShowBrowser(const KURL &url, const KParts::URLArgs &)
   
   m_selectedPhrase=url.host();
   
+  m_selected=true;
+  m_list->setSelected(m_selectedPhrase.toInt(), true);
+  
   /*for(QStringList::Iterator phrase = phrases.begin(); phrase != phrases.end(); phrase++)
   {
     QString search=temp1 = *phrase;
@@ -257,6 +272,9 @@ void KSlovar::slotPrevPhrase()
   m_selectedPhrase = m_selectedPhrase.setNum(temp);
   //m_userDictionary=temp1;
   
+  m_selected=true;
+  m_list->setSelected(m_selectedPhrase.toInt(), true);
+  
   m_it = m_backHistory.remove(m_it);
   
   if(m_backHistory.isEmpty())
@@ -278,6 +296,9 @@ void KSlovar::slotNextPhrase()
   m_selectedPhrase = m_selectedPhrase.setNum(temp);
   //m_userDictionary=temp1;
   
+  m_selected=true;
+  m_list->setSelected(m_selectedPhrase.toInt(), true);
+  
   m_itForward = m_forwardHistory.remove(m_itForward);
   
   if(m_forwardHistory.isEmpty())
@@ -294,6 +315,8 @@ void KSlovar::slotHome()
   {
     return;
   }
+  
+  m_list->setSelected(m_selectedPhrase.toInt(), false);
   
   addHistory();
   
@@ -360,8 +383,6 @@ void KSlovar::registerButtons()
   m_addPhrase=new KAction(i18n("&Add phrase"), "filenew", KShortcut(KKey("CTRL+a")), this, SLOT(slotAddPhrase()), actionCollection(), "addPhrase");
   m_editPhrase=new KAction(i18n("Edi&t phrase"), "edit", KShortcut(KKey("CTRL+t")), this, SLOT(slotEditPhrase()), actionCollection(), "editPhrase");
   m_removePhrase=new KAction(i18n("&Remove phrase"), "editdelete", KShortcut(KKey("CTRL+r")), this, SLOT(slotRemovePhrase()), actionCollection(), "removePhrase");
-
-  m_spellConfig = new KAction(i18n("Configure &spell check"), "spellcheck", KShortcut(KKey("CTRL+s")), this, SLOT(slotSpellConfig()), actionCollection(), "spellConfig");
 }
 
 void KSlovar::addMenu()
@@ -391,8 +412,7 @@ void KSlovar::addMenu()
   m_forward->plug(gomenu);
   m_home->plug(gomenu);
   
-  KPopupMenu *setmenu=new KPopupMenu;
-  //m_spellConfig->plug(setmenu);
+//  KPopupMenu *setmenu=new KPopupMenu;
   
   KPopupMenu *help = helpMenu( );
   
@@ -400,7 +420,7 @@ void KSlovar::addMenu()
   menu->insertItem( i18n( "&File" ), filemenu );
   menu->insertItem(i18n("&Edit"), editmenu);
   menu->insertItem(i18n("&Go"), gomenu);
-  menu->insertItem(i18n("&Settings"), setmenu);
+  //menu->insertItem(i18n("&Settings"), setmenu);
   menu->insertItem( i18n( "&Help" ), help );
 }
 
@@ -429,7 +449,6 @@ void KSlovar::disableNavButtons()
   m_addPhrase->setEnabled(false);
   m_editPhrase->setEnabled(false);
   m_removePhrase->setEnabled(false);
-  m_spellConfig->setEnabled(false);
 }
 
 void KSlovar::slotClose()
@@ -492,13 +511,17 @@ void KSlovar::slotSelectAll()
 void KSlovar::slotAddPhrase()
 {
   m_phrasedlg=new AddPhrase(this, "Add word");
+  m_phrasedlg->setPath(m_path);
   m_phrasedlg->resize(700, 700);
   m_phrasedlg->show();
 }
 
 void KSlovar::slotEditPhrase()
 {
+  QString output=DBHandler::Instance(m_path)->readText(m_selectedPhrase);
   m_phrasedlg=new AddPhrase(this, "Edit word");
+  m_phrasedlg->setWord(output, m_selectedPhrase);
+  m_phrasedlg->setPath(m_path);
   m_phrasedlg->resize(700, 700);
   m_phrasedlg->show();
 }
@@ -515,21 +538,6 @@ KSlovar *KSlovar::mainInstance()
 QStringList KSlovar::getPhrases()
 {
   return m_phrases;
-}
-
-void KSlovar::slotSpellConfig()
-{
-  //m_spellInstance=new KSpellConfig();
-  m_spellInstance->show();
-}
-
-KSpellConfig *KSlovar::spellInstance()
-{
-  /*if(!m_spellInstance)
-  {
-    m_spellInstance=new KSpellConfig(0);
-}*/
-  return m_spellInstance;
 }
 
 KSlovar::~KSlovar()

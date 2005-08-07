@@ -25,6 +25,7 @@
 #include <qstringlist.h>
 #include <kprogress.h>
 #include <klocale.h>
+#include <kmessagebox.h>
 
 #include <kdebug.h>
 
@@ -68,11 +69,11 @@ void DBHandler::query(QString sqlQuery, sqlite3_stmt ** output, bool returnResul
   {
     const char *tail;
   
-    sqlite3_prepare(m_db, sqlQuery, sqlQuery.length(), output, &tail);
+    sqlite3_prepare(m_db, sqlQuery.utf8(), sqlQuery.length(), output, &tail);
   }
   else
   {
-    sqlite3_exec(m_db, sqlQuery, NULL, NULL, NULL);
+    sqlite3_exec(m_db, sqlQuery.utf8(), NULL, NULL, NULL);
   }
 }
 
@@ -111,13 +112,14 @@ void DBHandler::saveDictionary(QString text, bool create)
     query1=query1+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' ); COMMIT;";*/
     query1="BEGIN TRANSACTION; CREATE TABLE media ( id INTEGER PRIMARY KEY AUTOINCREMENT , mime TEXT , data BLOB ); CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , id_media INTEGER , modified INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT , search TEXT ); ";
     query1=query1+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' ); COMMIT;";
+    //query1=query1.utf8();
   }
   else
   {
     query1="UPDATE dictionary SET text='"+text+"' WHERE id='0';";
   }
   
-  query(query1, NULL, false);
+  query(query1, 0L, false);
 }
 
 DBHandler *DBHandler::Instance(QString path)
@@ -128,6 +130,20 @@ DBHandler *DBHandler::Instance(QString path)
   }
   
   return m_instance;
+}
+
+void DBHandler::saveWord(QString word, QString text, bool add, QString id)
+{
+  QString query1;
+  if(add)
+  {
+    query1="INSERT INTO phrases ( name , search ) VALUES ( '"+word+"' , '"+word+"' ); INSERT INTO dictionary ( text ) VALUES ( '"+text+"' );";
+  }
+  else
+  {
+    query1="UPDATE dictionary SET text='"+text+"' WHERE id='"+id+"' LIMIT 1;";
+  }
+  query(query1, 0L, false);
 }
 
 DBHandler::~DBHandler()

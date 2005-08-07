@@ -56,6 +56,7 @@ class DBHandler
     * Desctructor that closes the connection
     */
     void saveDictionary(QString text, bool create=true);
+    void saveWord(QString word, QString text, bool add, QString id);
     static DBHandler *Instance(QString path);
     ~DBHandler();
     

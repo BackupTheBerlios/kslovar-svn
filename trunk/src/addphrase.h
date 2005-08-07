@@ -37,6 +37,8 @@ class AddPhrase : public KDialogBase
   Q_OBJECT
   public:
     AddPhrase(QWidget *parent, QString caption);
+    void setWord(QString text, QString id);
+    void setPath(QString filename);
     
   private slots:
     void slotAddExplanation();
@@ -47,11 +49,19 @@ class AddPhrase : public KDialogBase
     void slotCheck(KSpell *speller);
     void slotEndCheck(const QString& checked);
     
+  protected slots:
+    void slotOk();
+    
   private:
     AddPhraseWdt *m_mainWidget;
-    //KSpell *m_spell;
+    QString m_path;
+    QStringList m_words;
+    QString m_id;
+    QString m_text;
+    bool m_edit;
     
     void populateAvailableList();
+    void populateAddPhraseDialog();
 };
 
 #endif
