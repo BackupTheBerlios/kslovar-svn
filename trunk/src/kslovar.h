@@ -29,7 +29,7 @@
 #include <kmainwindow.h>
 #include <kurl.h>
 #include <kparts/browserextension.h>
-#include <qstringlist.h>
+#include <klistview.h>
  
 class KLineEdit;
 class KListBox;
@@ -41,6 +41,21 @@ class KProgress;
 class CreateDictionary;
 class KAction;
 class AddPhrase;
+class KListView;
+
+class KSListViewItem : public KListViewItem
+{
+  public:
+    KSListViewItem(KListView *parent, QString label1, QString search, QString id) : KListViewItem(parent, label1), m_id(id), m_search(search)
+    {
+    }
+    
+    QString getId() { return m_id; }
+    QString getSearch() { return m_search; }
+  private:
+    QString m_id;
+    QString m_search;
+};
 
 /*class history
 {
@@ -92,7 +107,7 @@ private slots:
   /**
   * Method for showing a phrase using the list.
   */
-  void slotShowList();
+  void slotShowList(QListViewItem *selected);
   /**
   * Method for showing a phrase using the browser.
   */
@@ -147,7 +162,7 @@ private:
   
   
   KLineEdit *m_search;
-  KListBox *m_list;
+  KListView *m_list;
   KHTMLPart *m_browser;
   QSplitter *m_split;
   KProgressDialog *m_progress;
@@ -157,6 +172,7 @@ private:
   QString m_welcomeMessage;
   QString m_currentText;
   bool m_selected;
+  bool m_history;
   static KSlovar *m_instance;
   
   KAction *m_newDictionary;

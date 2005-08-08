@@ -47,9 +47,10 @@
 #include <kprinter.h>
 #include <qpainter.h>
 #include <qpaintdevicemetrics.h>
-#include <ksconfig.h>
+//#include <klistview.h>
 
 #include <kdebug.h>
+#include <qheader.h>
 
 #include <kmainwindow.h>
 #include <klocale.h>
@@ -75,7 +76,10 @@ KSlovar::KSlovar()
   vert->setMinimumWidth(200);
   
   m_search = new KLineEdit( vert );
-  m_list = new KListBox( vert );
+  m_list = new KListView( vert );
+  m_list->header()->hide();
+  m_list->addColumn("name");
+  m_list->setColumnWidth(0, 193);
   
   m_browser=new KHTMLPart( m_split );
   m_browser->setEncoding("utf-8", true);
@@ -83,9 +87,8 @@ KSlovar::KSlovar()
   
   connect( m_browser->browserExtension(), SIGNAL( openURLRequest( const KURL &, const KParts::URLArgs & ) ), this, SLOT( slotShowBrowser(const KURL &, const KParts::URLArgs &) ) );
   
-  connect(m_list, SIGNAL( selectionChanged() ), this, SLOT( slotShowList() ) );
+  connect(m_list, SIGNAL( selectionChanged(QListViewItem *)), this, SLOT( slotShowList(QListViewItem *) ) );
   connect(m_search, SIGNAL ( textChanged ( const QString & ) ), this, SLOT( slotSearch( const QString & ) ) );
-  
   
   setCentralWidget( horiz );
 }
@@ -122,18 +125,20 @@ void KSlovar::slotFileOpen()
     }
     file.close();
     
-    int steps=0;
-    int step=0;
+    //int steps=0;
+    //int step=0;
     
-    m_phrases = DBHandler::Instance(m_path)->readIndex(&steps);
+    m_phrases = DBHandler::Instance(m_path)->readIndex(0L);
     //progressBar->setTotalSteps(steps);
     
     
     for(QStringList::iterator phrase = m_phrases.begin(); phrase != m_phrases.end(); phrase++)
     {
-      step++;
-      QString rez = *phrase;
-      m_list->insertItem(rez.remove( QRegExp ("/.+$") ));
+      //step++;
+      QString word = *phrase;
+      QString search= *phrase;
+      QString id= *phrase;
+      new KSListViewItem(m_list, word.remove(QRegExp("/.+$")), search.remove(QRegExp("^.+/")), id.remove(QRegExp("/\\D.+$")).remove(QRegExp("^\\w+/")));
       //progressBar->setProgress(step);
     }
     //progressBar->setProgress(steps);
@@ -152,16 +157,7 @@ void KSlovar::slotFileOpen()
 }
 
 void KSlovar::showDictionary()
-{
-  if(m_selectedPhrase!="0")
-  {
-    m_editPhrase->setEnabled(true);
-  }
-  else
-  {
-    m_editPhrase->setEnabled(false);
-  }
-  
+{/*
   m_selected=false;
   
   QString output=DBHandler::Instance(m_path)->readText(m_selectedPhrase);
@@ -175,24 +171,40 @@ void KSlovar::showDictionary()
   {
     m_back->setEnabled(true);
   }
+ */
+  m_history=false;
+  m_browser->begin();
+  m_browser->write(DBHandler::Instance(m_path)->readText(m_selectedPhrase));
+  m_browser->end();
+
+  if(!m_backHistory.isEmpty())
+  {
+    m_back->setEnabled(true);
+  }
+  else
+  {
+    m_back->setEnabled(false);
+  }
 }
 
 void KSlovar::slotSearch(const QString &text)
 {
   m_list->clear();
-  
-  for(QStringList::Iterator rezultat = m_phrases.begin(); rezultat != m_phrases.end(); rezultat++)
+  for(QStringList::Iterator result = m_phrases.begin(); result != m_phrases.end(); result++)
   {
-    QString rez = *rezultat;
+    QString rez = *result;
     if( ( rez.contains( text ) ) )
     {
-      m_list->insertItem(rez.remove( QRegExp ("/.+$") ));
+      QString word=rez;
+      QString search=word;
+      QString id=search;
+      new KSListViewItem(m_list, word.remove(QRegExp("/.+$")), search.remove(QRegExp("^.+/")), id.remove(QRegExp("/\\D.+$")).remove(QRegExp("^\\w+/")));
     }
   }
 }
 
-void KSlovar::slotShowList()
-{
+void KSlovar::slotShowList(QListViewItem *selected)
+{/*ULD
   if(m_selected==true)
   {
     return;
@@ -200,9 +212,9 @@ void KSlovar::slotShowList()
   addHistory();
   
   QString result;
-  QStringList list1 = m_phrases.grep( m_list->currentText() );
+//  QStringList list1 = m_phrases.grep( m_list->currentText() );
   
-  for(QStringList::Iterator phrase = list1.begin(); phrase != list1.end(); phrase++)
+/*  for(QStringList::Iterator phrase = list1.begin(); phrase != list1.end(); phrase++)
   {
     QString search=result = *phrase;
     if(search.remove(QRegExp("/.+$")).compare(m_list->currentText())==0)
@@ -210,7 +222,7 @@ void KSlovar::slotShowList()
       break;
     }
   }
-  
+  /////////  *
   //QString text=result;
   //QString backup=text;
 
@@ -221,24 +233,33 @@ void KSlovar::slotShowList()
     m_userDictionary=true;
   }
   else
-  {*/
+  {*
   m_selectedPhrase=result.remove(QRegExp("/\\D.+$")).remove(QRegExp("^\\w+/"));
   //m_userDictionary=false;
   //}
+  showDictionary();
+  */
+
+  if(m_history==false)
+  {
+    addHistory();
+  }
+  
+  m_selectedPhrase=static_cast<KSListViewItem*> (selected)->getId();
   showDictionary();
 }
 
 void KSlovar::slotShowBrowser(const KURL &url, const KParts::URLArgs &)
 {
-  addHistory();
+  //addHistory();
   
   //int temp = url.host().toInt();
   //QString temp1;
   
-  m_selectedPhrase=url.host();
+  //m_selectedPhrase=url.host();
   
-  m_selected=true;
-  m_list->setSelected(m_selectedPhrase.toInt(), true);
+  //m_selected=true;
+//  m_list->setSelected(m_selectedPhrase.toInt(), true);
   
   /*for(QStringList::Iterator phrase = phrases.begin(); phrase != phrases.end(); phrase++)
   {
@@ -260,20 +281,31 @@ void KSlovar::slotShowBrowser(const KURL &url, const KParts::URLArgs &)
     }
 }*/
   
-  showDictionary();
+  //showDictionary();
+  
+  QListViewItem *current=m_list->firstChild();
+  while(current)
+  {
+    if(static_cast<KSListViewItem*> (current)->getId()==url.host())
+    {
+      m_list->setSelected(current, true);
+      break;
+    }
+    current=current->nextSibling();
+  }
 }
 
 void KSlovar::slotPrevPhrase()
 {
-  int& temp = m_backHistory.first();
+  int temp = m_backHistory.first();
   //bool temp1=m_backHistory.first().user();
   //m_itForward = m_forwardHistory.prepend( history(m_selectedPhrase.toInt(), m_userDictionary) );
   m_itForward = m_forwardHistory.prepend( m_selectedPhrase.toInt() );
-  m_selectedPhrase = m_selectedPhrase.setNum(temp);
+  //m_selectedPhrase = m_selectedPhrase.setNum(temp);
   //m_userDictionary=temp1;
   
-  m_selected=true;
-  m_list->setSelected(m_selectedPhrase.toInt(), true);
+//  m_selected=true;
+//  m_list->setSelected(m_selectedPhrase.toInt(), true);
   
   m_it = m_backHistory.remove(m_it);
   
@@ -282,22 +314,44 @@ void KSlovar::slotPrevPhrase()
     m_back->setEnabled(false);
   }
   m_forward->setEnabled(true);
+
+  m_history=true;
   
-  showDictionary();
+  if(temp==0)
+  {
+    m_list->clearSelection();
+    m_selectedPhrase.setNum(0);
+    showDictionary();
+  }
+  else
+  {
+    QListViewItem *current=m_list->firstChild();
+    while(current)
+    {
+      if(static_cast<KSListViewItem*> (current)->getId().toInt()==temp)
+      {
+        m_list->setSelected(current, true);
+        break;
+      }
+      current=current->nextSibling();
+    }
+  }
+  
+  //showDictionary();
 }
 
 void KSlovar::slotNextPhrase()
 {
-  int& temp = m_forwardHistory.first();
+  int temp = m_forwardHistory.first();
   //bool temp1= m_forwardHistory.first().user();
   
   addHistory(false);
   
-  m_selectedPhrase = m_selectedPhrase.setNum(temp);
+  //m_selectedPhrase = m_selectedPhrase.setNum(temp);
   //m_userDictionary=temp1;
   
-  m_selected=true;
-  m_list->setSelected(m_selectedPhrase.toInt(), true);
+  //m_selected=true;
+//  m_list->setSelected(m_selectedPhrase.toInt(), true);
   
   m_itForward = m_forwardHistory.remove(m_itForward);
   
@@ -305,8 +359,21 @@ void KSlovar::slotNextPhrase()
   {
     m_forward->setEnabled(false);
   }
+
+  m_history=true;
+
+  QListViewItem *current=m_list->firstChild();
+  while(current)
+  {
+    if(static_cast<KSListViewItem*> (current)->getId().toInt()==temp)
+    {
+      m_list->setSelected(current, true);
+      break;
+    }
+    current=current->nextSibling();
+  }
   
-  showDictionary();
+  //showDictionary();
 }
 
 void KSlovar::slotHome()
@@ -316,11 +383,12 @@ void KSlovar::slotHome()
     return;
   }
   
-  m_list->setSelected(m_selectedPhrase.toInt(), false);
+//  m_list->setSelected(m_selectedPhrase.toInt(), false);
   
   addHistory();
   
-  m_selectedPhrase = m_selectedPhrase.setNum(0);
+  m_selectedPhrase.setNum(0);
+  m_list->clearSelection();
   //m_userDictionary=false;
   
   showDictionary();
