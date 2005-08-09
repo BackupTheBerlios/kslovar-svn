@@ -190,11 +190,6 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="KListBox" row="1" column="2">
-                        <property name="name">
-                            <cstring>selectedList</cstring>
-                        </property>
-                    </widget>
                     <widget class="QLabel" row="0" column="0">
                         <property name="name">
                             <cstring>availableLabel</cstring>
@@ -281,17 +276,47 @@
                             </spacer>
                         </vbox>
                     </widget>
-                    <widget class="KListBox" row="1" column="0">
-                        <property name="name">
-                            <cstring>availableList</cstring>
-                        </property>
-                    </widget>
                     <widget class="QLabel" row="0" column="2">
                         <property name="name">
                             <cstring>addedLabel</cstring>
                         </property>
                         <property name="text">
                             <string>textLabel2</string>
+                        </property>
+                    </widget>
+                    <widget class="KListView" row="1" column="0">
+                        <column>
+                            <property name="text">
+                                <string>name</string>
+                            </property>
+                            <property name="clickable">
+                                <bool>false</bool>
+                            </property>
+                            <property name="resizable">
+                                <bool>false</bool>
+                            </property>
+                        </column>
+                        <property name="name">
+                            <cstring>availableList</cstring>
+                        </property>
+                        <property name="enabled">
+                            <bool>true</bool>
+                        </property>
+                    </widget>
+                    <widget class="KListView" row="1" column="2">
+                        <column>
+                            <property name="text">
+                                <string>name</string>
+                            </property>
+                            <property name="clickable">
+                                <bool>false</bool>
+                            </property>
+                            <property name="resizable">
+                                <bool>false</bool>
+                            </property>
+                        </column>
+                        <property name="name">
+                            <cstring>selectedList</cstring>
                         </property>
                     </widget>
                 </grid>
@@ -307,9 +332,9 @@
     <includehint>kpushbutton.h</includehint>
     <includehint>klistview.h</includehint>
     <includehint>klineedit.h</includehint>
-    <includehint>klistbox.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
-    <includehint>klistbox.h</includehint>
+    <includehint>klistview.h</includehint>
+    <includehint>klistview.h</includehint>
 </includehints>
 </UI>

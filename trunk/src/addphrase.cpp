@@ -29,7 +29,7 @@
 #include <qwidget.h>
 #include <qgroupbox.h>
 #include <klineedit.h>
-#include <klistview.h>
+//#include <klistview.h>
 #include <kpushbutton.h>
 #include <kicondialog.h>
 #include <kiconloader.h>
@@ -38,6 +38,7 @@
 #include <qregexp.h>
 #include <qlabel.h>
 #include <qregexp.h>
+#include <qheader.h>
 #include <kmessagebox.h>
 
 #include <kdebug.h>
@@ -45,25 +46,13 @@
 
 AddPhrase::AddPhrase(QWidget *parent, QString caption) : KDialogBase(parent, "AddPhrase", true, caption, Ok|Cancel)
 {
-  KIconLoader *icons=new KIconLoader();
-  
-  m_mainWidget=new AddPhraseWdt(this);
-  m_mainWidget->spellButton->setIconSet(icons->loadIconSet("spellcheck", KIcon::Toolbar));
-  m_mainWidget->explanationList->setRenameable(1);
-  
-  m_mainWidget->availableLabel->setText(i18n("List of available words"));
-  m_mainWidget->addedLabel->setText(i18n("List of selected words"));
-  m_mainWidget->rightButton->setIconSet(icons->loadIconSet("forward", KIcon::Toolbar));
-  m_mainWidget->leftButton->setIconSet(icons->loadIconSet("back", KIcon::Toolbar));
+  initialize();
   populateAvailableList();
   enableButtonApply(false);
   
   setMainWidget(m_mainWidget);
-  connect(m_mainWidget->addButton, SIGNAL(clicked()), this, SLOT(slotAddExplanation()));
-  connect(m_mainWidget->removeButton, SIGNAL(clicked()), this, SLOT(slotRemoveExplanation()));
-  connect(m_mainWidget->spellButton, SIGNAL(clicked()), this, SLOT(slotBeginCheck()));
-  connect(m_mainWidget->rightButton, SIGNAL(clicked()), this, SLOT(slotAddWord()));
-  connect(m_mainWidget->leftButton, SIGNAL(clicked()), this, SLOT(slotRemoveWord()));
+
+  connectSlots();
 }
 
 void AddPhrase::slotAddExplanation()
@@ -82,20 +71,20 @@ void AddPhrase::populateAvailableList()
   for(QStringList::iterator it = m_words.begin(); it != m_words.end(); it++)
   {
     QString word = *it;
-    m_mainWidget->availableList->insertItem(word.remove( QRegExp ("/.+$") ));
+    QString search = word;
+    QString id = search;
+    new KSListViewItem(m_mainWidget->availableList, word.remove(QRegExp("/.+$")), search.remove(QRegExp("^.+/")), id.remove(QRegExp("/\\D.+$")).remove(QRegExp("^\\w+/")));
   }
 }
 
 void AddPhrase::slotAddWord()
 {
-  m_mainWidget->selectedList->insertItem(m_mainWidget->availableList->currentText());
-  m_mainWidget->availableList->removeItem(m_mainWidget->availableList->currentItem());
+  m_mainWidget->selectedList->insertItem(m_mainWidget->availableList->currentItem());
 }
 
 void AddPhrase::slotRemoveWord()
 {
-  m_mainWidget->availableList->insertItem(m_mainWidget->selectedList->currentText());
-  m_mainWidget->selectedList->removeItem(m_mainWidget->selectedList->currentItem());
+  m_mainWidget->availableList->insertItem(m_mainWidget->selectedList->currentItem());
 }
 
 void AddPhrase::slotBeginCheck()
@@ -135,20 +124,13 @@ void AddPhrase::slotOk()
     explanations+="<li>"+count->text(0)+" <i>"+count->text(1)+"</i></li>";
   }
   QString seealso=" ";
-  for(int count1=0;!m_mainWidget->selectedList->text(count1).isEmpty();count1++)
+  
+  for(QListViewItem *current=m_mainWidget->selectedList->firstChild();current;current=current->nextSibling())
   {
-    QString word=m_mainWidget->selectedList->text(count1);
-    for(QStringList::iterator it=m_words.begin();it!=m_words.end();it++)
-    {
-      QString search=*it;
-      if(search.remove(QRegExp("/.+$"))==word)
-      {
-        QString result=*it;
-        seealso+="<a href=http://"+result.remove(QRegExp("/\\D.+$")).remove(QRegExp("^\\w+/"))+">"+word+"</a> ";
-        break;
-      }
-    }
+    KSListViewItem *item=static_cast<KSListViewItem*> (current);
+    seealso+="<a href=http://"+item->getId()+">"+item->text(0)+"</a> ";
   }
+  
   QString text;
   text="<h1>"+m_mainWidget->wordEdit->text()+", "+m_mainWidget->typeEdit->text()+"</h1>"+"<p>"+explanations+"</p>"+"<p>See also: "+seealso+"</p>";
   if(m_edit==true)
@@ -202,9 +184,43 @@ void AddPhrase::populateAddPhraseDialog()
   }
   for(QStringList::iterator count=seealso.begin();count!=seealso.end();count++)
   {
-    m_mainWidget->selectedList->insertItem(*count);
-    m_mainWidget->availableList->removeItem(m_mainWidget->availableList->index(m_mainWidget->availableList->findItem(*count, ExactMatch)));
+    for(QListViewItem *current=m_mainWidget->availableList->firstChild();current;current=current->nextSibling())
+    {
+      if(*count==current->text(0))
+      {
+        m_mainWidget->selectedList->insertItem(current);
+      }
+    }
   }
+  delete m_mainWidget->availableList->findItem(word, 0);
+}
+
+void AddPhrase::initialize()
+{
+  KIconLoader *icons=new KIconLoader();
+  
+  m_mainWidget=new AddPhraseWdt(this);
+  m_mainWidget->spellButton->setIconSet(icons->loadIconSet("spellcheck", KIcon::Toolbar));
+  m_mainWidget->explanationList->setRenameable(1);
+  
+  m_mainWidget->availableLabel->setText(i18n("List of available words"));
+  m_mainWidget->addedLabel->setText(i18n("List of selected words"));
+  m_mainWidget->rightButton->setIconSet(icons->loadIconSet("forward", KIcon::Toolbar));
+  m_mainWidget->leftButton->setIconSet(icons->loadIconSet("back", KIcon::Toolbar));
+
+  m_mainWidget->availableList->header()->hide();
+  m_mainWidget->availableList->setColumnWidth(0, 193);
+  m_mainWidget->selectedList->header()->hide();
+  m_mainWidget->selectedList->setColumnWidth(0, 193);
+}
+
+void AddPhrase::connectSlots()
+{
+  connect(m_mainWidget->addButton, SIGNAL(clicked()), this, SLOT(slotAddExplanation()));
+  connect(m_mainWidget->removeButton, SIGNAL(clicked()), this, SLOT(slotRemoveExplanation()));
+  connect(m_mainWidget->spellButton, SIGNAL(clicked()), this, SLOT(slotBeginCheck()));
+  connect(m_mainWidget->rightButton, SIGNAL(clicked()), this, SLOT(slotAddWord()));
+  connect(m_mainWidget->leftButton, SIGNAL(clicked()), this, SLOT(slotRemoveWord()));
 }
 
 #include "addphrase.moc"

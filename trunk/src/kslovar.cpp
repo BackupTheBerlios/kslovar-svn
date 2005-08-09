@@ -240,11 +240,13 @@ void KSlovar::slotShowList(QListViewItem *selected)
   showDictionary();
   */
 
+  m_editPhrase->setEnabled(true);
+
   if(m_history==false)
   {
     addHistory();
   }
-  
+
   m_selectedPhrase=static_cast<KSListViewItem*> (selected)->getId();
   showDictionary();
 }
@@ -320,6 +322,7 @@ void KSlovar::slotPrevPhrase()
   if(temp==0)
   {
     m_list->clearSelection();
+    m_editPhrase->setEnabled(false);
     m_selectedPhrase.setNum(0);
     showDictionary();
   }
@@ -389,6 +392,7 @@ void KSlovar::slotHome()
   
   m_selectedPhrase.setNum(0);
   m_list->clearSelection();
+  m_editPhrase->setEnabled(false);
   //m_userDictionary=false;
   
   showDictionary();

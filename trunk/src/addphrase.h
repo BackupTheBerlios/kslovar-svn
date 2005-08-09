@@ -58,10 +58,13 @@ class AddPhrase : public KDialogBase
     QStringList m_words;
     QString m_id;
     QString m_text;
+    QString m_word;
     bool m_edit;
     
     void populateAvailableList();
     void populateAddPhraseDialog();
+    void initialize();
+    void connectSlots();
 };
 
 #endif
