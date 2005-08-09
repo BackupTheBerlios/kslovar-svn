@@ -31,7 +31,6 @@
 #include <kparts/browserextension.h>
 #include <klistview.h>
  
-class KLineEdit;
 class KListBox;
 class KHTMLPart;
 class QSplitter;
@@ -101,10 +100,6 @@ private slots:
   * A slot that opens a dictionary from disk.
   */
   void slotFileOpen();
-  /**
-  * Method that search for a given keyphrase and print result on the list.
-  */
-  void slotSearch(const QString &text);
   /**
   * Method for showing a phrase using the list.
   */

@@ -81,6 +81,7 @@ KSlovar::KSlovar()
   m_list->header()->hide();
   m_list->addColumn("name");
   m_list->setColumnWidth(0, 193);
+  m_list->setFullWidth(true);
   m_search->setListView(m_list);
   
   m_browser=new KHTMLPart( m_split );
@@ -90,7 +91,6 @@ KSlovar::KSlovar()
   connect( m_browser->browserExtension(), SIGNAL( openURLRequest( const KURL &, const KParts::URLArgs & ) ), this, SLOT( slotShowBrowser(const KURL &, const KParts::URLArgs &) ) );
   
   connect(m_list, SIGNAL( selectionChanged(QListViewItem *)), this, SLOT( slotShowList(QListViewItem *) ) );
-  //connect(m_search, SIGNAL ( textChanged ( const QString & ) ), this, SLOT( slotSearch( const QString & ) ) );
   
   setCentralWidget( horiz );
 }
@@ -140,14 +140,14 @@ void KSlovar::slotFileOpen()
       QString word = *phrase;
       QString search= *phrase;
       QString id= *phrase;
-      new KSListViewItem(m_list, word.remove(QRegExp("/.+$")), search.remove(QRegExp("^.+/")), id.remove(QRegExp("/\\D.+$")).remove(QRegExp("^\\w+/")));
+      new KSListViewItem(m_list, word.remove(QRegExp("/.+$")), search.remove(QRegExp("^.+/")), id.remove(QRegExp("\\D+")));
       //progressBar->setProgress(step);
     }
     //progressBar->setProgress(steps);
 
     m_home->setEnabled(true);
-    m_back->setEnabled(false);
-    m_forward->setEnabled(false);
+    //m_back->setEnabled(false);
+    //m_forward->setEnabled(false);
     m_editDictionary->setEnabled(true);
     m_close->setEnabled(true);
     m_addPhrase->setEnabled(true);
@@ -186,22 +186,6 @@ void KSlovar::showDictionary()
   else
   {
     m_back->setEnabled(false);
-  }
-}
-
-void KSlovar::slotSearch(const QString &text)
-{
-  m_list->clear();
-  for(QStringList::Iterator result = m_phrases.begin(); result != m_phrases.end(); result++)
-  {
-    QString rez = *result;
-    if( ( rez.contains( text ) ) )
-    {
-      QString word=rez;
-      QString search=word;
-      QString id=search;
-      new KSListViewItem(m_list, word.remove(QRegExp("/.+$")), search.remove(QRegExp("^.+/")), id.remove(QRegExp("/\\D.+$")).remove(QRegExp("^\\w+/")));
-    }
   }
 }
 
@@ -528,9 +512,9 @@ void KSlovar::disableNavButtons()
 void KSlovar::slotClose()
 {
   disableNavButtons();
-  m_phrases.empty();
-  m_backHistory.empty();
-  m_forwardHistory.empty();
+  m_phrases.clear();
+  m_backHistory.clear();
+  m_forwardHistory.clear();
   m_selectedPhrase="";
   m_browser->begin();
   m_browser->write(m_welcomeMessage);

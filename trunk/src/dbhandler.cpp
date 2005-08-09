@@ -60,6 +60,8 @@ QString DBHandler::readText(QString id)
 
 void DBHandler::query(QString sqlQuery, sqlite3_stmt ** output, bool returnResult)
 {
+  int error;
+  
   if( sqlQuery.isEmpty() )
   {
     kdError() << "[DBHandler] Query is not assigned!";
@@ -69,11 +71,17 @@ void DBHandler::query(QString sqlQuery, sqlite3_stmt ** output, bool returnResul
   {
     const char *tail;
   
-    sqlite3_prepare(m_db, sqlQuery.utf8(), sqlQuery.length(), output, &tail);
+    error=sqlite3_prepare(m_db, sqlQuery.utf8(), sqlQuery.length(), output, &tail);
   }
   else
   {
-    sqlite3_exec(m_db, sqlQuery.utf8(), NULL, NULL, NULL);
+    error=sqlite3_exec(m_db, sqlQuery.utf8(), NULL, NULL, NULL);
+  }
+
+  if(error!=SQLITE_OK)
+  {
+    kdDebug() << "SQLITE err code: " << error << endl;
+    KMessageBox::detailedError(0, i18n("Error executing SQL query."), i18n("Query was "+sqlQuery));
   }
 }
 
@@ -141,7 +149,7 @@ void DBHandler::saveWord(QString word, QString text, bool add, QString id)
   }
   else
   {
-    query1="UPDATE dictionary SET text='"+text+"' WHERE id='"+id+"' LIMIT 1;";
+    query1="UPDATE dictionary SET text='"+text+"' WHERE id='"+id+"';";
   }
   query(query1, 0L, false);
 }

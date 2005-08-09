@@ -73,7 +73,7 @@ void AddPhrase::populateAvailableList()
     QString word = *it;
     QString search = word;
     QString id = search;
-    new KSListViewItem(m_mainWidget->availableList, word.remove(QRegExp("/.+$")), search.remove(QRegExp("^.+/")), id.remove(QRegExp("/\\D.+$")).remove(QRegExp("^\\w+/")));
+    new KSListViewItem(m_mainWidget->availableList, word.remove(QRegExp("/.+$")), search.remove(QRegExp("^.+/")), id.remove(QRegExp("\\D+")));
   }
 }
 
@@ -123,7 +123,7 @@ void AddPhrase::slotOk()
   {
     explanations+="<li>"+count->text(0)+" <i>"+count->text(1)+"</i></li>";
   }
-  QString seealso=" ";
+  QString seealso;
   
   for(QListViewItem *current=m_mainWidget->selectedList->firstChild();current;current=current->nextSibling())
   {
@@ -132,7 +132,11 @@ void AddPhrase::slotOk()
   }
   
   QString text;
-  text="<h1>"+m_mainWidget->wordEdit->text()+", "+m_mainWidget->typeEdit->text()+"</h1>"+"<p>"+explanations+"</p>"+"<p>See also: "+seealso+"</p>";
+  text="<h1>"+m_mainWidget->wordEdit->text()+", "+m_mainWidget->typeEdit->text()+"</h1>"+"<p>"+explanations+"</p>";
+  if(!seealso.isEmpty())
+  {
+    text+="<p>See also: "+seealso+"</p>";
+  }
   if(m_edit==true)
   {
     DBHandler::Instance(m_path)->saveWord(m_mainWidget->wordEdit->text(), text, false, m_id);
@@ -142,7 +146,7 @@ void AddPhrase::slotOk()
     DBHandler::Instance(m_path)->saveWord(m_mainWidget->wordEdit->text(), text, true, 0L);
   }
   
-  close();
+  accept();
 }
 
 void AddPhrase::setPath(QString filename)
@@ -168,7 +172,7 @@ void AddPhrase::populateAddPhraseDialog()
   QString explanations=m_text;
   explanations.remove(QRegExp(".+<p>\\B")).remove(QRegExp("</p>.+")). remove("<li>");
   QString seealsos=m_text;
-  seealsos.remove(QRegExp(".+See also:  ")).remove("</p>").remove(QRegExp("<a href=http://\\d+>"));
+  seealsos.remove(QRegExp(".+See also:\\s+")).remove("</p>").remove(QRegExp("<a href=http://\\d+>"));
   QStringList explanation=QStringList::split("</li>", explanations);
   QStringList seealso=QStringList::split("</a> ", seealsos);
   
@@ -212,6 +216,9 @@ void AddPhrase::initialize()
   m_mainWidget->availableList->setColumnWidth(0, 193);
   m_mainWidget->selectedList->header()->hide();
   m_mainWidget->selectedList->setColumnWidth(0, 193);
+
+  m_mainWidget->availableList->setFullWidth(true);
+  m_mainWidget->selectedList->setFullWidth(true);
 }
 
 void AddPhrase::connectSlots()
