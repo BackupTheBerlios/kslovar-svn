@@ -47,6 +47,7 @@
 #include <kprinter.h>
 #include <qpainter.h>
 #include <qpaintdevicemetrics.h>
+#include <klistviewsearchline.h>
 //#include <klistview.h>
 
 #include <kdebug.h>
@@ -75,11 +76,12 @@ KSlovar::KSlovar()
   vert->setMaximumWidth(200);
   vert->setMinimumWidth(200);
   
-  m_search = new KLineEdit( vert );
+  m_search = new KListViewSearchLine( vert );
   m_list = new KListView( vert );
   m_list->header()->hide();
   m_list->addColumn("name");
   m_list->setColumnWidth(0, 193);
+  m_search->setListView(m_list);
   
   m_browser=new KHTMLPart( m_split );
   m_browser->setEncoding("utf-8", true);
@@ -88,7 +90,7 @@ KSlovar::KSlovar()
   connect( m_browser->browserExtension(), SIGNAL( openURLRequest( const KURL &, const KParts::URLArgs & ) ), this, SLOT( slotShowBrowser(const KURL &, const KParts::URLArgs &) ) );
   
   connect(m_list, SIGNAL( selectionChanged(QListViewItem *)), this, SLOT( slotShowList(QListViewItem *) ) );
-  connect(m_search, SIGNAL ( textChanged ( const QString & ) ), this, SLOT( slotSearch( const QString & ) ) );
+  //connect(m_search, SIGNAL ( textChanged ( const QString & ) ), this, SLOT( slotSearch( const QString & ) ) );
   
   setCentralWidget( horiz );
 }

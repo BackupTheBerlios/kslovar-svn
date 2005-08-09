@@ -42,6 +42,7 @@ class CreateDictionary;
 class KAction;
 class AddPhrase;
 class KListView;
+class KListViewSearchLine;
 
 class KSListViewItem : public KListViewItem
 {
@@ -161,7 +162,7 @@ private:
   QValueList<int>::iterator m_itForward;
   
   
-  KLineEdit *m_search;
+  KListViewSearchLine *m_search;
   KListView *m_list;
   KHTMLPart *m_browser;
   QSplitter *m_split;
