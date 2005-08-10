@@ -22,6 +22,7 @@
 #include "ui/addphrasewdt.h"
 #include "kslovar.h"
 #include "dbhandler.h"
+#include "kslistview.h"
 
 #include <kdialogbase.h>
 #include <klocale.h>
@@ -39,6 +40,7 @@
 #include <qlabel.h>
 #include <qregexp.h>
 #include <qheader.h>
+#include <qscrollbar.h>
 #include <kmessagebox.h>
 
 #include <kdebug.h>
@@ -205,7 +207,10 @@ void AddPhrase::initialize()
   
   m_mainWidget=new AddPhraseWdt(this);
   m_mainWidget->spellButton->setIconSet(icons->loadIconSet("spellcheck", KIcon::Toolbar));
+  m_mainWidget->explanationList->setRenameable(0);
   m_mainWidget->explanationList->setRenameable(1);
+  m_mainWidget->explanationList->addColumn(i18n("Explanation"));
+  m_mainWidget->explanationList->addColumn(i18n("Example"));
   
   m_mainWidget->availableLabel->setText(i18n("List of available words"));
   m_mainWidget->addedLabel->setText(i18n("List of selected words"));
@@ -218,7 +223,9 @@ void AddPhrase::initialize()
   m_mainWidget->selectedList->setColumnWidth(0, 193);
 
   m_mainWidget->availableList->setFullWidth(true);
+  m_mainWidget->availableList->addColumn("name");
   m_mainWidget->selectedList->setFullWidth(true);
+  m_mainWidget->selectedList->addColumn("name");
 }
 
 void AddPhrase::connectSlots()

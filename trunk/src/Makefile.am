@@ -2,7 +2,8 @@
 INCLUDES = $(all_includes)
 
 # these are the headers for your project
-noinst_HEADERS = kslovar.h dbhandler.h createdictionary.h addphrase.h
+noinst_HEADERS = kslovar.h dbhandler.h createdictionary.h addphrase.h \
+	kslistview.h
 
 # let automoc handle all of the meta source files (moc)
 METASOURCES = AUTO
@@ -22,7 +23,7 @@ bin_PROGRAMS = kslovar
 
 # the application source, library search path, and link libraries
 kslovar_SOURCES = main.cpp kslovar.cpp dbhandler.cpp createdictionary.cpp \
-	addphrase.cpp
+		addphrase.cpp kslistview.cpp
 kslovar_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 kslovar_LDADD = $(top_builddir)/src/ui/libui.a \
 	$(top_builddir)/src/sqlite/libsqlite.la -lkdeprint -lkhtml $(LIB_KDEUI)

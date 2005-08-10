@@ -41,6 +41,7 @@ class CreateDictionary;
 class KAction;
 class AddPhrase;
 class KListView;
+class KSListView;
 class KListViewSearchLine;
 
 class KSListViewItem : public KListViewItem
@@ -158,7 +159,7 @@ private:
   
   
   KListViewSearchLine *m_search;
-  KListView *m_list;
+  KSListView *m_list;
   KHTMLPart *m_browser;
   QSplitter *m_split;
   KProgressDialog *m_progress;

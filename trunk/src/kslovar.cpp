@@ -49,6 +49,7 @@
 #include <qpaintdevicemetrics.h>
 #include <klistviewsearchline.h>
 //#include <klistview.h>
+#include "kslistview.h"
 
 #include <kdebug.h>
 #include <qheader.h>
@@ -77,7 +78,7 @@ KSlovar::KSlovar()
   vert->setMinimumWidth(200);
   
   m_search = new KListViewSearchLine( vert );
-  m_list = new KListView( vert );
+  m_list = new KSListView( vert );
   m_list->header()->hide();
   m_list->addColumn("name");
   m_list->setColumnWidth(0, 193);
