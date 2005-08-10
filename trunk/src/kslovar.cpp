@@ -51,7 +51,6 @@
 #include <qpainter.h>
 #include <qpaintdevicemetrics.h>
 #include <klistviewsearchline.h>
-//#include <klistview.h>
 
 
 #include <kdebug.h>
@@ -580,6 +579,10 @@ void KSlovar::slotAddPhrase()
 
 void KSlovar::slotEditPhrase()
 {
+  if(!m_editPhrase->isEnabled())
+  {
+    return;
+  }
   QString output=DBHandler::Instance(m_path)->readText(m_selectedPhrase);
   m_phrasedlg=new AddPhrase(this, "Edit word");
   m_phrasedlg->setWord(output, m_selectedPhrase);
