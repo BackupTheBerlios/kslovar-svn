@@ -21,8 +21,10 @@
 #include "addphrase.h"
 #include "ui/addphrasewdt.h"
 #include "kslovar.h"
+
 #include "dbhandler.h"
 #include "kslistview.h"
+#include "kslistviewitem.h"
 
 #include <kdialogbase.h>
 #include <klocale.h>

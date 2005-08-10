@@ -36,16 +36,16 @@ bool KSListView::eventFilter(QObject *o, QEvent *e)
     {
       const double offset = static_cast<double>(visibleHeight())/50.0 + 5.0;
       m_value = ( event->y() - offset ) * ( static_cast<double>(verticalScrollBar()->maxValue()) / ( static_cast<double>(visibleHeight()) - offset * 2 ) );
-      verticalScrollBar()->setValue(m_value);
+      verticalScrollBar()->setValue(static_cast<int> (m_value));
     }
   }
   return KListView::eventFilter(o, e);
 }
 
-void KSListView::timerEvent(QTimerEvent *e)
+/*void KSListView::timerEvent(QTimerEvent *e)
 {
   verticalScrollBar()->setValue(m_value);
-}
+}*/
 
 KSListView::~KSListView()
 {

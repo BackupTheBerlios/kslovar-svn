@@ -43,20 +43,8 @@ class AddPhrase;
 class KListView;
 class KSListView;
 class KListViewSearchLine;
+class KSListViewItem;
 
-class KSListViewItem : public KListViewItem
-{
-  public:
-    KSListViewItem(KListView *parent, QString label1, QString search, QString id) : KListViewItem(parent, label1), m_id(id), m_search(search)
-    {
-    }
-    
-    QString getId() { return m_id; }
-    QString getSearch() { return m_search; }
-  private:
-    QString m_id;
-    QString m_search;
-};
 
 /*class history
 {

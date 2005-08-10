@@ -20,9 +20,12 @@
 
 
 #include "kslovar.h"
-#include "dbhandler.h"
 #include "createdictionary.h"
 #include "addphrase.h"
+
+#include "dbhandler.h"
+#include "kslistview.h"
+#include "kslistviewitem.h"
 
 #include <kpopupmenu.h>
 #include <kmenubar.h>
@@ -49,7 +52,7 @@
 #include <qpaintdevicemetrics.h>
 #include <klistviewsearchline.h>
 //#include <klistview.h>
-#include "kslistview.h"
+
 
 #include <kdebug.h>
 #include <qheader.h>

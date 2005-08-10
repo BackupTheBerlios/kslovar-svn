@@ -17,29 +17,28 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KSLISTVIEW_H
-#define KSLISTVIEW_H
+#include "kslistviewitem.h"
 
 #include <klistview.h>
 
-/**
-@author Gregor Kališnik
-*/
-class KSListView : public KListView
+KSListViewItem::KSListViewItem(KListView *parent, QString label1, QString search, QString id)
+  : KListViewItem(parent, label1), m_id(id), m_search(search)
 {
-  Q_OBJECT
-  public:
-  KSListView(QWidget *parent=0, const char *name=0);
+}
 
-  ~KSListView();
+QString KSListViewItem::getId()
+{
+  return m_id;
+}
 
-  protected:
-//    virtual void timerEvent(QTimerEvent *e);
-    
-    virtual bool eventFilter(QObject *o, QEvent *e);
+QString KSListViewItem::getSearch()
+{
+  return m_search;
+}
 
-  private:
-    double m_value;
-};
+KSListViewItem::~KSListViewItem()
+{
+}
 
-#endif
+
+//#include "kslistviewitem.moc"
