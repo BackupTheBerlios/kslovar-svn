@@ -51,6 +51,7 @@
 #include <qpainter.h>
 #include <qpaintdevicemetrics.h>
 #include <klistviewsearchline.h>
+#include <khtmlview.h>
 
 
 #include <kdebug.h>
@@ -177,6 +178,7 @@ void KSlovar::showDictionary()
     m_back->setEnabled(true);
   }
  */
+  
   m_history=false;
   m_browser->begin();
   m_browser->write(DBHandler::Instance(m_path)->readText(m_selectedPhrase));
@@ -537,31 +539,7 @@ void KSlovar::slotFindNext()
 
 void KSlovar::slotPrint()
 {
-  int reply=KMessageBox::warningContinueCancel(this, i18n("Printing is not fully implemented! DO NOT USE! I REPEAT! DO NOT USE!"), i18n("Warning!"));
-  
-  if(reply==KMessageBox::Cancel)
-  {
-    return;
-  }
-  KPrinter printer;
-  if(m_currentText.isEmpty())
-  {
-    m_currentText=m_welcomeMessage;
-  }
-  
-  if(printer.setup(this))
-  {
-    QPainter painter;
-    
-    painter.begin(&printer);
-    
-    QPaintDeviceMetrics metrics(painter.device());
-    
-    painter.drawText(QRect(QPoint(0,0), QPoint(metrics.width(), metrics.height())), WordBreak, m_currentText);
-    
-    painter.end();
-  }
-  m_currentText="";
+  m_browser->view()->print();
 }
 
 void KSlovar::slotSelectAll()

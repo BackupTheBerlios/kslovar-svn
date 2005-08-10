@@ -155,7 +155,6 @@ private:
   CreateDictionary *m_dictionarydlg;
   AddPhrase *m_phrasedlg;
   QString m_welcomeMessage;
-  QString m_currentText;
   bool m_selected;
   bool m_history;
   static KSlovar *m_instance;
