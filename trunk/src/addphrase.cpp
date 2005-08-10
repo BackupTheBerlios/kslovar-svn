@@ -32,7 +32,6 @@
 #include <qwidget.h>
 #include <qgroupbox.h>
 #include <klineedit.h>
-//#include <klistview.h>
 #include <kpushbutton.h>
 #include <kicondialog.h>
 #include <kiconloader.h>
@@ -42,7 +41,6 @@
 #include <qlabel.h>
 #include <qregexp.h>
 #include <qheader.h>
-#include <qscrollbar.h>
 #include <kmessagebox.h>
 
 #include <kdebug.h>
@@ -174,7 +172,7 @@ void AddPhrase::populateAddPhraseDialog()
   word.remove(QRegExp(",.+"));
   type.remove(word+", ");
   QString explanations=m_text;
-  explanations.remove(QRegExp(".+<p>\\B")).remove(QRegExp("</p>.+")). remove("<li>");
+  explanations.remove(QRegExp(".+<p>\\B")).remove(QRegExp("(</p>.+)|(</p>)")). remove("<li>");
   QString seealsos=m_text;
   seealsos.remove(QRegExp(".+See also:\\s+")).remove("</p>").remove(QRegExp("<a href=http://\\d+>"));
   QStringList explanation=QStringList::split("</li>", explanations);
