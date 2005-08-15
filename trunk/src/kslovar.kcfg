@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg> <kcfgfile name="kslovarrc"/>
+  <group name="appearance">
+    <entry name="MouseNavigation" type="Bool">
+      <label>Enable mouse navigation.</label>
+      <default>true</default>
+    </entry>
+    <entry name="ScrollBar" type="Bool">
+      <label>Enable vertical scroll bar.</label>
+      <default>false</default>
+    </entry>
+  </group>
+</kcfg>

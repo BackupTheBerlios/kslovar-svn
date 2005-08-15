@@ -19,27 +19,55 @@
  ***************************************************************************/
 #include "kslistview.h"
 
+#include "configuration.h"
+#include "kslovar.h"
+
 #include <qtimer.h>
 
-KSListView::KSListView(QWidget *parent, const char *name) : KListView(parent, name)
+KSListView::KSListView(QWidget *parent, const char *name) : KListView(parent, name), mouseConfig(true)
 {
+  connect( KSlovar::mainInstance()->getConfig(), SIGNAL(settingsChanged()), this, SLOT(slotUpdateConfiguration()) );
   verticalScrollBar()->installEventFilter(this);
-  setVScrollBarMode(AlwaysOff);
 }
 
 bool KSListView::eventFilter(QObject *o, QEvent *e)
 {
   if(o==viewport())
   {
-    QMouseEvent *event = static_cast<QMouseEvent*>(e);
-    if(e->type() == QEvent::MouseMove)
+    if(mouseConfig)
     {
-      const double offset = static_cast<double>(visibleHeight())/50.0 + 5.0;
-      m_value = ( event->y() - offset ) * ( static_cast<double>(verticalScrollBar()->maxValue()) / ( static_cast<double>(visibleHeight()) - offset * 2 ) );
-      verticalScrollBar()->setValue(static_cast<int> (m_value));
+      QMouseEvent *event = static_cast<QMouseEvent*>(e);
+      if(e->type() == QEvent::MouseMove)
+      {
+        const double offset = static_cast<double>(visibleHeight())/50.0 + 5.0;
+        m_value = ( event->y() - offset ) * ( static_cast<double>(verticalScrollBar()->maxValue()) / ( static_cast<double>(visibleHeight()) - offset * 2 ) );
+        verticalScrollBar()->setValue(static_cast<int> (m_value));
+      }
     }
   }
   return KListView::eventFilter(o, e);
+}
+
+/*void KSListView::setMouseConfig(bool option)
+{
+  mouseConfig=option;
+}
+
+void KSListView::setScrollConfig(bool option)
+{
+  if(!option)
+  {
+    setVScrollBarMode(AlwaysOff);
+  }
+}*/
+
+void KSListView::slotUpdateConfiguration()
+{
+  mouseConfig=Configuration::mouseNavigation();
+  if(!Configuration::scrollBar())
+  {
+    setVScrollBarMode(AlwaysOff);
+  }
 }
 
 /*void KSListView::timerEvent(QTimerEvent *e)

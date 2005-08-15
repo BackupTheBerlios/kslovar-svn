@@ -44,6 +44,7 @@ class KListView;
 class KSListView;
 class KListViewSearchLine;
 class KSListViewItem;
+class KConfigDialog;
 
 
 /*class history
@@ -77,6 +78,7 @@ public:
     KSlovar();
 
     static KSlovar *mainInstance();
+    QObject *getConfig();
     QStringList getPhrases();
     
     /**
@@ -119,6 +121,8 @@ private slots:
   void slotAddPhrase();
   void slotEditPhrase();
   void slotRemovePhrase();
+  void slotConfigure();
+  void slotUpdateConfiguration();
     
 private:
   /**
@@ -158,6 +162,7 @@ private:
   bool m_selected;
   bool m_history;
   static KSlovar *m_instance;
+  KConfigDialog *m_configDialog;
   
   KAction *m_newDictionary;
   KAction *m_openDictionary;
@@ -174,7 +179,7 @@ private:
   KAction *m_addPhrase;
   KAction *m_editPhrase;
   KAction *m_removePhrase;
-  KAction *m_spellConfig;
+  KAction *m_config;
   
   /**
    * Updating history

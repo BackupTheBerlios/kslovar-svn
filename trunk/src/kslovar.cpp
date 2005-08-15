@@ -22,6 +22,9 @@
 #include "kslovar.h"
 #include "createdictionary.h"
 #include "addphrase.h"
+#include "configuration.h"
+
+#include "ui/appearancewdt.h"
 
 #include "dbhandler.h"
 #include "kslistview.h"
@@ -52,6 +55,7 @@
 #include <qpaintdevicemetrics.h>
 #include <klistviewsearchline.h>
 #include <khtmlview.h>
+#include <kconfigdialog.h>
 
 
 #include <kdebug.h>
@@ -67,6 +71,7 @@ KSlovar::KSlovar()
 {
   m_instance=this;
   m_welcomeMessage=i18n("<h1>Welcome message.</h1> Need to change it :P");
+  m_configDialog=new KConfigDialog(this, "settings", Configuration::self());
   
   registerButtons();
   addMenu();
@@ -446,6 +451,8 @@ void KSlovar::registerButtons()
   m_addPhrase=new KAction(i18n("&Add phrase"), "filenew", KShortcut(KKey("CTRL+a")), this, SLOT(slotAddPhrase()), actionCollection(), "addPhrase");
   m_editPhrase=new KAction(i18n("Edi&t phrase"), "edit", KShortcut(KKey("CTRL+t")), this, SLOT(slotEditPhrase()), actionCollection(), "editPhrase");
   m_removePhrase=new KAction(i18n("&Remove phrase"), "editdelete", KShortcut(KKey("CTRL+r")), this, SLOT(slotRemovePhrase()), actionCollection(), "removePhrase");
+
+  m_config=KStdAction::preferences(this, SLOT(slotConfigure()), actionCollection());
 }
 
 void KSlovar::addMenu()
@@ -475,7 +482,8 @@ void KSlovar::addMenu()
   m_forward->plug(gomenu);
   m_home->plug(gomenu);
   
-//  KPopupMenu *setmenu=new KPopupMenu;
+  KPopupMenu *setmenu=new KPopupMenu;
+  m_config->plug(setmenu);
   
   KPopupMenu *help = helpMenu( );
   
@@ -483,7 +491,7 @@ void KSlovar::addMenu()
   menu->insertItem( i18n( "&File" ), filemenu );
   menu->insertItem(i18n("&Edit"), editmenu);
   menu->insertItem(i18n("&Go"), gomenu);
-  //menu->insertItem(i18n("&Settings"), setmenu);
+  menu->insertItem(i18n("&Settings"), setmenu);
   menu->insertItem( i18n( "&Help" ), help );
 }
 
@@ -581,6 +589,25 @@ KSlovar *KSlovar::mainInstance()
 QStringList KSlovar::getPhrases()
 {
   return m_phrases;
+}
+
+void KSlovar::slotConfigure()
+{
+  m_configDialog->addPage(new AppearanceWdt(0), i18n("Appearance"), "looknfeel");
+
+  //connect( m_configDialog, SIGNAL(settingsChanged()), this, SLOT(slotUpdateConfiguration()) );
+  
+  m_configDialog->show();
+}
+
+void KSlovar::slotUpdateConfiguration()
+{
+  
+}
+
+QObject *KSlovar::getConfig()
+{
+  return m_configDialog;
 }
 
 KSlovar::~KSlovar()

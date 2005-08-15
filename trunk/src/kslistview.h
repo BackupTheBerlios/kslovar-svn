@@ -38,8 +38,12 @@ class KSListView : public KListView
     
     virtual bool eventFilter(QObject *o, QEvent *e);
 
+  private slots:
+    void slotUpdateConfiguration();
+
   private:
     double m_value;
+    bool mouseConfig;
 };
 
 #endif
