@@ -21,13 +21,18 @@
 
 #include "configuration.h"
 #include "kslovar.h"
+#include "instances.h"
 
 #include <qtimer.h>
 
-KSListView::KSListView(QWidget *parent, const char *name) : KListView(parent, name), mouseConfig(true)
+KSListView::KSListView(QWidget *parent, const char *name) : KListView(parent, name), mouseConfig(Configuration::mouseNavigation())
 {
-  connect( KSlovar::mainInstance()->getConfig(), SIGNAL(settingsChanged()), this, SLOT(slotUpdateConfiguration()) );
+  connect( Instances::configInstance(), SIGNAL(settingsChanged()), this, SLOT(slotUpdateConfiguration()) );
   verticalScrollBar()->installEventFilter(this);
+  if(!Configuration::scrollBar())
+  {
+    setVScrollBarMode(AlwaysOff);
+  }
 }
 
 bool KSListView::eventFilter(QObject *o, QEvent *e)
@@ -67,6 +72,10 @@ void KSListView::slotUpdateConfiguration()
   if(!Configuration::scrollBar())
   {
     setVScrollBarMode(AlwaysOff);
+  }
+  else
+  {
+    setVScrollBarMode(AlwaysOn);
   }
 }
 

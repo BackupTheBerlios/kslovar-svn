@@ -77,8 +77,6 @@ public:
      */
     KSlovar();
 
-    static KSlovar *mainInstance();
-    QObject *getConfig();
     QStringList getPhrases();
     
     /**

@@ -29,6 +29,7 @@
 #include "dbhandler.h"
 #include "kslistview.h"
 #include "kslistviewitem.h"
+#include "instances.h"
 
 #include <kpopupmenu.h>
 #include <kmenubar.h>
@@ -69,9 +70,11 @@ KSlovar *KSlovar::m_instance=0L;
 KSlovar::KSlovar()
     : KMainWindow( 0, "KSlovar" )
 {
-  m_instance=this;
-  m_welcomeMessage=i18n("<h1>Welcome message.</h1> Need to change it :P");
+  Instances::setMainInstance(this);
   m_configDialog=new KConfigDialog(this, "settings", Configuration::self());
+  Instances::setConfigInstance(m_configDialog);
+
+  m_welcomeMessage=i18n("<h1>Welcome message.</h1> Need to change it :P");
   
   registerButtons();
   addMenu();
@@ -581,11 +584,6 @@ void KSlovar::slotRemovePhrase()
 {
 }
 
-KSlovar *KSlovar::mainInstance()
-{
-  return m_instance;
-}
-
 QStringList KSlovar::getPhrases()
 {
   return m_phrases;
@@ -603,11 +601,6 @@ void KSlovar::slotConfigure()
 void KSlovar::slotUpdateConfiguration()
 {
   
-}
-
-QObject *KSlovar::getConfig()
-{
-  return m_configDialog;
 }
 
 KSlovar::~KSlovar()

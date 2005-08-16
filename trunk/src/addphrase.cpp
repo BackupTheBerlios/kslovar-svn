@@ -25,6 +25,7 @@
 #include "dbhandler.h"
 #include "kslistview.h"
 #include "kslistviewitem.h"
+#include "instances.h"
 
 #include <kdialogbase.h>
 #include <klocale.h>
@@ -69,7 +70,7 @@ void AddPhrase::slotRemoveExplanation()
 
 void AddPhrase::populateAvailableList()
 {
-  m_words=KSlovar::mainInstance()->getPhrases();
+  m_words=Instances::mainInstance()->getPhrases();
   for(QStringList::iterator it = m_words.begin(); it != m_words.end(); it++)
   {
     QString word = *it;
