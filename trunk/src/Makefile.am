@@ -2,8 +2,8 @@
 INCLUDES = $(all_includes)
 
 # these are the headers for your project
-noinst_HEADERS = kslovar.h dbhandler.h createdictionary.h addphrase.h \
-		kslistview.h kslistviewitem.h instances.h
+noinst_HEADERS = kslovar.h dbhandler.h addphrase.h kslistview.h \
+	kslistviewitem.h instances.h createdictionary.h
 
 # let automoc handle all of the meta source files (moc)
 METASOURCES = AUTO
@@ -22,8 +22,9 @@ KDE_ICON = AUTO
 bin_PROGRAMS = kslovar
 
 # the application source, library search path, and link libraries
-kslovar_SOURCES = main.cpp kslovar.cpp dbhandler.cpp createdictionary.cpp \
-	addphrase.cpp kslistview.cpp kslistviewitem.cpp configuration.kcfgc instances.cpp
+kslovar_SOURCES = main.cpp kslovar.cpp dbhandler.cpp addphrase.cpp \
+	kslistview.cpp kslistviewitem.cpp configuration.kcfgc instances.cpp \
+	createdictionary.cpp
 kslovar_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 kslovar_LDADD = $(top_builddir)/src/ui/libui.a \
 	$(top_builddir)/src/sqlite/libsqlite.la -lkdeprint -lkhtml $(LIB_KDEUI)
@@ -39,7 +40,7 @@ shellrc_DATA = kslovarui.rc
 kde_kcfg_DATA = kslovar.kcfg
 
 mimedir = $(kde_mimedir)/application
-mime_DATA = vnd.kslovar.ksd.desktop
+mime_DATA = vnd.kslovar.ksd.desktop vnd.kslovar.ksl.desktop
 EXTRA_DIST = $(mime_DATA)
 
 

@@ -59,7 +59,10 @@ int main(int argc, char **argv)
         mainWin = new KSlovar();
 
         //Opening file from command line
-        mainWin->openFile(QString::fromUtf8(args->arg(0)));
+        if(args->count())
+        {
+          mainWin->openFile(QString::fromUtf8(args->arg(0)));
+        }
 
         app.setMainWidget( mainWin );
         mainWin->resize(1000, 800);

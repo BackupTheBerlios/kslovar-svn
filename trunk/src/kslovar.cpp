@@ -132,7 +132,8 @@ void KSlovar::showDictionary()
   
   m_history=false;
   m_browser->begin();
-  m_browser->write(DBHandler::Instance(m_path)->readText(m_selectedPhrase));
+  //m_browser->write(DBHandler::Instance(m_path)->readText(m_selectedPhrase));
+  m_browser->write(DBHandler::Instance(m_path)->ProcessString("SELECT text FROM dictionary WHERE id='"+m_selectedPhrase+"' LIMIT 1;"));
   m_browser->end();
 
   if(!m_backHistory.isEmpty())
@@ -357,21 +358,22 @@ void KSlovar::addHistory(bool deleteForward)
 
 void KSlovar::slotNewDictionary()
 {
-  m_dictionarydlg = new CreateDictionary(this, "Create Dictionary");
+  m_dictionarydlg = new CreateDictionary(this);
   m_dictionarydlg->resize(700, 700);
   m_dictionarydlg->show();
 }
 
 void KSlovar::slotEditDictionary()
 {
-  QString text=DBHandler::Instance(m_path)->readText(QString("0"));
+  //QString text=DBHandler::Instance(m_path)->readText(QString("0"));
+  QString text=DBHandler::Instance(m_path)->ProcessString("SELECT text FROM dictionary WHERE id='0' LIMIT 1;");
   QString name=text;
   
   text.remove(QRegExp("<h1>.+</h1>"));
   name.remove(text).remove("<h1>").remove("</h1>");
   
   m_dictionarydlg = new CreateDictionary(this, "Edit Dictionary", name, text);
-  m_dictionarydlg->setPath(m_path);
+//  m_dictionarydlg->setPath(m_path);
   m_dictionarydlg->resize(700, 700);
   m_dictionarydlg->show();
 }
@@ -515,7 +517,8 @@ void KSlovar::slotEditPhrase()
   {
     return;
   }
-  QString output=DBHandler::Instance(m_path)->readText(m_selectedPhrase);
+  //QString output=DBHandler::Instance(m_path)->readText(m_selectedPhrase);
+  QString output=DBHandler::Instance(m_path)->ProcessString("SELECT text FROM dictionary WHERE id='"+m_selectedPhrase+"' LIMIT 1;");
   m_phrasedlg=new AddPhrase(this, "Edit word");
   m_phrasedlg->setWord(output, m_selectedPhrase);
   m_phrasedlg->setPath(m_path);
@@ -585,7 +588,8 @@ void KSlovar::processFileOpen()
     //int steps=0;
     //int step=0;
     
-    m_phrases = DBHandler::Instance(m_path)->readIndex(0L);
+    //m_phrases = DBHandler::Instance(m_path)->readIndex(0L);
+    m_phrases=DBHandler::Instance(m_path)->ProcessList("SELECT name, search, id FROM phrases ORDER BY search ASC;", 3);
     //progressBar->setTotalSteps(steps);
     
     

@@ -37,55 +37,57 @@ DBHandler::DBHandler(QString databasePath)
   sqlite3_open(databasePath, &m_db);
 }
 
-QString DBHandler::readText(QString id)
+/*QString DBHandler::readText(QString id)
 {
   sqlite3_stmt *stmt;
   //QString database="user_dictionary";
   /*if(!user)
   {
-    database="dictionary";
-}*/
+  database="dictionary";
+}*//*
   
   QString query1="SELECT text FROM dictionary WHERE id='";
   query1=query1.append(id);
   query1=query1.append("' LIMIT 1;");
   
-  query(query1, &stmt);
+  Query(query1, &stmt);
   
   sqlite3_step(stmt);
   QString output=QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 0 ) );
   sqlite3_reset(stmt);
   return output;
-}
+}*/
 
-void DBHandler::query(QString sqlQuery, sqlite3_stmt ** output, bool returnResult)
+bool DBHandler::Query(QString sqlQuery, sqlite3_stmt ** output, bool returnResult)
 {
-  int error;
+  int statusCode;
   
   if( sqlQuery.isEmpty() )
   {
-    kdError() << "[DBHandler] Query is not assigned!";
+    kdError() << "[DBHandler]->Query Query is not assigned!";
+    return false;
   }
   
   if(returnResult)
   {
     const char *tail;
   
-    error=sqlite3_prepare(m_db, sqlQuery.utf8(), sqlQuery.length(), output, &tail);
+    statusCode=sqlite3_prepare(m_db, sqlQuery.utf8(), sqlQuery.length(), output, &tail);
   }
   else
   {
-    error=sqlite3_exec(m_db, sqlQuery.utf8(), NULL, NULL, NULL);
+    statusCode=sqlite3_exec(m_db, sqlQuery.utf8(), NULL, NULL, NULL);
   }
 
-  if(error!=SQLITE_OK)
+  if(statusCode!=SQLITE_OK)
   {
-    kdDebug() << "SQLITE err code: " << error << endl;
-    KMessageBox::detailedError(0, i18n("Error executing SQL query."), i18n("Query was "+sqlQuery));
+    kdDebug() << "[DBHandler]->Query SQLITE err code: " << statusCode << endl;
+    return false;
   }
+  return true;
 }
 
-QStringList DBHandler::readIndex(int * count)
+/*QStringList DBHandler::readIndex(int * count)
 {
   int error;
   QString temp;
@@ -93,7 +95,7 @@ QStringList DBHandler::readIndex(int * count)
   
   sqlite3_stmt *stmt;
   
-  query("SELECT name, search, id FROM phrases ORDER BY search ASC;", &stmt);
+  Query("SELECT name, search, id FROM phrases ORDER BY search ASC;", &stmt);
   
   while(true)
   {
@@ -109,7 +111,7 @@ QStringList DBHandler::readIndex(int * count)
   }
   sqlite3_reset(stmt);
   return output;
-}
+}*/
 
 void DBHandler::saveDictionary(QString text, bool create)
 {
@@ -127,7 +129,7 @@ void DBHandler::saveDictionary(QString text, bool create)
     query1="UPDATE dictionary SET text='"+text+"' WHERE id='0';";
   }
   
-  query(query1, 0L, false);
+  Query(query1, 0L, false);
 }
 
 DBHandler *DBHandler::Instance(QString path)
@@ -151,7 +153,95 @@ void DBHandler::saveWord(QString word, QString text, bool add, QString id)
   {
     query1="UPDATE dictionary SET text='"+text+"' WHERE id='"+id+"';";
   }
-  query(query1, 0L, false);
+  Query(query1, 0L, false);
+}
+
+/*bool DBHandler::Query(QString query)
+{
+  if(query.isEmpty())
+{
+    kdError() << "[DBHandler] Query not defined!" << endl;
+    return false;
+}
+
+  int statusCode;
+
+  const char *tail;
+  statusCode=sqlite3_prepare(m_db, query.utf8(), query.length(), &m_rawOutput, &tail);
+
+  if(statusCode!=SQLITE_OK)
+{
+    kdError() << "[DBHandler]->Query SQLITE err code: " << statusCode << endl;
+    return false;
+}
+  return true;
+}*/
+
+QString DBHandler::ProcessString(QString query, int columns)
+{
+  sqlite3_stmt *rawOutput;
+  QString output;
+  int statusCode;
+
+  if(!Query(query, &rawOutput))
+  {
+    return 0L;
+  }
+
+  statusCode=sqlite3_step(rawOutput);
+
+  if(statusCode!=SQLITE_OK && statusCode < SQLITE_ROW)
+  {
+    kdError() << "[DBHandler]->ProcessOutput SQLITE err code: " << statusCode << endl;
+    return 0L;
+  }
+
+  //QString output=QString::fromUtf8( (const char*) sqlite3_column_text( rawOutput, 0 ) );
+  output = QString::fromUtf8( (const char*) sqlite3_column_text( rawOutput, 0 ) );
+  for(int count=1; count<columns; count++)
+  {
+    output+="/"+QString::fromUtf8( (const char*) sqlite3_column_text( rawOutput, count ) );
+  }
+
+  statusCode=sqlite3_reset(rawOutput);
+
+  if(statusCode!=SQLITE_OK)
+  {
+    kdError() << "[DBHandler]->ProcessOutput->Reset SQLITE err code: " << statusCode << endl;
+    return 0L;
+  }
+
+  return output;
+}
+
+QStringList DBHandler::ProcessList(QString query, int columns)
+{
+  QString temp;
+  QStringList output;
+  sqlite3_stmt *rawOutput;
+  int statusCode;
+
+  if(!Query(query, &rawOutput))
+  {
+    return 0L;
+  }
+
+  while(true)
+  {
+    statusCode = sqlite3_step(rawOutput);
+    if ( statusCode == SQLITE_DONE || statusCode == SQLITE_ERROR )
+    {
+      break;
+    }
+    temp = QString::fromUtf8( (const char*) sqlite3_column_text( rawOutput, 0 ) );
+    for(int count=1; count<columns; count++)
+    {
+      temp+="/"+QString::fromUtf8( (const char*) sqlite3_column_text( rawOutput, count ) );
+    }
+    output << temp;
+  }
+  sqlite3_reset(rawOutput);
+  return output;
 }
 
 DBHandler::~DBHandler()

@@ -17,55 +17,37 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef CREATEDICTIONARY_H
+#define CREATEDICTIONARY_H
 
-#ifndef _CREATEDICTIONARY_H_
-#define _CREATEDICTIONARY_H_
+#include <kdialogbase.h>
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
+class CreateDictionaryWdt;
 
-#include <kdialog.h>
-
-class KToolBar;
-class KLineEdit;
-class KTextEdit;
-class DBHandler;
-class KAction;
-
-class CreateDictionary : public KDialog
+/**
+@author Gregor Kališnik
+ */
+class CreateDictionary : public KDialogBase
 {
   Q_OBJECT
-
   public:
-    CreateDictionary(QWidget *parent, QString caption, QString name=0L, QString page=0L);
-    
-    void setPath(QString filename);
-    
+    CreateDictionary(QWidget *parent = 0, const char *caption="Create dictionary", QString nameDictionary=0, QString text=0);
+
+    ~CreateDictionary();
+
   private slots:
-    virtual void slotUnder();
-    virtual void slotItalic();
-    virtual void slotBold();
-    virtual void slotSaveAs();
-    virtual void slotFontSize();
-    virtual void slotSave();
-    virtual void slotChanged();
-    
+    void slotBold();
+    void slotItalic();
+    void slotUnderline();
+    void slotSize(int newSize);
+
   private:
-    KToolBar *m_toolbar;
-    KLineEdit *m_nameEdit;
-    KTextEdit *m_pageEdit;
-    QString m_path;
-    
-    KAction *m_save;
-    KAction *m_saveAs;
-    KAction *m_bold;
-    KAction *m_italic;
-    KAction *m_under;
-    KAction *m_close;
-    
-    void registerButtons();
-    void registerToolbar();
+    void populateLanguages();
+
+    CreateDictionaryWdt *m_mainWidget;
+    QString m_name;
+    QString m_text;
+
 };
 
 #endif

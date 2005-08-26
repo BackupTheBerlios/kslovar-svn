@@ -46,22 +46,28 @@ class DBHandler
     * @return Returns the text of the phrase or false
     * @todo Improve error handling
     */
-    QString readText(QString id);
+    //QString readText(QString id);
     /**
     * Method to read the index from databases
     * @return returns the index
     */
-    QStringList readIndex(int * count);
+    //QStringList readIndex(int * count);
     /**
     * Desctructor that closes the connection
     */
     void saveDictionary(QString text, bool create=true);
     void saveWord(QString word, QString text, bool add, QString id);
     static DBHandler *Instance(QString path);
+    //bool Query(QString query);
+    QString ProcessOutput();
+    QString ProcessString(QString query, int columns=1);
+    QStringList ProcessList(QString query, int columns=1);
+
     ~DBHandler();
     
   private:
     sqlite3 *m_db;
+    sqlite3_stmt *m_rawOutput;
     static QString m_currentPath;
     static DBHandler *m_instance;
     
@@ -70,5 +76,5 @@ class DBHandler
     * @param sqlQuery Query to excetute
     * @retval output Returns the result of the SQL query (statement)
     */
-    void query(QString sqlQuery, sqlite3_stmt ** output, bool returnResult=true);
+    bool Query(QString sqlQuery, sqlite3_stmt ** output, bool returnResult=true);
 };

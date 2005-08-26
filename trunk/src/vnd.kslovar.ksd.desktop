@@ -2,7 +2,7 @@
 DefaultApp=kslovar
 Comment=KSlovar dictionary
 Hidden=false
-Icon=
+Icon=kslovar.ksd
 MimeType=application/vnd.kslovar.ksd
 Patterns=*.ksd
 Type=MimeType

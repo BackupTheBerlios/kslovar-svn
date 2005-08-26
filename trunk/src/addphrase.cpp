@@ -47,7 +47,8 @@
 #include <kdebug.h>
 
 
-AddPhrase::AddPhrase(QWidget *parent, QString caption) : KDialogBase(parent, "AddPhrase", true, caption, Ok|Cancel)
+AddPhrase::AddPhrase(QWidget *parent, QString caption)
+  : KDialogBase(parent, "AddPhrase", true, caption, Ok|Cancel)
 {
   initialize();
   populateAvailableList();
