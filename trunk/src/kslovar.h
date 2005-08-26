@@ -78,7 +78,9 @@ public:
     KSlovar();
 
     QStringList getPhrases();
-    
+
+    void openFile(QString fileName);
+
     /**
      * Default Destructor
      */
@@ -192,6 +194,7 @@ private:
   void addMenu();
   void addToolbar();
   void disableNavButtons();
+  void processFileOpen();
   
 };
 

@@ -86,7 +86,7 @@ void CreateDictionary::slotSaveAs()
 {
   QString backup=m_path;
   m_pageEdit->setTextFormat(RichText);
-  m_path=KFileDialog::getSaveFileName(QString::null, "*.db", this);
+  m_path=KFileDialog::getSaveFileName(QString::null, "*.ksd|KSlovar dictionary file", this);
   if(m_path.isEmpty())
   {
     m_path=backup;

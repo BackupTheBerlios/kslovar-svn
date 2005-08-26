@@ -23,7 +23,7 @@ bin_PROGRAMS = kslovar
 
 # the application source, library search path, and link libraries
 kslovar_SOURCES = main.cpp kslovar.cpp dbhandler.cpp createdictionary.cpp \
-		addphrase.cpp kslistview.cpp kslistviewitem.cpp configuration.kcfgc instances.cpp
+	addphrase.cpp kslistview.cpp kslistviewitem.cpp configuration.kcfgc instances.cpp
 kslovar_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 kslovar_LDADD = $(top_builddir)/src/ui/libui.a \
 	$(top_builddir)/src/sqlite/libsqlite.la -lkdeprint -lkhtml $(LIB_KDEUI)
@@ -37,6 +37,10 @@ shellrcdir   = $(kde_datadir)/kslovar
 shellrc_DATA = kslovarui.rc
 
 kde_kcfg_DATA = kslovar.kcfg
+
+mimedir = $(kde_mimedir)/application
+mime_DATA = vnd.kslovar.ksd.desktop
+EXTRA_DIST = $(mime_DATA)
 
 
 

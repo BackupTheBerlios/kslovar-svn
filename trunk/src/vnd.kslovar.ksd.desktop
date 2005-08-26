@@ -1,0 +1,7 @@
+[Desktop Entry]
+Comment=KSlovar dictionary
+Hidden=false
+Icon=
+MimeType=application/vnd.kslovar.ksd
+Patterns=*.ksd
+Type=MimeType

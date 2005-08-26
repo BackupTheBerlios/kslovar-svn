@@ -28,11 +28,11 @@
 static const char description[] =
     I18N_NOOP("A dictionary for KDE");
 
-static const char version[] = "0.1.0 20050816";
+static const char version[] = "0.1.0 20050826";
 
 static KCmdLineOptions options[] =
 {
-//    { "+[URL]", I18N_NOOP( "Document to open" ), 0 },
+    { "+[URL]", I18N_NOOP( "Document to open" ), 0 },
     KCmdLineLastOption
 };
 
@@ -44,6 +44,7 @@ int main(int argc, char **argv)
     about.addCredit("Kopete development team", I18N_NOOP("Mouse navigation in lists"), "kopete-devel@kde.org", "http://kopete.kde.org");
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions( options );
+    KCmdLineArgs *args=KCmdLineArgs::parsedArgs();
     KApplication app;
     KSlovar *mainWin = 0;
 
@@ -54,9 +55,12 @@ int main(int argc, char **argv)
     else
     {
         // no session.. just start up normally
-        KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
         mainWin = new KSlovar();
+
+        //Opening file from command line
+        mainWin->openFile(QString::fromUtf8(args->arg(0)));
+
         app.setMainWidget( mainWin );
         mainWin->resize(1000, 800);
         mainWin->show();

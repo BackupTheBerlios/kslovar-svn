@@ -109,65 +109,8 @@ KSlovar::KSlovar()
 
 void KSlovar::slotFileOpen()
 {
-  m_path=KFileDialog::getOpenFileName(QString::null, "*.db", this);
-  
-  if( !m_path.isEmpty() )
-  {
-    
-    /*progress = new KProgressDialog(this, "Progress", i18n("Reading index"), i18n("Please wait..."));
-    progress->setAutoClose(true);
-    progress->showCancelButton(false);
-    progress->setMinimumDuration(0);
-    progressBar = progress->progressBar();*/
-  
-    QFile file( m_path );
-    if( file.open(IO_ReadOnly) )
-    {
-      QString temp;
-      file.readLine(temp, 50);
-      if( !temp.startsWith("SQLite format 3") )
-      {
-        KMessageBox::error(this, i18n("This is not a valid dictionary!") );
-        return;
-      }
-      slotClose();
-    }
-    else
-    {
-      KMessageBox::error(this, i18n("Couldn't read the dictionary!") );
-      return;
-    }
-    file.close();
-    
-    //int steps=0;
-    //int step=0;
-    
-    m_phrases = DBHandler::Instance(m_path)->readIndex(0L);
-    //progressBar->setTotalSteps(steps);
-    
-    
-    for(QStringList::iterator phrase = m_phrases.begin(); phrase != m_phrases.end(); phrase++)
-    {
-      //step++;
-      QString word = *phrase;
-      QString search= *phrase;
-      QString id= *phrase;
-      new KSListViewItem(m_list, word.remove(QRegExp("/.+$")), search.remove(QRegExp("^.+/")), id.remove(QRegExp("\\D+")));
-      //progressBar->setProgress(step);
-    }
-    //progressBar->setProgress(steps);
-
-    m_home->setEnabled(true);
-    //m_back->setEnabled(false);
-    //m_forward->setEnabled(false);
-    m_editDictionary->setEnabled(true);
-    m_close->setEnabled(true);
-    m_addPhrase->setEnabled(true);
-    //m_editPhrase->setEnabled(true);
-    
-    slotHome();
-    m_backHistory.clear();
-  }
+  m_path=KFileDialog::getOpenFileName(QString::null, "*.ksd|KSlovar dictionary file", this);
+  processFileOpen();
 }
 
 void KSlovar::showDictionary()
@@ -601,6 +544,73 @@ void KSlovar::slotConfigure()
 void KSlovar::slotUpdateConfiguration()
 {
   
+}
+
+void KSlovar::openFile(QString fileName)
+{
+  m_path=fileName;
+  processFileOpen();
+}
+
+void KSlovar::processFileOpen()
+{
+  if( !m_path.isEmpty() )
+  {
+    
+    /*progress = new KProgressDialog(this, "Progress", i18n("Reading index"), i18n("Please wait..."));
+    progress->setAutoClose(true);
+    progress->showCancelButton(false);
+    progress->setMinimumDuration(0);
+    progressBar = progress->progressBar();*/
+  
+    QFile file( m_path );
+    if( file.open(IO_ReadOnly) )
+    {
+      QString temp;
+      file.readLine(temp, 50);
+      if( !temp.startsWith("SQLite format 3") )
+      {
+        KMessageBox::error(this, i18n("This is not a valid dictionary!") );
+        return;
+      }
+      slotClose();
+    }
+    else
+    {
+      KMessageBox::error(this, i18n("Couldn't read the dictionary!") );
+      return;
+    }
+    file.close();
+    
+    //int steps=0;
+    //int step=0;
+    
+    m_phrases = DBHandler::Instance(m_path)->readIndex(0L);
+    //progressBar->setTotalSteps(steps);
+    
+    
+    for(QStringList::iterator phrase = m_phrases.begin(); phrase != m_phrases.end(); phrase++)
+    {
+      //step++;
+      QString word = *phrase;
+      QString search= *phrase;
+      QString id= *phrase;
+      new KSListViewItem(m_list, word.remove(QRegExp("/.+$")), search.remove(QRegExp("^.+/")), id.remove(QRegExp("\\D+")));
+      //progressBar->setProgress(step);
+    }
+    //progressBar->setProgress(steps);
+
+    m_home->setEnabled(true);
+    //m_back->setEnabled(false);
+    //m_forward->setEnabled(false);
+    m_editDictionary->setEnabled(true);
+    m_close->setEnabled(true);
+    m_addPhrase->setEnabled(true);
+    //m_editPhrase->setEnabled(true);
+    
+    slotHome();
+    m_backHistory.clear();
+  }
 }
 
 KSlovar::~KSlovar()
