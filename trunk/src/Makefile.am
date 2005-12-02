@@ -33,7 +33,7 @@ shelldesktop_DATA = kslovar.desktop
 
 # this is where the shell's XML-GUI resource file goes
 shellrcdir   = $(kde_datadir)/kslovar
-shellrc_DATA = kslovarui.rc
+shellrc_DATA = kslovarui.rc languages.ksl
 
 mimedir = $(kde_mimedir)/application
 mime_DATA = vnd.kslovar.ksd.desktop vnd.kslovar.ksl.desktop
@@ -45,4 +45,4 @@ EXTRA_DIST = $(mime_DATA)
 
 
 
-SUBDIRS = sqlite ui objects widgets
+SUBDIRS = sqlite ui objects widgets styles

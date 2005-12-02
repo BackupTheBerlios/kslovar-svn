@@ -55,6 +55,7 @@
 #include <kconfigdialog.h>
 #include <kdebug.h>
 #include <klocale.h>
+#include <kstandarddirs.h>
 
 
 KSlovar *KSlovar::m_instance=0L;
@@ -65,7 +66,7 @@ KSlovar::KSlovar()
   Instances::setMainInstance(this);
   m_configDialog=new KConfigDialog(this, "settings", Configuration::self());
   Instances::setConfigInstance(m_configDialog);
-  XMLParser=new KSXMLHandler(QString::fromUtf8("/home/mastermind/geslo.xsl"));
+  XMLParser=new KSXMLHandler(QString::fromUtf8(locate("appdata", "styles/default.xsl")));
 
   m_welcomeMessage=i18n("<h1>Welcome message.</h1> Need to change it :P");
 

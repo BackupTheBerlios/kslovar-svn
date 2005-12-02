@@ -289,7 +289,7 @@
 <customwidgets>
     <customwidget>
         <class>KSListView</class>
-        <header location="global">/home/mastermind/Projekti/Programi/kslovar/src/objects/kslistview.h</header>
+        <header location="global">../objects/kslistview.h</header>
         <sizehint>
             <width>-1</width>
             <height>-1</height>

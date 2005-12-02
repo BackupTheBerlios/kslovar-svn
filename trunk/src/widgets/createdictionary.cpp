@@ -116,7 +116,7 @@ void CreateDictionary::slotSize(int newSize)
 
 void CreateDictionary::populateLanguages()
 {
-  QStringList text=DBHandler::instance(locateLocal("data", "kslovar/languages.ksl"))->processList("SELECT name FROM languages;");
+  QStringList text=DBHandler::instance(locate("appdata", "languages.ksl"))->processList("SELECT name FROM languages;");
   if(!text.isEmpty())
   {
     for(QStringList::iterator count=text.begin(); count!=text.end(); count++)
