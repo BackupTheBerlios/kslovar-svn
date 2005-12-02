@@ -17,3 +17,37 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef KSXMLHANDLER_H
+#define KSXMLHANDLER_H
+
+#include <libxml/globals.h>
+#include <libxml/parser.h>
+
+#include <libxslt/xsltconfig.h>
+#include <libxslt/xsltInternals.h>
+#include <libxslt/transform.h>
+
+class QString;
+class QCString;
+
+/**
+	@author Gregor Kališnik <gregor@podnapisi.net>
+*/
+class KSXMLHandler{
+public:
+    KSXMLHandler(QString document);
+
+    void setXSL(QString document);
+    QString parse(QString xmlString);
+
+    ~KSXMLHandler();
+
+  private:
+    xsltStylesheetPtr styleSheet;
+    xmlDocPtr xslDoc;
+
+    QCString openXSL(QString path);
+
+};
+
+#endif

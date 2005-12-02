@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Gregor Kališnik   *
- *   gregor@podnapisi.net   *
+ *   Copyright (C) 2005 by Gregor Kališnik                                 *
+ *   gregor@podnapisi.net                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,6 +20,7 @@
 
 
 #include "kslovar.h"
+
 #include <kapplication.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
@@ -28,7 +29,7 @@
 static const char description[] =
     I18N_NOOP("A dictionary for KDE");
 
-static const char version[] = "0.1.0 20050826";
+static const char version[] = "0.1.0 20051202"; //Ne pozabi dodat vseh novih map in datotek... 2.12.2005
 
 static KCmdLineOptions options[] =
 {
@@ -39,7 +40,7 @@ static KCmdLineOptions options[] =
 int main(int argc, char **argv)
 {
     KAboutData about("kslovar", I18N_NOOP("KSlovar"), version, description,
-		     KAboutData::License_GPL, "(C) 2005 Gregor Kališnik", 0, 0, "gregor@podnapisi.net");
+         KAboutData::License_GPL, "(C) 2005 Gregor Kališnik", 0, 0, "gregor@podnapisi.net");
     about.addAuthor( "Gregor Kališnik", I18N_NOOP("Lead developer"), "gregor@podnapisi.net" );
     about.addCredit("Kopete development team", I18N_NOOP("Mouse navigation in lists"), "kopete-devel@kde.org", "http://kopete.kde.org");
     KCmdLineArgs::init(argc, argv, &about);

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Gregor Kališnik   *
- *   gregor@podnapisi.net   *
+ *   Copyright (C) 2005 by Gregor Kališnik                                 *
+ *   gregor@podnapisi.net                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,29 +17,44 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef INSTANCES_H
-#define INSTANCES_H
+#ifndef CREATEDICTIONARY_H
+#define CREATEDICTIONARY_H
 
-#include <qobject.h>
+#include <kdialogbase.h>
 
-class KSlovar;
+class CreateDictionaryWdt;
 
 /**
 @author Gregor Kališnik
-*/
-class Instances : public QObject
+ */
+class CreateDictionary : public KDialogBase
 {
   Q_OBJECT
   public:
-    static void setMainInstance(KSlovar *KSlovar);
-    static void setConfigInstance(QObject *Config);
+    CreateDictionary(QWidget *parent = 0, const char *caption="Create dictionary", QString nameDictionary=0, QString text=0, bool edit=false);
 
-    static KSlovar *mainInstance();
-    static QObject *configInstance();
+    ~CreateDictionary();
+
+  private slots:
+    void slotBold();
+    void slotItalic();
+    void slotUnderline();
+    void slotSize(int newSize);
+    void slotAddLang();
+    void slotEditLang();
 
   private:
-    static KSlovar *m_mainInstance;
-    static QObject *m_configInstance;
+    void populateLanguages();
+    bool save();
+
+    CreateDictionaryWdt *m_mainWidget;
+    QString m_name;
+    QString m_text;
+    bool m_edit;
+
+  protected slots:
+    virtual void slotOk();
+    virtual void slotApply();
 
 };
 

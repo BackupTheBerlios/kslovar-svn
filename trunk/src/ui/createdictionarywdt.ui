@@ -8,7 +8,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>540</width>
+            <width>652</width>
             <height>522</height>
         </rect>
     </property>
@@ -19,76 +19,6 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QLayoutWidget" row="0" column="0">
-            <property name="name">
-                <cstring>layout1</cstring>
-            </property>
-            <hbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <widget class="QGroupBox">
-                    <property name="name">
-                        <cstring>nameBox</cstring>
-                    </property>
-                    <property name="title">
-                        <string>Name</string>
-                    </property>
-                    <grid>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
-                        </property>
-                        <widget class="KLineEdit" row="0" column="0">
-                            <property name="name">
-                                <cstring>nameEdit</cstring>
-                            </property>
-                        </widget>
-                    </grid>
-                </widget>
-                <widget class="QGroupBox">
-                    <property name="name">
-                        <cstring>languageBox</cstring>
-                    </property>
-                    <property name="title">
-                        <string>Language</string>
-                    </property>
-                    <grid>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
-                        </property>
-                        <widget class="KComboBox" row="0" column="0">
-                            <item>
-                                <property name="text">
-                                    <string>Select language</string>
-                                </property>
-                            </item>
-                            <property name="name">
-                                <cstring>languageSelect</cstring>
-                            </property>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>1</hsizetype>
-                                    <vsizetype>0</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                        </widget>
-                        <widget class="KPushButton" row="0" column="1">
-                            <property name="name">
-                                <cstring>addLanguageButton</cstring>
-                            </property>
-                            <property name="text">
-                                <string>&amp;Add</string>
-                            </property>
-                            <property name="accel">
-                                <string>Alt+A</string>
-                            </property>
-                        </widget>
-                    </grid>
-                </widget>
-            </hbox>
-        </widget>
         <widget class="QGroupBox" row="1" column="0">
             <property name="name">
                 <cstring>mainBox</cstring>
@@ -184,18 +114,102 @@
                 </widget>
             </grid>
         </widget>
+        <widget class="QLayoutWidget" row="0" column="0">
+            <property name="name">
+                <cstring>layout5</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QGroupBox">
+                    <property name="name">
+                        <cstring>nameBox</cstring>
+                    </property>
+                    <property name="title">
+                        <string>Name</string>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="KLineEdit" row="0" column="0">
+                            <property name="name">
+                                <cstring>nameEdit</cstring>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+                <widget class="QGroupBox">
+                    <property name="name">
+                        <cstring>languageBox</cstring>
+                    </property>
+                    <property name="title">
+                        <string>Language</string>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="KComboBox">
+                            <item>
+                                <property name="text">
+                                    <string>Select language</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>languageSelect</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>1</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                        </widget>
+                        <widget class="KPushButton">
+                            <property name="name">
+                                <cstring>addLangButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Add</string>
+                            </property>
+                            <property name="accel">
+                                <string>Alt+A</string>
+                            </property>
+                        </widget>
+                        <widget class="KPushButton">
+                            <property name="name">
+                                <cstring>editLangButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Edit</string>
+                            </property>
+                            <property name="accel">
+                                <string>Alt+E</string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+            </hbox>
+        </widget>
     </grid>
 </widget>
+<customwidgets>
+</customwidgets>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
-    <includehint>klineedit.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>kpushbutton.h</includehint>
     <includehint>ktextedit.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>knuminput.h</includehint>
     <includehint>knuminput.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kpushbutton.h</includehint>
 </includehints>
 </UI>

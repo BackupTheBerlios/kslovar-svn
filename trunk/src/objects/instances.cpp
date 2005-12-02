@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Gregor Kališnik   *
- *   gregor@podnapisi.net   *
+ *   Copyright (C) 2005 by Gregor Kališnik                                 *
+ *   gregor@podnapisi.net                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,30 +17,34 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KSLISTVIEWITEM_H
-#define KSLISTVIEWITEM_H
+#include "instances.h"
 
-#include <klistview.h>
+#include "../kslovar.h"
 
-/**
-@author Gregor Kališnik
- */
-class KSListViewItem : public KListViewItem
+#include <qobject.h>
+
+KSlovar *Instances::m_mainInstance=0L;
+QObject *Instances::m_configInstance=0L;
+
+void Instances::setMainInstance(KSlovar *KSlovar)
 {
-  //Q_OBJECT
-  public:
-    KSListViewItem(KListView *parent = 0, QString label1=QString::null, QString search=QString::null, QString id=QString::null);
+  m_mainInstance=KSlovar;
+}
 
-    ~KSListViewItem();
+void Instances::setConfigInstance(QObject *Config)
+{
+  m_configInstance=Config;
+}
 
-  public:
-    QString getId();
-    QString getSearch();
+KSlovar *Instances::mainInstance()
+{
+  return m_mainInstance;
+}
 
-  private:
-    QString m_id;
-    QString m_search;
+QObject *Instances::configInstance()
+{
+  return m_configInstance;
+}
 
-};
 
-#endif
+#include "instances.moc"

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Gregor Kališnik   *
- *   gregor@podnapisi.net   *
+ *   Copyright (C) 2005 by Gregor Kališnik                                 *
+ *   gregor@podnapisi.net                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,36 +17,32 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CREATEDICTIONARY_H
-#define CREATEDICTIONARY_H
+#ifndef KSDATA_H
+#define KSDATA_H
 
-#include <kdialogbase.h>
+#include <qobject.h>
 
-class CreateDictionaryWdt;
 
 /**
-@author Gregor Kališnik
+	@author Gregor Kališnik <gregor@podnapisi.net>
  */
-class CreateDictionary : public KDialogBase
+class KSData : public QObject
 {
   Q_OBJECT
   public:
-    CreateDictionary(QWidget *parent = 0, const char *caption="Create dictionary", QString nameDictionary=0, QString text=0);
+    KSData();
 
-    ~CreateDictionary();
+    static KSData *instance();
 
-  private slots:
-    void slotBold();
-    void slotItalic();
-    void slotUnderline();
-    void slotSize(int newSize);
+    void setDictionaryPath(QString path);
+    QString getDictionaryPath();
+
+    ~KSData();
 
   private:
-    void populateLanguages();
+    static KSData *m_instance;
 
-    CreateDictionaryWdt *m_mainWidget;
-    QString m_name;
-    QString m_text;
+    QString m_dictionaryPath;
 
 };
 

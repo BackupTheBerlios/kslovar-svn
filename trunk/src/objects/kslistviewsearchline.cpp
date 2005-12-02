@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Gregor Kališnik   *
- *   gregor@podnapisi.net   *
+ *   Copyright (C) 2005 by Gregor Kališnik                                 *
+ *   gregor@podnapisi.net                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,28 +17,36 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#include "kslistviewsearchline.h"
+
+#include "kslistview.h"
 #include "kslistviewitem.h"
 
-#include <klistview.h>
+#include <kdebug.h>
 
-KSListViewItem::KSListViewItem(KListView *parent, QString label1, QString search, QString id)
-  : KListViewItem(parent, label1), m_id(id), m_search(search)
+KSListViewSearchLine::KSListViewSearchLine(QWidget *parent, KSListView *listView, const char *name)
+  : KListViewSearchLine(parent, static_cast<KListView*> (listView), name)
 {
 }
 
-QString KSListViewItem::getId()
+bool KSListViewSearchLine::itemMatches(const QListViewItem *item, const QString &s) const
 {
-  return m_id;
+  if(s.isEmpty())
+  {
+    return true;
+  }
+
+  if(static_cast<KSListViewItem*> (const_cast<QListViewItem*> (item))->getSearch().find(s, 0, 0) >= 0)
+  {
+    return true;
+  }
+
+  return false;
 }
 
-QString KSListViewItem::getSearch()
-{
-  return m_search;
-}
-
-KSListViewItem::~KSListViewItem()
+KSListViewSearchLine::~KSListViewSearchLine()
 {
 }
 
 
-//#include "kslistviewitem.moc"
+#include "kslistviewsearchline.moc"

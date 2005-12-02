@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Gregor Kališnik   *
- *   gregor@podnapisi.net   *
+ *   Copyright (C) 2005 by Gregor Kališnik                                 *
+ *   gregor@podnapisi.net                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,31 +19,25 @@
  ***************************************************************************/
 
 #include "addphrase.h"
-#include "ui/addphrasewdt.h"
-#include "kslovar.h"
+#include "../ui/addphrasewdt.h"
+#include "../kslovar.h"
 
-#include "dbhandler.h"
-#include "kslistview.h"
-#include "kslistviewitem.h"
-#include "instances.h"
+#include "../dbhandler.h"
+#include "../objects/kslistview.h"
+#include "../objects/kslistviewitem.h"
+#include "../objects/instances.h"
+#include "../objects/ksdata.h"
 
-#include <kdialogbase.h>
+#include <qregexp.h>
+
 #include <klocale.h>
-#include <qlayout.h>
-#include <qwidget.h>
-#include <qgroupbox.h>
 #include <klineedit.h>
 #include <kpushbutton.h>
 #include <kicondialog.h>
 #include <kiconloader.h>
 #include <kspell.h>
 #include <klistbox.h>
-#include <qregexp.h>
-#include <qlabel.h>
-#include <qregexp.h>
-#include <qheader.h>
 #include <kmessagebox.h>
-
 #include <kdebug.h>
 
 
@@ -53,7 +47,7 @@ AddPhrase::AddPhrase(QWidget *parent, QString caption)
   initialize();
   populateAvailableList();
   enableButtonApply(false);
-  
+
   setMainWidget(m_mainWidget);
 
   connectSlots();
@@ -77,7 +71,7 @@ void AddPhrase::populateAvailableList()
     QString word = *it;
     QString search = word;
     QString id = search;
-    new KSListViewItem(m_mainWidget->availableList, word.remove(QRegExp("/.+$")), search.remove(QRegExp("^.+/")), id.remove(QRegExp("\\D+")));
+    new KSListViewItem(m_mainWidget->availableList, word.remove(QRegExp("/.+$")), id.remove(QRegExp("[^/\\d]+")).remove(QRegExp("^\\d+")).remove(QRegExp("\\d+$")).remove(QRegExp("/+")), search.remove(QRegExp("^.+/")));
   }
 }
 
@@ -125,50 +119,102 @@ void AddPhrase::slotOk()
   QString explanations;
   for(QListViewItem *count=m_mainWidget->explanationList->firstChild();count;count=count->nextSibling())
   {
-    explanations+="<li>"+count->text(0)+" <i>"+count->text(1)+"</i></li>";
+    explanations+="<explanations><explanation>"+count->text(0)+"</explanation><example>"+count->text(1)+"</example></explanations>";
   }
   QString seealso;
-  
+
   for(QListViewItem *current=m_mainWidget->selectedList->firstChild();current;current=current->nextSibling())
   {
     KSListViewItem *item=static_cast<KSListViewItem*> (current);
-    seealso+="<a href=http://"+item->getId()+">"+item->text(0)+"</a> ";
+    seealso+="<other><seealso id='"+item->getId()+"'>"+item->text(0)+"</seealso></other>";
   }
-  
+
   QString text;
-  text="<h1>"+m_mainWidget->wordEdit->text()+", "+m_mainWidget->typeEdit->text()+"</h1>"+"<p>"+explanations+"</p>";
-  if(!seealso.isEmpty())
-  {
-    text+="<p>See also: "+seealso+"</p>";
-  }
+  text="<?xml version='1.0' encoding='UTF-8'?><phrase><word>"+m_mainWidget->wordEdit->text()+"</word><type>"+m_mainWidget->typeEdit->text()+"</type>"+explanations+seealso+"</phrase>";
   if(m_edit==true)
   {
-    DBHandler::Instance(m_path)->saveWord(m_mainWidget->wordEdit->text(), text, false, m_id);
+    if(!DBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(m_mainWidget->wordEdit->text(), text, false, m_id))
+    {
+      KMessageBox::error(this, i18n("Cannot edit phrase!"));
+      return;
+    }
   }
   else
   {
-    DBHandler::Instance(m_path)->saveWord(m_mainWidget->wordEdit->text(), text, true, 0L);
+    if(!DBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(m_mainWidget->wordEdit->text(), text, true, 0L))
+    {
+      KMessageBox::error(this, i18n("Cannot add new phrase!"));
+      return;
+    }
   }
-  
+
+  emit okClicked();
   accept();
 }
 
-void AddPhrase::setPath(QString filename)
+/*void AddPhrase::setPath(QString filename)
 {
   m_path=filename;
-}
+}*/
 
 void AddPhrase::setWord(QString text, QString id)
 {
-  m_text=text;
+  QString word;
+
+
+  text.remove(QRegExp("<\\?.+\\?>"));
+  //m_text=text;
   m_id=id;
   m_edit=true;
-  populateAddPhraseDialog();
+  //populateAddPhraseDialog();
+
+  QDomDocument phrase;
+  phrase.setContent(text);
+  QDomNode node=phrase.firstChild();
+  for(node=node.firstChild();!node.isNull();node=node.nextSibling())
+  {
+    QString name=node.nodeName();
+    if(name=="word")
+    {
+      m_mainWidget->wordEdit->setText(node.toElement().text());
+      continue;
+    }
+    if(name=="type")
+    {
+      m_mainWidget->typeEdit->setText(node.toElement().text());
+      continue;
+    }
+    if(name=="explanations")
+    {
+      new KListViewItem(m_mainWidget->explanationList, node.firstChild().toElement().text(), node.lastChild().toElement().text());
+      continue;
+    }
+    if(name=="other")
+    {
+      for(QDomNode node2=node.firstChild();!node2.isNull();node2=node2.nextSibling())
+      {
+        QString name2=node2.nodeName();
+        if(name2=="seealso")
+        {
+          for(QListViewItem *count=m_mainWidget->availableList->firstChild();count;count=count->nextSibling())
+          {
+            if(node2.toElement().text()==count->text(0))
+            {
+              m_mainWidget->selectedList->insertItem(count);
+            }
+          }
+          continue;
+        }
+      }
+      continue;
+    }
+  }
+  delete m_mainWidget->availableList->findItem(m_mainWidget->wordEdit->text(), 0);
 }
 
 void AddPhrase::populateAddPhraseDialog()
 {
-  QString word=m_text;
+  /*QString word=m_text;
   word.remove(QRegExp("</h1>.+")).remove("<h1>");
   QString type=word;
   word.remove(QRegExp(",.+"));
@@ -179,7 +225,7 @@ void AddPhrase::populateAddPhraseDialog()
   seealsos.remove(QRegExp(".+See also:\\s+")).remove("</p>").remove(QRegExp("<a href=http://\\d+>"));
   QStringList explanation=QStringList::split("</li>", explanations);
   QStringList seealso=QStringList::split("</a> ", seealsos);
-  
+
   m_mainWidget->wordEdit->setText(word);
   m_mainWidget->typeEdit->setText(type);
   for(QStringList::iterator count=explanation.begin();count!=explanation.end();count++)
@@ -200,28 +246,29 @@ void AddPhrase::populateAddPhraseDialog()
       }
     }
   }
-  delete m_mainWidget->availableList->findItem(word, 0);
+  delete m_mainWidget->availableList->findItem(word, 0);*/
+
 }
 
 void AddPhrase::initialize()
 {
   KIconLoader *icons=new KIconLoader();
-  
+
   m_mainWidget=new AddPhraseWdt(this);
   m_mainWidget->spellButton->setIconSet(icons->loadIconSet("spellcheck", KIcon::Toolbar));
-  m_mainWidget->explanationList->setRenameable(0);
-  m_mainWidget->explanationList->setRenameable(1);
+  m_mainWidget->explanationList->setItemsRenameable(true);
   m_mainWidget->explanationList->addColumn(i18n("Explanation"));
   m_mainWidget->explanationList->addColumn(i18n("Example"));
-  
-  m_mainWidget->availableLabel->setText(i18n("List of available words"));
-  m_mainWidget->addedLabel->setText(i18n("List of selected words"));
+  m_mainWidget->explanationList->setRenameable(1);
+
+//  m_mainWidget->availableLabel->setText(i18n("List of available words"));
+//  m_mainWidget->addedLabel->setText(i18n("List of selected words"));
   m_mainWidget->rightButton->setIconSet(icons->loadIconSet("forward", KIcon::Toolbar));
   m_mainWidget->leftButton->setIconSet(icons->loadIconSet("back", KIcon::Toolbar));
 
-  m_mainWidget->availableList->header()->hide();
+//  m_mainWidget->availableList->header()->hide();
   m_mainWidget->availableList->setColumnWidth(0, 193);
-  m_mainWidget->selectedList->header()->hide();
+//  m_mainWidget->selectedList->header()->hide();
   m_mainWidget->selectedList->setColumnWidth(0, 193);
 
   m_mainWidget->availableList->setFullWidth(true);

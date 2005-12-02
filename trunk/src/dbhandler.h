@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Gregor Kališnik   *
- *   gregor@podnapisi.net   *
+ *   Copyright (C) 2005 by Gregor Kališnik                                 *
+ *   gregor@podnapisi.net                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -34,7 +34,7 @@ typedef struct sqlite3_stmt sqlite3_stmt;
 class DBHandler
 {
   public:
-    
+
     /**
     * Class's constructor that opens a connection to the database
     * @param databasePath Path to the databases
@@ -55,26 +55,27 @@ class DBHandler
     /**
     * Desctructor that closes the connection
     */
-    void saveDictionary(QString text, bool create=true);
-    void saveWord(QString word, QString text, bool add, QString id);
-    static DBHandler *Instance(QString path);
+    bool saveDictionary(QString text, bool create=true);
+    bool saveWord(QString word, QString text, bool add, QString id);
+    static DBHandler *instance(QString path);
     //bool Query(QString query);
-    QString ProcessOutput();
-    QString ProcessString(QString query, int columns=1);
-    QStringList ProcessList(QString query, int columns=1);
+    bool processQuery(QString rawQuery);
+    QString processString(QString rawQuery, int columns=1);
+    QStringList processList(QString rawQuery, int columns=1);
 
     ~DBHandler();
-    
+
   private:
     sqlite3 *m_db;
     sqlite3_stmt *m_rawOutput;
     static QString m_currentPath;
     static DBHandler *m_instance;
-    
+
     /**
     * Query excetution method
     * @param sqlQuery Query to excetute
     * @retval output Returns the result of the SQL query (statement)
     */
-    bool Query(QString sqlQuery, sqlite3_stmt ** output, bool returnResult=true);
+    bool query(QString sqlQuery, sqlite3_stmt ** output);
+    bool query(QString sqlQuery);
 };

@@ -1,9 +1,8 @@
 # set the include path for X, qt and KDE
-INCLUDES = $(all_includes)
+INCLUDES = $(all_includes) $(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS)
 
 # these are the headers for your project
-noinst_HEADERS = kslovar.h dbhandler.h addphrase.h kslistview.h \
-	kslistviewitem.h instances.h createdictionary.h
+noinst_HEADERS = kslovar.h dbhandler.h ksxmlhandler.h
 
 # let automoc handle all of the meta source files (moc)
 METASOURCES = AUTO
@@ -22,12 +21,11 @@ KDE_ICON = AUTO
 bin_PROGRAMS = kslovar
 
 # the application source, library search path, and link libraries
-kslovar_SOURCES = main.cpp kslovar.cpp dbhandler.cpp addphrase.cpp \
-	kslistview.cpp kslistviewitem.cpp configuration.kcfgc instances.cpp \
-	createdictionary.cpp
-kslovar_LDFLAGS = $(KDE_RPATH) $(all_libraries)
-kslovar_LDADD = $(top_builddir)/src/ui/libui.a \
-	$(top_builddir)/src/sqlite/libsqlite.la -lkdeprint -lkhtml $(LIB_KDEUI)
+kslovar_SOURCES = main.cpp kslovar.cpp dbhandler.cpp ksxmlhandler.cpp
+kslovar_LDFLAGS = -no-undefined $(KDE_RPATH) $(all_libraries)
+kslovar_LDADD = $(top_builddir)/src/widgets/libkswidgets.la \
+	$(top_builddir)/src/ui/libui.a $(top_builddir)/src/sqlite/libsqlite.la \
+	$(top_builddir)/src/objects/libksobjects.la $(LIBXSLT_LIBS) $(LIBXML_LIBS) -lkdeprint -lkhtml $(LIB_KDEUI)
 
 # this is where the desktop file will go 
 shelldesktopdir   = $(kde_appsdir)/Utilities
@@ -36,8 +34,6 @@ shelldesktop_DATA = kslovar.desktop
 # this is where the shell's XML-GUI resource file goes
 shellrcdir   = $(kde_datadir)/kslovar
 shellrc_DATA = kslovarui.rc
-
-kde_kcfg_DATA = kslovar.kcfg
 
 mimedir = $(kde_mimedir)/application
 mime_DATA = vnd.kslovar.ksd.desktop vnd.kslovar.ksl.desktop
@@ -49,4 +45,4 @@ EXTRA_DIST = $(mime_DATA)
 
 
 
-SUBDIRS = sqlite ui
+SUBDIRS = sqlite ui objects widgets

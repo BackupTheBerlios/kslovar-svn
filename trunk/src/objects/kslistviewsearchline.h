@@ -17,3 +17,28 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef KSLISTVIEWSEARCHLINE_H
+#define KSLISTVIEWSEARCHLINE_H
+
+#include <klistviewsearchline.h>
+
+class KSListView;
+class QListViewItem;
+
+/**
+@author Gregor Kališnik
+ */
+class KSListViewSearchLine : public KListViewSearchLine
+{
+  Q_OBJECT
+  public:
+    KSListViewSearchLine(QWidget *parent = 0, KSListView *listView=0, const char *name = 0);
+
+    ~KSListViewSearchLine();
+
+  protected:
+    virtual bool itemMatches(const QListViewItem *item, const QString &s) const;
+
+};
+
+#endif

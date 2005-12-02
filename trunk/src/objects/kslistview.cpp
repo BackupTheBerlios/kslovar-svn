@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Gregor Kališnik   *
- *   gregor@podnapisi.net   *
+ *   Copyright (C) 2005 by Gregor Kališnik                                 *
+ *   gregor@podnapisi.net                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,13 +20,15 @@
 #include "kslistview.h"
 
 #include "configuration.h"
-#include "kslovar.h"
+#include "../kslovar.h"
 #include "instances.h"
 
 #include <qtimer.h>
+#include <qheader.h>
 
 KSListView::KSListView(QWidget *parent, const char *name) : KListView(parent, name), mouseConfig(Configuration::mouseNavigation())
 {
+  header()->hide();
   connect( Instances::configInstance(), SIGNAL(settingsChanged()), this, SLOT(slotUpdateConfiguration()) );
   verticalScrollBar()->installEventFilter(this);
   if(!Configuration::scrollBar())

@@ -17,3 +17,30 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef INSTANCES_H
+#define INSTANCES_H
+
+#include <qobject.h>
+
+class KSlovar;
+
+/**
+@author Gregor Kališnik
+*/
+class Instances : public QObject
+{
+  Q_OBJECT
+  public:
+    static void setMainInstance(KSlovar *KSlovar);
+    static void setConfigInstance(QObject *Config);
+
+    static KSlovar *mainInstance();
+    static QObject *configInstance();
+
+  private:
+    static KSlovar *m_mainInstance;
+    static QObject *m_configInstance;
+
+};
+
+#endif

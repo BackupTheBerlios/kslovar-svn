@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Gregor Kališnik   *
- *   gregor@podnapisi.net   *
+ *   Copyright (C) 2005 by Gregor Kališnik                                 *
+ *   gregor@podnapisi.net                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,50 +20,42 @@
 
 
 #include "kslovar.h"
-#include "createdictionary.h"
-#include "addphrase.h"
-#include "configuration.h"
+#include "objects/configuration.h"
+
+#include "widgets/createdictionary.h"
+#include "widgets/addphrase.h"
 
 #include "ui/appearancewdt.h"
 
 #include "dbhandler.h"
-#include "kslistview.h"
-#include "kslistviewitem.h"
-#include "instances.h"
+#include "ksxmlhandler.h"
+#include "objects/ksdata.h"
+
+#include "objects/kslistview.h"
+#include "objects/kslistviewitem.h"
+#include "objects/kslistviewsearchline.h"
+#include "objects/instances.h"
+
+#include <qvbox.h>
+#include <qhbox.h>
 
 #include <kpopupmenu.h>
 #include <kmenubar.h>
 #include <kapp.h>
-#include <qvbox.h>
-#include <qhbox.h>
 #include <klineedit.h>
-#include <klistbox.h>
 #include <khtml_part.h>
 #include <kurl.h>
-#include <qsplitter.h>
 #include <kfiledialog.h>
-#include <qfile.h>
-#include <qtextstream.h>
 #include <kiconloader.h>
-#include <qstringlist.h>
 #include <kmessagebox.h>
 #include <kparts/browserextension.h>
-#include <kprogress.h>
 #include <kshortcut.h>
 #include <kaction.h>
-#include <kprinter.h>
-#include <qpainter.h>
-#include <qpaintdevicemetrics.h>
-#include <klistviewsearchline.h>
 #include <khtmlview.h>
 #include <kconfigdialog.h>
-
-
 #include <kdebug.h>
-#include <qheader.h>
-
-#include <kmainwindow.h>
 #include <klocale.h>
+
 
 KSlovar *KSlovar::m_instance=0L;
 
@@ -73,68 +65,70 @@ KSlovar::KSlovar()
   Instances::setMainInstance(this);
   m_configDialog=new KConfigDialog(this, "settings", Configuration::self());
   Instances::setConfigInstance(m_configDialog);
+  XMLParser=new KSXMLHandler(QString::fromUtf8("/home/mastermind/geslo.xsl"));
 
   m_welcomeMessage=i18n("<h1>Welcome message.</h1> Need to change it :P");
-  
+
   registerButtons();
   addMenu();
   addToolbar();
-  
+
   QHBox * horiz = new QHBox( this );
-  
+
   m_split = new QSplitter( horiz );
-  
+
   QVBox * vert = new QVBox( m_split );
   vert->setMaximumWidth(200);
   vert->setMinimumWidth(200);
-  
-  m_search = new KListViewSearchLine( vert );
+
+  m_search = new KSListViewSearchLine( vert );
   m_list = new KSListView( vert );
-  m_list->header()->hide();
   m_list->addColumn("name");
   m_list->setColumnWidth(0, 193);
   m_list->setFullWidth(true);
   m_search->setListView(m_list);
-  
+
   m_browser=new KHTMLPart( m_split );
   m_browser->setEncoding("utf-8", true);
   slotClose();
-  
+
   connect( m_browser->browserExtension(), SIGNAL( openURLRequest( const KURL &, const KParts::URLArgs & ) ), this, SLOT( slotShowBrowser(const KURL &, const KParts::URLArgs &) ) );
   connect(m_list, SIGNAL( selectionChanged(QListViewItem *)), this, SLOT( slotShowList(QListViewItem *) ) );
   connect(m_list, SIGNAL(doubleClicked( QListViewItem *)), this, SLOT(slotEditPhrase()));
-  
+
   setCentralWidget( horiz );
 }
 
 void KSlovar::slotFileOpen()
 {
-  m_path=KFileDialog::getOpenFileName(QString::null, "*.ksd|KSlovar dictionary file", this);
-  processFileOpen();
+  processFileOpen(KFileDialog::getOpenFileName("~", "*.ksd|KSlovar dictionary file", this));
 }
 
 void KSlovar::showDictionary()
 {/*
   m_selected=false;
-  
+
   QString output=DBHandler::Instance(m_path)->readText(m_selectedPhrase);
   m_currentText=output;
-  
+
   m_browser->begin();
   m_browser->write(output);
   m_browser->end();
-  
+
   if(!m_backHistory.isEmpty())
   {
     m_back->setEnabled(true);
   }
  */
-  
+
   m_history=false;
   m_browser->begin();
   //m_browser->write(DBHandler::Instance(m_path)->readText(m_selectedPhrase));
-  m_browser->write(DBHandler::Instance(m_path)->ProcessString("SELECT text FROM dictionary WHERE id='"+m_selectedPhrase+"' LIMIT 1;"));
+  //m_browser->write(DBHandler::instance(m_path)->processString("SELECT text FROM dictionary WHERE id='"+m_selectedPhrase+"' LIMIT 1;"));
+  m_browser->write(XMLParser->parse(DBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+m_selectedPhrase+"' LIMIT 1;")));
   m_browser->end();
+
+  kdDebug() << XMLParser->parse(DBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+m_selectedPhrase+"' LIMIT 1;")) << endl;
 
   if(!m_backHistory.isEmpty())
   {
@@ -153,10 +147,10 @@ void KSlovar::slotShowList(QListViewItem *selected)
     return;
   }
   addHistory();
-  
+
   QString result;
 //  QStringList list1 = m_phrases.grep( m_list->currentText() );
-  
+
 /*  for(QStringList::Iterator phrase = list1.begin(); phrase != list1.end(); phrase++)
   {
     QString search=result = *phrase;
@@ -197,15 +191,15 @@ void KSlovar::slotShowList(QListViewItem *selected)
 void KSlovar::slotShowBrowser(const KURL &url, const KParts::URLArgs &)
 {
   //addHistory();
-  
+
   //int temp = url.host().toInt();
   //QString temp1;
-  
+
   //m_selectedPhrase=url.host();
-  
+
   //m_selected=true;
 //  m_list->setSelected(m_selectedPhrase.toInt(), true);
-  
+
   /*for(QStringList::Iterator phrase = phrases.begin(); phrase != phrases.end(); phrase++)
   {
     QString search=temp1 = *phrase;
@@ -225,9 +219,9 @@ void KSlovar::slotShowBrowser(const KURL &url, const KParts::URLArgs &)
       break;
     }
 }*/
-  
+
   //showDictionary();
-  
+
   QListViewItem *current=m_list->firstChild();
   while(current)
   {
@@ -248,12 +242,12 @@ void KSlovar::slotPrevPhrase()
   m_itForward = m_forwardHistory.prepend( m_selectedPhrase.toInt() );
   //m_selectedPhrase = m_selectedPhrase.setNum(temp);
   //m_userDictionary=temp1;
-  
+
 //  m_selected=true;
 //  m_list->setSelected(m_selectedPhrase.toInt(), true);
-  
+
   m_it = m_backHistory.remove(m_it);
-  
+
   if(m_backHistory.isEmpty())
   {
     m_back->setEnabled(false);
@@ -261,7 +255,7 @@ void KSlovar::slotPrevPhrase()
   m_forward->setEnabled(true);
 
   m_history=true;
-  
+
   if(temp==0)
   {
     m_list->clearSelection();
@@ -282,7 +276,7 @@ void KSlovar::slotPrevPhrase()
       current=current->nextSibling();
     }
   }
-  
+
   //showDictionary();
 }
 
@@ -290,17 +284,17 @@ void KSlovar::slotNextPhrase()
 {
   int temp = m_forwardHistory.first();
   //bool temp1= m_forwardHistory.first().user();
-  
+
   addHistory(false);
-  
+
   //m_selectedPhrase = m_selectedPhrase.setNum(temp);
   //m_userDictionary=temp1;
-  
+
   //m_selected=true;
 //  m_list->setSelected(m_selectedPhrase.toInt(), true);
-  
+
   m_itForward = m_forwardHistory.remove(m_itForward);
-  
+
   if(m_forwardHistory.isEmpty())
   {
     m_forward->setEnabled(false);
@@ -318,7 +312,7 @@ void KSlovar::slotNextPhrase()
     }
     current=current->nextSibling();
   }
-  
+
   //showDictionary();
 }
 
@@ -328,16 +322,16 @@ void KSlovar::slotHome()
   {
     return;
   }
-  
+
 //  m_list->setSelected(m_selectedPhrase.toInt(), false);
-  
+
   addHistory();
-  
+
   m_selectedPhrase.setNum(0);
   m_list->clearSelection();
   m_editPhrase->setEnabled(false);
   //m_userDictionary=false;
-  
+
   showDictionary();
 }
 
@@ -348,7 +342,7 @@ void KSlovar::addHistory(bool deleteForward)
     //m_it = m_backHistory.prepend( history(m_selectedPhrase.toInt(), m_userDictionary) );
     m_it = m_backHistory.prepend(m_selectedPhrase.toInt());
   }
-  
+
   if(deleteForward)
   {
     m_forwardHistory.clear();
@@ -366,13 +360,13 @@ void KSlovar::slotNewDictionary()
 void KSlovar::slotEditDictionary()
 {
   //QString text=DBHandler::Instance(m_path)->readText(QString("0"));
-  QString text=DBHandler::Instance(m_path)->ProcessString("SELECT text FROM dictionary WHERE id='0' LIMIT 1;");
+  QString text=DBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='0' LIMIT 1;");
   QString name=text;
-  
+
   text.remove(QRegExp("<h1>.+</h1>"));
   name.remove(text).remove("<h1>").remove("</h1>");
-  
-  m_dictionarydlg = new CreateDictionary(this, "Edit Dictionary", name, text);
+
+  m_dictionarydlg = new CreateDictionary(this, "Edit Dictionary", name, text, true);
 //  m_dictionarydlg->setPath(m_path);
   m_dictionarydlg->resize(700, 700);
   m_dictionarydlg->show();
@@ -383,19 +377,19 @@ void KSlovar::registerButtons()
   m_newDictionary = new KAction(i18n("&New dictionary"), "filenew", KShortcut(KKey("CTRL+n")), this, SLOT(slotNewDictionary()), actionCollection(), "newDictionary");
   m_openDictionary = KStdAction::open(this, SLOT(slotFileOpen()), actionCollection());
   m_quit = KStdAction::quit(kapp, SLOT(quit()), actionCollection());
-  
+
   m_back=KStdAction::back(this, SLOT(slotPrevPhrase()), actionCollection());
   m_forward=KStdAction::forward(this, SLOT(slotNextPhrase()), actionCollection());
   m_home=KStdAction::home(this, SLOT(slotHome()), actionCollection());
-  
+
   m_editDictionary = new KAction(i18n("&Edit dictionary"), "edit", KShortcut(KKey("CTRL+e")), this, SLOT(slotEditDictionary()), actionCollection(), "editDictionary");
   m_close=KStdAction::close(this, SLOT(slotClose()), actionCollection());
-  
+
   m_find=KStdAction::find(this, SLOT(slotFind()), actionCollection());
   m_findNext=KStdAction::findNext(this, SLOT(slotFindNext()), actionCollection());
   m_print=KStdAction::print(this, SLOT(slotPrint()), actionCollection());
   m_selectAll=KStdAction::selectAll(this, SLOT(slotSelectAll()), actionCollection());
-  
+
   m_addPhrase=new KAction(i18n("&Add phrase"), "filenew", KShortcut(KKey("CTRL+a")), this, SLOT(slotAddPhrase()), actionCollection(), "addPhrase");
   m_editPhrase=new KAction(i18n("Edi&t phrase"), "edit", KShortcut(KKey("CTRL+t")), this, SLOT(slotEditPhrase()), actionCollection(), "editPhrase");
   m_removePhrase=new KAction(i18n("&Remove phrase"), "editdelete", KShortcut(KKey("CTRL+r")), this, SLOT(slotRemovePhrase()), actionCollection(), "removePhrase");
@@ -413,7 +407,7 @@ void KSlovar::addMenu()
   filemenu->insertSeparator();
   m_close->plug(filemenu);
   m_quit->plug(filemenu);
-  
+
   KPopupMenu *editmenu=new KPopupMenu;
   m_editDictionary->plug(editmenu);
   m_selectAll->plug(editmenu);
@@ -424,17 +418,17 @@ void KSlovar::addMenu()
   editmenu->insertSeparator();
   m_find->plug(editmenu);
   m_findNext->plug(editmenu);
-  
+
   KPopupMenu *gomenu=new KPopupMenu;
   m_back->plug(gomenu);
   m_forward->plug(gomenu);
   m_home->plug(gomenu);
-  
+
   KPopupMenu *setmenu=new KPopupMenu;
   m_config->plug(setmenu);
-  
+
   KPopupMenu *help = helpMenu( );
-  
+
   KMenuBar * menu = menuBar();
   menu->insertItem( i18n( "&File" ), filemenu );
   menu->insertItem(i18n("&Edit"), editmenu);
@@ -449,11 +443,11 @@ void KSlovar::addToolbar()
   m_back->plug(toolbar);
   m_forward->plug(toolbar);
   m_home->plug(toolbar);
-  
+
   KToolBar *utilityToolbar=new KToolBar(this);
   m_print->plug(utilityToolbar);
   m_find->plug(utilityToolbar);
-  
+
   addToolBar(toolbar);
   addToolBar(utilityToolbar);
 }
@@ -506,7 +500,7 @@ void KSlovar::slotSelectAll()
 void KSlovar::slotAddPhrase()
 {
   m_phrasedlg=new AddPhrase(this, "Add word");
-  m_phrasedlg->setPath(m_path);
+  //m_phrasedlg->setPath(m_path);
   m_phrasedlg->resize(700, 700);
   m_phrasedlg->show();
 }
@@ -518,10 +512,10 @@ void KSlovar::slotEditPhrase()
     return;
   }
   //QString output=DBHandler::Instance(m_path)->readText(m_selectedPhrase);
-  QString output=DBHandler::Instance(m_path)->ProcessString("SELECT text FROM dictionary WHERE id='"+m_selectedPhrase+"' LIMIT 1;");
+  QString output=DBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+m_selectedPhrase+"' LIMIT 1;");
   m_phrasedlg=new AddPhrase(this, "Edit word");
   m_phrasedlg->setWord(output, m_selectedPhrase);
-  m_phrasedlg->setPath(m_path);
+  //m_phrasedlg->setPath(m_path);
   m_phrasedlg->resize(700, 700);
   m_phrasedlg->show();
 }
@@ -540,33 +534,33 @@ void KSlovar::slotConfigure()
   m_configDialog->addPage(new AppearanceWdt(0), i18n("Appearance"), "looknfeel");
 
   //connect( m_configDialog, SIGNAL(settingsChanged()), this, SLOT(slotUpdateConfiguration()) );
-  
+
   m_configDialog->show();
 }
 
 void KSlovar::slotUpdateConfiguration()
 {
-  
+
 }
 
 void KSlovar::openFile(QString fileName)
 {
-  m_path=fileName;
-  processFileOpen();
+  KSData::instance()->setDictionaryPath(fileName);
+  processFileOpen(fileName);
 }
 
-void KSlovar::processFileOpen()
+void KSlovar::processFileOpen(QString fileName)
 {
-  if( !m_path.isEmpty() )
+  if( !fileName.isEmpty() )
   {
-    
+
     /*progress = new KProgressDialog(this, "Progress", i18n("Reading index"), i18n("Please wait..."));
     progress->setAutoClose(true);
     progress->showCancelButton(false);
     progress->setMinimumDuration(0);
     progressBar = progress->progressBar();*/
-  
-    QFile file( m_path );
+
+    QFile file( fileName );
     if( file.open(IO_ReadOnly) )
     {
       QString temp;
@@ -584,22 +578,22 @@ void KSlovar::processFileOpen()
       return;
     }
     file.close();
-    
+
     //int steps=0;
     //int step=0;
-    
+
     //m_phrases = DBHandler::Instance(m_path)->readIndex(0L);
-    m_phrases=DBHandler::Instance(m_path)->ProcessList("SELECT name, search, id FROM phrases ORDER BY search ASC;", 3);
+    m_phrases=DBHandler::instance(fileName)->processList("SELECT name, id, search FROM phrases ORDER BY search ASC;", 3);
     //progressBar->setTotalSteps(steps);
-    
-    
+
+
     for(QStringList::iterator phrase = m_phrases.begin(); phrase != m_phrases.end(); phrase++)
     {
       //step++;
       QString word = *phrase;
-      QString search= *phrase;
       QString id= *phrase;
-      new KSListViewItem(m_list, word.remove(QRegExp("/.+$")), search.remove(QRegExp("^.+/")), id.remove(QRegExp("\\D+")));
+      QString search= *phrase;
+      new KSListViewItem(m_list, word.remove(QRegExp("/.+$")), id.remove(QRegExp("[^/\\d]+")).remove(QRegExp("^\\d+")).remove(QRegExp("\\d+$")).remove(QRegExp("/+")), search.remove(QRegExp("^.+/")));
       //progressBar->setProgress(step);
     }
     //progressBar->setProgress(steps);
@@ -611,9 +605,10 @@ void KSlovar::processFileOpen()
     m_close->setEnabled(true);
     m_addPhrase->setEnabled(true);
     //m_editPhrase->setEnabled(true);
-    
+
     slotHome();
     m_backHistory.clear();
+    KSData::instance()->setDictionaryPath(fileName);
   }
 }
 

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Gregor Kališnik   *
- *   gregor@podnapisi.net   *
+ *   Copyright (C) 2005 by Gregor Kališnik                                 *
+ *   gregor@podnapisi.net                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -30,7 +30,7 @@
 #include <kurl.h>
 #include <kparts/browserextension.h>
 #include <klistview.h>
- 
+
 class KListBox;
 class KHTMLPart;
 class QSplitter;
@@ -46,6 +46,8 @@ class KListViewSearchLine;
 class KSListViewItem;
 class KConfigDialog;
 
+class KSXMLHandler;
+
 
 /*class history
 {
@@ -53,7 +55,7 @@ class KConfigDialog;
     history() {}
     history( int id, bool user ) : idd(id), userd(user)
     {}
-    
+
     int id() const { return idd; };
     bool user() const { return userd; };
   private:
@@ -85,7 +87,7 @@ public:
      * Default Destructor
      */
     virtual ~KSlovar();
-    
+
 private slots:
   /**
   * A slot that opens a dictionary from disk.
@@ -123,7 +125,7 @@ private slots:
   void slotRemovePhrase();
   void slotConfigure();
   void slotUpdateConfiguration();
-    
+
 private:
   /**
   * Index of phrases.
@@ -132,7 +134,7 @@ private:
   /**
   * Path to the dictionary's database file.
   */
-  QString m_path;
+  //QString m_path;
   /**
   * Currently selected phrase.
   */
@@ -148,8 +150,8 @@ private:
   QValueList<int> m_forwardHistory;
   QValueList<int>::iterator m_it;
   QValueList<int>::iterator m_itForward;
-  
-  
+
+
   KListViewSearchLine *m_search;
   KSListView *m_list;
   KHTMLPart *m_browser;
@@ -163,7 +165,7 @@ private:
   bool m_history;
   static KSlovar *m_instance;
   KConfigDialog *m_configDialog;
-  
+
   KAction *m_newDictionary;
   KAction *m_openDictionary;
   KAction *m_editDictionary;
@@ -180,7 +182,9 @@ private:
   KAction *m_editPhrase;
   KAction *m_removePhrase;
   KAction *m_config;
-  
+
+  KSXMLHandler *XMLParser;
+
   /**
    * Updating history
    */
@@ -189,13 +193,13 @@ private:
    * Slot that searches for a phrase in SQLite database and displays it.
    */
   void showDictionary();
-  
+
   void registerButtons();
   void addMenu();
   void addToolbar();
   void disableNavButtons();
-  void processFileOpen();
-  
+  void processFileOpen(QString fileName);
+
 };
 
 #endif // _KSLOVAR_H_

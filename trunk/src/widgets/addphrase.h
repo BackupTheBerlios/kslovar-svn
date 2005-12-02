@@ -17,3 +17,54 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
+#ifndef _ADDPHRASE_H_
+#define _ADDPHRASE_H_
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <kdialogbase.h>
+
+class KIconLoader;
+class AddPhraseWdt;
+class KSpell;
+class KSlovar;
+
+class AddPhrase : public KDialogBase
+{
+  Q_OBJECT
+  public:
+    AddPhrase(QWidget *parent, QString caption);
+    void setWord(QString text, QString id);
+    //void setPath(QString filename);
+
+  private slots:
+    void slotAddExplanation();
+    void slotRemoveExplanation();
+    void slotAddWord();
+    void slotRemoveWord();
+    void slotBeginCheck();
+    void slotCheck(KSpell *speller);
+    void slotEndCheck(const QString& checked);
+
+  protected slots:
+    void slotOk();
+
+  private:
+    AddPhraseWdt *m_mainWidget;
+    //QString m_path;
+    QStringList m_words;
+    QString m_id;
+    QString m_text;
+    QString m_word;
+    bool m_edit;
+
+    void populateAvailableList();
+    void populateAddPhraseDialog();
+    void initialize();
+    void connectSlots();
+};
+
+#endif

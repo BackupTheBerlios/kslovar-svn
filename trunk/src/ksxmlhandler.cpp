@@ -1,0 +1,128 @@
+/***************************************************************************
+ *   Copyright (C) 2005 by Gregor Kališnik                                 *
+ *   gregor@podnapisi.net                                                  *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+#include "ksxmlhandler.h"
+
+#include <qfile.h>
+
+#include <kdebug.h>
+#include <kapplication.h>
+#include <kstandarddirs.h>
+
+KSXMLHandler::KSXMLHandler(QString document)
+{
+  setXSL(document);
+}
+
+void KSXMLHandler::setXSL(QString document)
+{
+  //xsltFreeStylesheet(styleSheet);
+  styleSheet=0;
+  //xmlFreeDoc(xslDoc);
+  xslDoc=0;
+
+  QCString rawDocument=openXSL(document);
+  xslDoc=xmlParseMemory(rawDocument, rawDocument.length());
+  if(xslDoc)
+  {
+    styleSheet=xsltParseStylesheetDoc(xslDoc);
+  }
+  else
+  {
+    kdWarning() << "Wrong XSL format!" << endl;
+    xmlFreeDoc(xslDoc);
+    xslDoc=0;
+  }
+}
+
+QString KSXMLHandler::parse(QString xmlString)
+{
+  //check if the message is allready a HTML
+  if(xmlString.find("<?xml version='1.0' encoding='UTF-8'?>")==-1)
+  {
+    return xmlString;
+  }
+  QCString xmlCString=xmlString.utf8();
+  QString result;
+
+  xmlDocPtr xmlDoc=xmlParseMemory(xmlCString, xmlCString.length());
+  if(xmlDoc)
+  {
+    if(styleSheet)
+    {
+      static QCString appPath( QString::fromLatin1("\"%1\"").arg( KApplication::kApplication()->dirs()->findDirs("appdata", QString::fromLatin1("styles/data") ).front() ).utf8() );
+
+      static const char* params[3] = {
+        "appdata",
+        appPath,
+        NULL
+      };
+
+      xmlDocPtr xmlResult=xsltApplyStylesheet(styleSheet, xmlDoc, params);
+      if(xmlResult)
+      {
+        xmlChar *temp;
+        int size;
+        xmlDocDumpMemory(xmlResult, &temp, &size);
+        result=QString::fromUtf8(QCString((char *)temp, size+1));
+        xmlFree(temp);
+        xmlFreeDoc(xmlResult);
+      }
+      else
+      {
+        kdWarning() << "There is no phrase." << endl;
+      }
+    }
+    else
+    {
+      kdWarning() << "No stylesheet loaded." << endl;
+    }
+  }
+  else
+  {
+    kdWarning() << "Wrong XML format." << endl;
+  }
+  xmlFreeDoc(xmlDoc);
+  xmlDoc=0;
+  return result;
+}
+
+QCString KSXMLHandler::openXSL(QString path)
+{
+  QString temp;
+  QFile input(path);
+  if(input.open(IO_ReadOnly))
+  {
+    QTextStream stream(&input);
+    while(!stream.atEnd())
+    {
+      temp+=stream.readLine();
+    }
+    input.close();
+  }
+  return temp.utf8();
+}
+
+KSXMLHandler::~KSXMLHandler()
+{
+  xsltFreeStylesheet(styleSheet);
+  xmlFreeDoc(xslDoc);
+}
+
+

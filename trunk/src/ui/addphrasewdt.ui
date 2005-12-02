@@ -39,7 +39,7 @@
                     <cstring>General</cstring>
                 </property>
                 <attribute name="title">
-                    <string>Ge&amp;neral</string>
+                    <string>&amp;General</string>
                 </attribute>
                 <grid>
                     <property name="name">
@@ -165,17 +165,47 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
+                    <widget class="KSListView" row="1" column="0">
+                        <property name="name">
+                            <cstring>availableList</cstring>
+                        </property>
+                    </widget>
+                    <widget class="KSListView" row="1" column="2">
+                        <property name="name">
+                            <cstring>selectedList</cstring>
+                        </property>
+                    </widget>
+                    <widget class="QLabel" row="0" column="2">
+                        <property name="name">
+                            <cstring>addedLabel</cstring>
+                        </property>
+                        <property name="maximumSize">
+                            <size>
+                                <width>32767</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                        <property name="text">
+                            <string>Selected words</string>
+                        </property>
+                    </widget>
                     <widget class="QLabel" row="0" column="0">
                         <property name="name">
                             <cstring>availableLabel</cstring>
                         </property>
+                        <property name="maximumSize">
+                            <size>
+                                <width>32767</width>
+                                <height>20</height>
+                            </size>
+                        </property>
                         <property name="text">
-                            <string>textLabel1</string>
+                            <string>Available words</string>
                         </property>
                     </widget>
                     <widget class="QLayoutWidget" row="0" column="1" rowspan="2" colspan="1">
                         <property name="name">
-                            <cstring>layout8</cstring>
+                            <cstring>layout2</cstring>
                         </property>
                         <vbox>
                             <property name="name">
@@ -194,7 +224,7 @@
                                 <property name="sizeHint">
                                     <size>
                                         <width>21</width>
-                                        <height>81</height>
+                                        <height>227</height>
                                     </size>
                                 </property>
                             </spacer>
@@ -245,29 +275,11 @@
                                 <property name="sizeHint">
                                     <size>
                                         <width>41</width>
-                                        <height>220</height>
+                                        <height>227</height>
                                     </size>
                                 </property>
                             </spacer>
                         </vbox>
-                    </widget>
-                    <widget class="QLabel" row="0" column="2">
-                        <property name="name">
-                            <cstring>addedLabel</cstring>
-                        </property>
-                        <property name="text">
-                            <string>textLabel2</string>
-                        </property>
-                    </widget>
-                    <widget class="KSListView" row="1" column="0">
-                        <property name="name">
-                            <cstring>availableList</cstring>
-                        </property>
-                    </widget>
-                    <widget class="KSListView" row="1" column="2">
-                        <property name="name">
-                            <cstring>selectedList</cstring>
-                        </property>
                     </widget>
                 </grid>
             </widget>
@@ -277,7 +289,7 @@
 <customwidgets>
     <customwidget>
         <class>KSListView</class>
-        <header location="global">/home/mastermind/Projekti/Programi/kslovar/src/kslistview.h</header>
+        <header location="global">/home/mastermind/Projekti/Programi/kslovar/src/objects/kslistview.h</header>
         <sizehint>
             <width>-1</width>
             <height>-1</height>
@@ -305,9 +317,9 @@
     <includehint>kpushbutton.h</includehint>
     <includehint>kslistview.h</includehint>
     <includehint>klineedit.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kpushbutton.h</includehint>
     <includehint>kslistview.h</includehint>
     <includehint>kslistview.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kpushbutton.h</includehint>
 </includehints>
 </UI>

@@ -17,3 +17,44 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef KSLANGUAGES_H
+#define KSLANGUAGES_H
+
+#include <kdialogbase.h>
+
+class LanguagesWdt;
+
+/**
+@author Gregor Kališnik
+ */
+class KSLanguages : public KDialogBase
+{
+  Q_OBJECT
+  public:
+    KSLanguages(QWidget *parent=0, const char *caption=0, QString language=0l, QString path=0l, int langid=0l, const char *name=0);
+
+    ~KSLanguages();
+
+  protected slots:
+    void slotOk();
+    void slotApply();
+
+  private:
+    LanguagesWdt *m_mainWidget;
+    QString m_path;
+    int m_id;
+
+    void populatePrimaryList(int id);
+    bool save();
+
+  private slots:
+    void slotPopulateSecondaryList(QListViewItem *selectedItem);
+    void slotAddPrimary();
+    void slotDeletePrimary();
+    void slotAddSecondary();
+    void slotDeleteSecondary();
+    void slotEnableApply();
+
+};
+
+#endif

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Gregor Kališnik   *
- *   gregor@podnapisi.net   *
+ *   Copyright (C) 2005 by Gregor Kališnik                                 *
+ *   gregor@podnapisi.net                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,10 +23,10 @@
 
 #include <qstring.h>
 #include <qstringlist.h>
+
 #include <kprogress.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-
 #include <kdebug.h>
 
 DBHandler *DBHandler::m_instance=0L;
@@ -42,42 +42,57 @@ DBHandler::DBHandler(QString databasePath)
   sqlite3_stmt *stmt;
   //QString database="user_dictionary";
   /*if(!user)
-  {
+{
   database="dictionary";
 }*//*
-  
+
   QString query1="SELECT text FROM dictionary WHERE id='";
   query1=query1.append(id);
   query1=query1.append("' LIMIT 1;");
-  
+
   Query(query1, &stmt);
-  
+
   sqlite3_step(stmt);
   QString output=QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 0 ) );
   sqlite3_reset(stmt);
   return output;
 }*/
 
-bool DBHandler::Query(QString sqlQuery, sqlite3_stmt ** output, bool returnResult)
+bool DBHandler::query(QString sqlQuery, sqlite3_stmt ** output)
 {
   int statusCode;
-  
+
   if( sqlQuery.isEmpty() )
   {
     kdError() << "[DBHandler]->Query Query is not assigned!";
     return false;
   }
-  
-  if(returnResult)
+
+
+  const char *tail;
+
+  statusCode=sqlite3_prepare(m_db, sqlQuery.utf8(), sqlQuery.length(), output, &tail);
+
+
+  if(statusCode!=SQLITE_OK)
   {
-    const char *tail;
-  
-    statusCode=sqlite3_prepare(m_db, sqlQuery.utf8(), sqlQuery.length(), output, &tail);
+    kdDebug() << "[DBHandler]->Query SQLITE err code: " << statusCode << endl;
+    return false;
   }
-  else
+  return true;
+}
+
+bool DBHandler::query(QString sqlQuery)
+{
+  int statusCode;
+
+  if( sqlQuery.isEmpty() )
   {
-    statusCode=sqlite3_exec(m_db, sqlQuery.utf8(), NULL, NULL, NULL);
+    kdError() << "[DBHandler]->Query Query is not assigned!";
+    return false;
   }
+
+  statusCode=sqlite3_exec(m_db, sqlQuery.utf8(), NULL, NULL, NULL);
 
   if(statusCode!=SQLITE_OK)
   {
@@ -92,68 +107,76 @@ bool DBHandler::Query(QString sqlQuery, sqlite3_stmt ** output, bool returnResul
   int error;
   QString temp;
   QStringList output;
-  
+
   sqlite3_stmt *stmt;
-  
+
   Query("SELECT name, search, id FROM phrases ORDER BY search ASC;", &stmt);
-  
+
   while(true)
-  {
+{
     error = sqlite3_step(stmt);
     if ( error == SQLITE_DONE || error == SQLITE_ERROR )
-    {
+{
       break;
-    }
+}
     temp = QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 0 ) );
     temp = temp + "/" + QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 2 ) ) + "/" + QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 1 ) );
     output << temp;
     *count++;
-  }
+}
   sqlite3_reset(stmt);
   return output;
 }*/
 
-void DBHandler::saveDictionary(QString text, bool create)
+bool DBHandler::saveDictionary(QString text, bool create)
 {
-  QString query1;
+  QString rawQuery;
   if(create)
   {
     /*query1="BEGIN TRANSACTION; CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT ); CREATE TABLE user_dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , rand INTEGER , new INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name VARCHAR( 36 ) , search VARCHAR( 36 ) , ido INTEGER UNIQUE , idu INTEGER UNIQUE ); ";
     query1=query1+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' ); COMMIT;";*/
-    query1="BEGIN TRANSACTION; CREATE TABLE media ( id INTEGER PRIMARY KEY AUTOINCREMENT , mime TEXT , data BLOB ); CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , id_media INTEGER , modified INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT , search TEXT ); ";
-    query1=query1+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' ); COMMIT;";
+    rawQuery="BEGIN TRANSACTION; CREATE TABLE media ( id INTEGER PRIMARY KEY AUTOINCREMENT , mime TEXT , data BLOB ); CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , modified INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT , search TEXT ); ";
+    rawQuery=rawQuery+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' ); COMMIT;";
     //query1=query1.utf8();
   }
   else
   {
-    query1="UPDATE dictionary SET text='"+text+"' WHERE id='0';";
+    rawQuery="UPDATE dictionary SET text='"+text+"' WHERE id='0';";
   }
-  
-  Query(query1, 0L, false);
+
+  if(!query(rawQuery))
+  {
+    return false;
+  }
+  return true;
 }
 
-DBHandler *DBHandler::Instance(QString path)
+DBHandler *DBHandler::instance(QString path)
 {
   if((!m_instance) || (m_currentPath!=path))
   {
     m_instance=new DBHandler(path);
   }
-  
+
   return m_instance;
 }
 
-void DBHandler::saveWord(QString word, QString text, bool add, QString id)
+bool DBHandler::saveWord(QString word, QString text, bool add, QString id)
 {
-  QString query1;
+  QString rawQuery;
   if(add)
   {
-    query1="INSERT INTO phrases ( name , search ) VALUES ( '"+word+"' , '"+word+"' ); INSERT INTO dictionary ( text ) VALUES ( '"+text+"' );";
+    rawQuery="INSERT INTO phrases ( name , search ) VALUES ( '"+word+"' , '"+word+"' ); INSERT INTO dictionary ( text ) VALUES ( \""+text+"\" );";
   }
   else
   {
-    query1="UPDATE dictionary SET text='"+text+"' WHERE id='"+id+"';";
+    rawQuery="UPDATE dictionary SET text=\""+text+"\" WHERE id='"+id+"';";
   }
-  Query(query1, 0L, false);
+  if(!query(rawQuery))
+  {
+    return false;
+  }
+  return true;
 }
 
 /*bool DBHandler::Query(QString query)
@@ -177,13 +200,13 @@ void DBHandler::saveWord(QString word, QString text, bool add, QString id)
   return true;
 }*/
 
-QString DBHandler::ProcessString(QString query, int columns)
+QString DBHandler::processString(QString rawQuery, int columns)
 {
   sqlite3_stmt *rawOutput;
   QString output;
   int statusCode;
 
-  if(!Query(query, &rawOutput))
+  if(!query(rawQuery, &rawOutput))
   {
     return 0L;
   }
@@ -214,14 +237,14 @@ QString DBHandler::ProcessString(QString query, int columns)
   return output;
 }
 
-QStringList DBHandler::ProcessList(QString query, int columns)
+QStringList DBHandler::processList(QString rawQuery, int columns)
 {
   QString temp;
   QStringList output;
   sqlite3_stmt *rawOutput;
   int statusCode;
 
-  if(!Query(query, &rawOutput))
+  if(!query(rawQuery, &rawOutput))
   {
     return 0L;
   }
@@ -242,6 +265,11 @@ QStringList DBHandler::ProcessList(QString query, int columns)
   }
   sqlite3_reset(rawOutput);
   return output;
+}
+
+bool DBHandler::processQuery(QString rawQuery)
+{
+  return query(rawQuery);
 }
 
 DBHandler::~DBHandler()

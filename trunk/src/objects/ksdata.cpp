@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by Gregor Kališnik   *
- *   gregor@podnapisi.net   *
+ *   Copyright (C) 2005 by Gregor Kališnik                                 *
+ *   gregor@podnapisi.net                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,34 +17,36 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "instances.h"
+#include "ksdata.h"
 
-#include "kslovar.h"
+KSData *KSData::m_instance=0l;
 
-#include <qobject.h>
-
-KSlovar *Instances::m_mainInstance=0L;
-QObject *Instances::m_configInstance=0L;
-
-void Instances::setMainInstance(KSlovar *KSlovar)
+KSData::KSData()
+ : QObject()
 {
-  m_mainInstance=KSlovar;
 }
 
-void Instances::setConfigInstance(QObject *Config)
+KSData *KSData::instance()
 {
-  m_configInstance=Config;
+  if(!KSData::m_instance)
+  {
+    KSData::m_instance=new KSData();
+  }
+  return KSData::m_instance;
 }
 
-KSlovar *Instances::mainInstance()
+void KSData::setDictionaryPath(QString path)
 {
-  return m_mainInstance;
+  m_dictionaryPath=path;
 }
 
-QObject *Instances::configInstance()
+QString KSData::getDictionaryPath()
 {
-  return m_configInstance;
+  return m_dictionaryPath;
 }
 
+KSData::~KSData()
+{
+}
 
-#include "instances.moc"
+#include "ksdata.moc"
