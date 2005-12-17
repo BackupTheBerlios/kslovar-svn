@@ -31,7 +31,7 @@ class KSLanguages : public KDialogBase
 {
   Q_OBJECT
   public:
-    KSLanguages(QWidget *parent=0, const char *caption=0, QString language=0l, QString path=0l, int langid=0l, const char *name=0);
+    KSLanguages(QWidget *parent=0, const char *caption=0, QString language=0l, int langid=0l, const char *name=0);
 
     ~KSLanguages();
 
@@ -43,16 +43,15 @@ class KSLanguages : public KDialogBase
     LanguagesWdt *m_mainWidget;
     QString m_path;
     int m_id;
+    bool m_edit;
 
-    void populatePrimaryList(int id);
+    void populateTypeList();
     bool save();
 
   private slots:
-    void slotPopulateSecondaryList(QListViewItem *selectedItem);
-    void slotAddPrimary();
-    void slotDeletePrimary();
-    void slotAddSecondary();
-    void slotDeleteSecondary();
+    //void slotPopulateSecondaryList(QListViewItem *selectedItem);
+    void slotAddType();
+    void slotDeleteType();
     void slotEnableApply();
 
 };

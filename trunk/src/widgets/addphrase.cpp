@@ -37,6 +37,7 @@
 #include <kiconloader.h>
 #include <kspell.h>
 #include <klistbox.h>
+#include <kcombobox.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
 
@@ -130,22 +131,22 @@ void AddPhrase::slotOk()
   }
 
   QString text;
-  text="<?xml version='1.0' encoding='UTF-8'?><phrase><word>"+m_mainWidget->wordEdit->text()+"</word><type>"+m_mainWidget->typeEdit->text()+"</type>"+explanations+seealso+"</phrase>";
+  text="<?xml version='1.0' encoding='UTF-8'?><phrase><word>"+m_mainWidget->wordEdit->text()+"</word><type>"+m_mainWidget->typeBox->currentText()+"</type>"+explanations+seealso+"</phrase>";
   if(m_edit==true)
   {
     if(!DBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(m_mainWidget->wordEdit->text(), text, false, m_id))
     {
       KMessageBox::error(this, i18n("Cannot edit phrase!"));
-      return;
     }
+    Instances::mainInstance()->refresh();
   }
   else
   {
     if(!DBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(m_mainWidget->wordEdit->text(), text, true, 0L))
     {
       KMessageBox::error(this, i18n("Cannot add new phrase!"));
-      return;
     }
+    Instances::mainInstance()->openFile(KSData::instance()->getDictionaryPath());
   }
 
   emit okClicked();
@@ -181,7 +182,8 @@ void AddPhrase::setWord(QString text, QString id)
     }
     if(name=="type")
     {
-      m_mainWidget->typeEdit->setText(node.toElement().text());
+      //KSData::instance()->getPartOfSpeechId(node.toElement().text());
+      m_mainWidget->typeBox->setCurrentItem(KSData::instance()->getPartOfSpeechId(node.toElement().text())-1);
       continue;
     }
     if(name=="explanations")
@@ -250,6 +252,11 @@ void AddPhrase::populateAddPhraseDialog()
 
 }
 
+void AddPhrase::populatePartsOfSpeech()
+{
+  m_mainWidget->typeBox->insertStringList(KSData::instance()->getPartOfSpeech());
+}
+
 void AddPhrase::initialize()
 {
   KIconLoader *icons=new KIconLoader();
@@ -275,6 +282,8 @@ void AddPhrase::initialize()
   m_mainWidget->availableList->addColumn("name");
   m_mainWidget->selectedList->setFullWidth(true);
   m_mainWidget->selectedList->addColumn("name");
+
+  m_mainWidget->typeBox->insertStringList(KSData::instance()->getPartOfSpeech());
 }
 
 void AddPhrase::connectSlots()

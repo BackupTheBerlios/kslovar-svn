@@ -82,6 +82,9 @@ public:
     QStringList getPhrases();
 
     void openFile(QString fileName);
+    void refresh();
+    void loadLanguages();
+    void loadPartOfSpeech(int id);
 
     /**
      * Default Destructor

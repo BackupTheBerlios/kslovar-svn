@@ -63,6 +63,7 @@ class AddPhrase : public KDialogBase
 
     void populateAvailableList();
     void populateAddPhraseDialog();
+    void populatePartsOfSpeech();
     void initialize();
     void connectSlots();
 };

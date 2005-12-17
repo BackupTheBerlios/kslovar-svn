@@ -55,7 +55,7 @@ class DBHandler
     /**
     * Desctructor that closes the connection
     */
-    bool saveDictionary(QString text, bool create=true);
+    bool saveDictionary(QString text, QString lang, bool create=true);
     bool saveWord(QString word, QString text, bool add, QString id);
     static DBHandler *instance(QString path);
     //bool Query(QString query);

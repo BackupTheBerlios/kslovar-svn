@@ -34,7 +34,7 @@ QString DBHandler::m_currentPath=0L;
 
 DBHandler::DBHandler(QString databasePath)
 {
-  sqlite3_open(databasePath, &m_db);
+  sqlite3_open(databasePath.utf8(), &m_db);
 }
 
 /*QString DBHandler::readText(QString id)
@@ -128,20 +128,22 @@ bool DBHandler::query(QString sqlQuery)
   return output;
 }*/
 
-bool DBHandler::saveDictionary(QString text, bool create)
+bool DBHandler::saveDictionary(QString text, QString lang, bool create)
 {
   QString rawQuery;
+  QString type;
+  type.setNum(0);
   if(create)
   {
     /*query1="BEGIN TRANSACTION; CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT ); CREATE TABLE user_dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , rand INTEGER , new INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name VARCHAR( 36 ) , search VARCHAR( 36 ) , ido INTEGER UNIQUE , idu INTEGER UNIQUE ); ";
     query1=query1+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' ); COMMIT;";*/
-    rawQuery="BEGIN TRANSACTION; CREATE TABLE media ( id INTEGER PRIMARY KEY AUTOINCREMENT , mime TEXT , data BLOB ); CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , modified INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT , search TEXT ); ";
-    rawQuery=rawQuery+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' ); COMMIT;";
+    rawQuery="BEGIN TRANSACTION; CREATE TABLE head ( lang INTEGER , type INTEGER , version TEXT ); CREATE TABLE media ( id INTEGER PRIMARY KEY AUTOINCREMENT , mime TEXT , data BLOB ); CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , modified INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT , search TEXT ); ";
+    rawQuery=rawQuery+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' ); COMMIT;"+"INSERT INTO head ( lang , type ) VALUES ( '"+lang+"' , '"+type+"' );";
     //query1=query1.utf8();
   }
   else
   {
-    rawQuery="UPDATE dictionary SET text='"+text+"' WHERE id='0';";
+    rawQuery="UPDATE dictionary SET text='"+text+"' WHERE id='0'; UPDATE head SET lang='"+lang+"';";
   }
 
   if(!query(rawQuery))
@@ -246,7 +248,7 @@ QStringList DBHandler::processList(QString rawQuery, int columns)
 
   if(!query(rawQuery, &rawOutput))
   {
-    return 0L;
+    return output;
   }
 
   while(true)
@@ -274,6 +276,7 @@ bool DBHandler::processQuery(QString rawQuery)
 
 DBHandler::~DBHandler()
 {
+  query("VACUUM;");
   sqlite3_close(m_db);
   m_instance=0L;
 }

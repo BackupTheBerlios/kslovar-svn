@@ -22,6 +22,15 @@
 
 #include <qobject.h>
 
+/**
+ * @author Gregor Kališnik <gregor@podnapisi.net>
+ */
+typedef struct
+{
+  QString name;
+  int id;
+}KSElement;
+
 
 /**
 	@author Gregor Kališnik <gregor@podnapisi.net>
@@ -37,12 +46,27 @@ class KSData : public QObject
     void setDictionaryPath(QString path);
     QString getDictionaryPath();
 
+    void setLanguage(int id);
+    int getLanguage();
+
+    void addLanguage(QString name, int id);
+    QStringList getLanguagesNames();
+    QString getLanguageId(QString name);
+
+    void addPartOfSpeech(QString name, int id);
+    QStringList getPartOfSpeech();
+    QString getPartOfSpeechName(int id);
+    int getPartOfSpeechId(QString name);
+
     ~KSData();
 
   private:
     static KSData *m_instance;
 
     QString m_dictionaryPath;
+    int m_languageId;
+    QValueList<KSElement> m_languages;
+    QValueList<KSElement> m_partOfSpeech;
 
 };
 

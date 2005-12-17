@@ -67,8 +67,9 @@ KSlovar::KSlovar()
   m_configDialog=new KConfigDialog(this, "settings", Configuration::self());
   Instances::setConfigInstance(m_configDialog);
   XMLParser=new KSXMLHandler(QString::fromUtf8(locate("appdata", "styles/default.xsl")));
+  loadLanguages();
 
-  m_welcomeMessage=i18n("<h1>Welcome message.</h1> Need to change it :P");
+  m_welcomeMessage=i18n("<h1>Dobrodošli v KSlovarju</h1> Poskusite narediti kakšen slovar, in ne pozabite povedati za kakšen hrošč, če ga zapazite :).");
 
   registerButtons();
   addMenu();
@@ -128,8 +129,6 @@ void KSlovar::showDictionary()
   //m_browser->write(DBHandler::instance(m_path)->processString("SELECT text FROM dictionary WHERE id='"+m_selectedPhrase+"' LIMIT 1;"));
   m_browser->write(XMLParser->parse(DBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+m_selectedPhrase+"' LIMIT 1;")));
   m_browser->end();
-
-  kdDebug() << XMLParser->parse(DBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+m_selectedPhrase+"' LIMIT 1;")) << endl;
 
   if(!m_backHistory.isEmpty())
   {
@@ -610,7 +609,52 @@ void KSlovar::processFileOpen(QString fileName)
     slotHome();
     m_backHistory.clear();
     KSData::instance()->setDictionaryPath(fileName);
+    loadPartOfSpeech(DBHandler::instance(fileName)->processString("SELECT lang FROM head;").toInt());
   }
+}
+
+void KSlovar::loadLanguages()
+{
+  QStringList input=DBHandler::instance(QString::fromUtf8(locate("appdata", "languages.ksl")))->processList("SELECT id, name FROM language;", 2);
+  if(!input.isEmpty())
+  {
+    QString id, name;
+    for(QStringList::iterator count=input.begin();count!=input.end();count++)
+    {
+      id=*count;
+      name=*count;
+      KSData::instance()->addLanguage(name.remove(QRegExp("^.+/")), id.remove(QRegExp("/.+$")).toInt());
+    }
+  }
+  else
+  {
+    KMessageBox::error(this, i18n("Cannot load languages!"));
+  }
+}
+
+void KSlovar::loadPartOfSpeech(int id)
+{
+  KSData::instance()->setLanguage(id);
+  QStringList input=DBHandler::instance(QString::fromUtf8(locate("appdata", "languages.ksl")))->processList("SELECT id, name FROM type WHERE id_lang='"+QString::number(id)+"';", 2);
+  if(!input.isEmpty())
+  {
+    QString id, name;
+    for(QStringList::iterator count=input.begin();count!=input.end();count++)
+    {
+      id=*count;
+      name=*count;
+      KSData::instance()->addPartOfSpeech(name.remove(QRegExp("^.+/")), id.remove(QRegExp("/.+&")).toInt());
+    }
+  }
+  else
+  {
+    KMessageBox::error(this, i18n("Cannot load parts of speech!"));
+  }
+}
+
+void KSlovar::refresh()
+{
+  showDictionary();
 }
 
 KSlovar::~KSlovar()

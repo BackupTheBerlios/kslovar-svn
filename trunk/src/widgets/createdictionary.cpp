@@ -19,8 +19,11 @@
  ***************************************************************************/
 #include "createdictionary.h"
 
+#include "../kslovar.h"
+
 #include "../dbhandler.h"
 #include "../objects/ksdata.h"
+#include "../objects/instances.h"
 
 #include "../ui/createdictionarywdt.h"
 #include "kslanguages.h"
@@ -57,9 +60,9 @@ CreateDictionary::CreateDictionary(QWidget *parent, const char *caption, QString
   m_mainWidget->underlineButton->setIconSet(icons->loadIconSet("text_under", KIcon::Toolbar));
 
   //Currently disabled, because of quick presentation...
-  m_mainWidget->addLangButton->setEnabled(false);
+  /*m_mainWidget->addLangButton->setEnabled(false);
   m_mainWidget->editLangButton->setEnabled(false);
-  m_mainWidget->languageSelect->setEnabled(false);
+  m_mainWidget->languageSelect->setEnabled(false);*/
 
   enableButtonApply(false);
 
@@ -116,10 +119,11 @@ void CreateDictionary::slotSize(int newSize)
 
 void CreateDictionary::populateLanguages()
 {
-  QStringList text=DBHandler::instance(locate("appdata", "languages.ksl"))->processList("SELECT name FROM languages;");
-  if(!text.isEmpty())
+  m_mainWidget->languageSelect->clear();
+  QStringList languages=KSData::instance()->getLanguagesNames();
+  if(!languages.isEmpty())
   {
-    for(QStringList::iterator count=text.begin(); count!=text.end(); count++)
+    for(QStringList::iterator count=languages.begin(); count!=languages.end(); count++)
     {
       m_mainWidget->languageSelect->insertItem(*count);
     }
@@ -128,12 +132,7 @@ void CreateDictionary::populateLanguages()
 
 void CreateDictionary::slotEditLang()
 {
-  if(m_mainWidget->languageSelect->currentItem() == 0)
-  {
-    return;
-  }
-
-  KSLanguages *widget=new KSLanguages(this, i18n("Edit language"), m_mainWidget->languageSelect->currentText(), locateLocal("data", "kslovar/languages.ksl"), m_mainWidget->languageSelect->currentItem());
+  KSLanguages *widget=new KSLanguages(this, i18n("Edit language"), m_mainWidget->languageSelect->currentText(), m_mainWidget->languageSelect->currentItem());
   widget->show();
 }
 
@@ -166,9 +165,11 @@ bool CreateDictionary::save()
 {
   m_mainWidget->mainEdit->setTextFormat(Qt::RichText);
   QString text="<h1>"+m_mainWidget->nameEdit->text()+"</h1>"+m_mainWidget->mainEdit->text();
+  QString id=KSData::instance()->getLanguageId(m_mainWidget->languageSelect->currentText());
+  QString lang=id;
   if(m_edit)
   {
-    if(!DBHandler::instance(KSData::instance()->getDictionaryPath())->saveDictionary(text, false))
+    if(!DBHandler::instance(KSData::instance()->getDictionaryPath())->saveDictionary(text, lang, false))
     {
       return false;
     }
@@ -193,12 +194,13 @@ bool CreateDictionary::save()
         return false;
       }
     }
-    if(!DBHandler::instance(path)->saveDictionary(text))
+    if(!DBHandler::instance(path)->saveDictionary(text, lang))
     {
       return false;
     }
     KSData::instance()->setDictionaryPath(path);
     m_edit=true;
+    Instances::mainInstance()->openFile(path);
   }
   return true;
 }
