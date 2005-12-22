@@ -119,6 +119,7 @@ private slots:
   void slotNewDictionary();
   void slotEditDictionary();
   void slotClose();
+  void slotQuit();
   void slotFind();
   void slotFindNext();
   void slotPrint();

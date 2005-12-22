@@ -19,11 +19,15 @@
  ***************************************************************************/
 #include "ksxmlhandler.h"
 
+#include "objects/ksdata.h"
+
 #include <qfile.h>
 
 #include <kdebug.h>
 #include <kapplication.h>
 #include <kstandarddirs.h>
+#include <qstring.h>
+#include <qstringlist.h>
 
 KSXMLHandler::KSXMLHandler(QString document)
 {
@@ -58,6 +62,13 @@ QString KSXMLHandler::parse(QString xmlString)
   {
     return xmlString;
   }
+
+  QStringList temp=KSData::instance()->getPartOfSpeech();
+  for(QStringList::Iterator count=temp.begin();count!=temp.end();count++)
+  {
+    xmlString.replace("<type>"+QString::number(KSData::instance()->getPartOfSpeechId(*count))+"</type>", "<type>"+*count+"</type>");
+  }
+
   QCString xmlCString=xmlString.utf8();
   QString result;
 

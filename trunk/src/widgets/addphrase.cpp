@@ -131,7 +131,7 @@ void AddPhrase::slotOk()
   }
 
   QString text;
-  text="<?xml version='1.0' encoding='UTF-8'?><phrase><word>"+m_mainWidget->wordEdit->text()+"</word><type>"+m_mainWidget->typeBox->currentText()+"</type>"+explanations+seealso+"</phrase>";
+  text="<?xml version='1.0' encoding='UTF-8'?><phrase><word>"+m_mainWidget->wordEdit->text()+"</word><type>"+QString::number(KSData::instance()->getPartOfSpeechId(m_mainWidget->typeBox->currentText()))+"</type>"+explanations+seealso+"</phrase>";
   if(m_edit==true)
   {
     if(!DBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(m_mainWidget->wordEdit->text(), text, false, m_id))
@@ -183,7 +183,7 @@ void AddPhrase::setWord(QString text, QString id)
     if(name=="type")
     {
       //KSData::instance()->getPartOfSpeechId(node.toElement().text());
-      m_mainWidget->typeBox->setCurrentItem(KSData::instance()->getPartOfSpeechId(node.toElement().text())-1);
+      m_mainWidget->typeBox->setCurrentItem(node.toElement().text().toInt()-1);
       continue;
     }
     if(name=="explanations")

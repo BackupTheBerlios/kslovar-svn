@@ -69,7 +69,7 @@ KSlovar::KSlovar()
   XMLParser=new KSXMLHandler(QString::fromUtf8(locate("appdata", "styles/default.xsl")));
   loadLanguages();
 
-  m_welcomeMessage=i18n("<h1>Dobrodošli v KSlovarju</h1> Poskusite narediti kakšen slovar, in ne pozabite povedati za kakšen hrošč, če ga zapazite :).");
+  m_welcomeMessage=i18n("<h1>Welcome to KSlovarju</h1> This needs to be changed :).");
 
   registerButtons();
   addMenu();
@@ -97,6 +97,7 @@ KSlovar::KSlovar()
   connect( m_browser->browserExtension(), SIGNAL( openURLRequest( const KURL &, const KParts::URLArgs & ) ), this, SLOT( slotShowBrowser(const KURL &, const KParts::URLArgs &) ) );
   connect(m_list, SIGNAL( selectionChanged(QListViewItem *)), this, SLOT( slotShowList(QListViewItem *) ) );
   connect(m_list, SIGNAL(doubleClicked( QListViewItem *)), this, SLOT(slotEditPhrase()));
+  connect(kapp, SIGNAL(shutDown()), this, SLOT(slotClose()));
 
   setCentralWidget( horiz );
 }
@@ -477,6 +478,12 @@ void KSlovar::slotClose()
   m_list->clear();
 }
 
+void KSlovar::slotQuit()
+{
+  slotClose();
+//  quit();
+}
+
 void KSlovar::slotFind()
 {
   m_browser->findText();
@@ -634,6 +641,7 @@ void KSlovar::loadLanguages()
 
 void KSlovar::loadPartOfSpeech(int id)
 {
+  KSData::instance()->clearPartOfSpeech();
   KSData::instance()->setLanguage(id);
   QStringList input=DBHandler::instance(QString::fromUtf8(locate("appdata", "languages.ksl")))->processList("SELECT id, name FROM type WHERE id_lang='"+QString::number(id)+"';", 2);
   if(!input.isEmpty())
@@ -643,7 +651,7 @@ void KSlovar::loadPartOfSpeech(int id)
     {
       id=*count;
       name=*count;
-      KSData::instance()->addPartOfSpeech(name.remove(QRegExp("^.+/")), id.remove(QRegExp("/.+&")).toInt());
+      KSData::instance()->addPartOfSpeech(name.remove(QRegExp("^.+/")), id.remove(QRegExp("/.+$")).toInt());
     }
   }
   else

@@ -130,6 +130,11 @@ int KSData::getLanguage()
   return m_languageId;
 }
 
+void KSData::clearPartOfSpeech()
+{
+  m_partOfSpeech.clear();
+}
+
 KSData::~KSData()
 {
 }

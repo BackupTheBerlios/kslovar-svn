@@ -57,6 +57,7 @@ class KSData : public QObject
     QStringList getPartOfSpeech();
     QString getPartOfSpeechName(int id);
     int getPartOfSpeechId(QString name);
+    void clearPartOfSpeech();
 
     ~KSData();
 

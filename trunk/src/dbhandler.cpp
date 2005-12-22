@@ -35,6 +35,7 @@ QString DBHandler::m_currentPath=0L;
 DBHandler::DBHandler(QString databasePath)
 {
   sqlite3_open(databasePath.utf8(), &m_db);
+  query("PRAGMA auto_vacuum = 1;");
 }
 
 /*QString DBHandler::readText(QString id)
@@ -276,7 +277,7 @@ bool DBHandler::processQuery(QString rawQuery)
 
 DBHandler::~DBHandler()
 {
-  query("VACUUM;");
   sqlite3_close(m_db);
-  m_instance=0L;
+  kdDebug() << "VACUUM procedure ended." << endl;
 }
+
