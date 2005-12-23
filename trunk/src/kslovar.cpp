@@ -179,6 +179,7 @@ void KSlovar::slotShowList(QListViewItem *selected)
   */
 
   m_editPhrase->setEnabled(true);
+  m_removePhrase->setEnabled(true);
 
   if(m_history==false)
   {
@@ -529,6 +530,15 @@ void KSlovar::slotEditPhrase()
 
 void KSlovar::slotRemovePhrase()
 {
+  if(KMessageBox::questionYesNo(this, i18n("Are you really sure you want to delete this word?"), i18n("Confirm deletion"), i18n("Delete"))==KMessageBox::No)
+  {
+    return;
+  }
+  KSListViewItem *temp=static_cast<KSListViewItem*> (m_list->selectedItem());
+  DBHandler::instance(KSData::instance()->getDictionaryPath())->processQuery("DELETE FROM phrases WHERE id='"+temp->getId()+"'; DELETE FROM dictionary WHERE id='"+temp->getId()+"';");
+  delete temp;
+  m_editPhrase->setEnabled(false);
+  m_removePhrase->setEnabled(false);
 }
 
 QStringList KSlovar::getPhrases()
