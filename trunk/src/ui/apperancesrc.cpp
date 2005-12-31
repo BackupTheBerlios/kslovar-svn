@@ -78,7 +78,6 @@ void ApperanceSrc::populateStyleList()
 
 void ApperanceSrc::selectStyle(QListViewItem *selected)
 {
-  delete m_defaultStyleParser;
   m_defaultStyleParser=new KSXMLHandler(QString::fromUtf8(locate("appdata", "styles/"+selected->text(0)+"/"+selected->text(0)+"-default.xsl")));
 
   m_previewDefault->begin();
@@ -87,7 +86,6 @@ void ApperanceSrc::selectStyle(QListViewItem *selected)
 
   KSData::instance()->setStyle(selected->text(0));
   Configuration::setDictionaryStyle(selected->text(0));
-  kdDebug() << Configuration::dictionaryStyle() << endl;
   Instances::configInstance()->manualUpdateButtons();
 }
 
