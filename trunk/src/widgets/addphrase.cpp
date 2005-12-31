@@ -66,13 +66,18 @@ void AddPhrase::slotRemoveExplanation()
 
 void AddPhrase::populateAvailableList()
 {
-  m_words=Instances::mainInstance()->getPhrases();
-  for(QStringList::iterator it = m_words.begin(); it != m_words.end(); it++)
+  //m_words=Instances::mainInstance()->getPhrases();
+  QValueList<KSPhrase> temp=KSData::instance()->getPhrases();
+  /*for(QStringList::iterator it = m_words.begin(); it != m_words.end(); it++)
   {
     QString word = *it;
     QString search = word;
     QString id = search;
     new KSListViewItem(m_mainWidget->availableList, word.remove(QRegExp("/.+$")), id.remove(QRegExp("[^/\\d]+")).remove(QRegExp("^\\d+")).remove(QRegExp("\\d+$")).remove(QRegExp("/+")), search.remove(QRegExp("^.+/")));
+}*/
+  for(QValueList<KSPhrase>::iterator count=temp.begin();count!=temp.end();count++)
+  {
+    new KSListViewItem(m_mainWidget->availableList, (*count).name, QString::number((*count).id), (*count).search);
   }
 }
 

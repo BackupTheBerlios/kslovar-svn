@@ -17,74 +17,48 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KSDATA_H
-#define KSDATA_H
+#include "ksconfigdialog.h"
 
-#include <qobject.h>
+#include "ksdata.h"
+#include "configuration.h"
 
-/**
- * @author Gregor Kališnik <gregor@podnapisi.net>
- */
-typedef struct
+KSConfigDialog::KSConfigDialog(QWidget *parent, const char *name, KConfigSkeleton *config)
+  : KConfigDialog(parent, name, config), m_modified(false)
 {
-  QString name;
-  int id;
-}KSElement;
+  connect(this, SIGNAL(okClicked()), this, SLOT(slotLocalOk()));
+  connect(this, SIGNAL(applyClicked()), this, SLOT(slotLocalApply()));
+}
 
-typedef struct
+void KSConfigDialog::manualUpdateButtons()
 {
-  int id;
-  QString name;
-  QString search;
-}KSPhrase;
+  enableButton(Apply, true);
+  m_modified=true;
 
+  emit widgetModified();
+}
 
-/**
-	@author Gregor Kališnik <gregor@podnapisi.net>
- */
-class KSData : public QObject
+void KSConfigDialog::slotLocalOk()
 {
-  Q_OBJECT
-  public:
-    KSData();
+  if(m_modified)
+  {
+    save();
+  }
+}
 
-    static KSData *instance();
+void KSConfigDialog::slotLocalApply()
+{
+  save();
+}
 
-    void setDictionaryPath(QString path);
-    QString getDictionaryPath();
+void KSConfigDialog::save()
+{
+  Configuration::writeConfig();
+  m_modified=false;
+}
 
-    void setLanguage(int id);
-    int getLanguage();
+KSConfigDialog::~KSConfigDialog()
+{
+}
 
-    void addLanguage(QString name, int id);
-    QStringList getLanguagesNames();
-    QString getLanguageId(QString name);
 
-    void addPartOfSpeech(QString name, int id);
-    QStringList getPartOfSpeech();
-    QString getPartOfSpeechName(int id);
-    int getPartOfSpeechId(QString name);
-    void clearPartOfSpeech();
-
-    void addPhrase(int id, QString name, QString search);
-    QValueList<KSPhrase> getPhrases();
-    void clearPhrases();
-
-    void setStyle(QString selectedStyle);
-    QString getStyle();
-
-    ~KSData();
-
-  private:
-    static KSData *m_instance;
-
-    QString m_dictionaryPath;
-    int m_languageId;
-    QValueList<KSElement> m_languages;
-    QValueList<KSElement> m_partOfSpeech;
-    QValueList<KSPhrase> m_phrases;
-    QString m_selectedStyle;
-
-};
-
-#endif
+#include "ksconfigdialog.moc"

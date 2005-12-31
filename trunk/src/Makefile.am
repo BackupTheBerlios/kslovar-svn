@@ -24,15 +24,15 @@ bin_PROGRAMS = kslovar
 kslovar_SOURCES = main.cpp kslovar.cpp dbhandler.cpp ksxmlhandler.cpp
 kslovar_LDFLAGS = -no-undefined $(KDE_RPATH) $(all_libraries)
 kslovar_LDADD = $(top_builddir)/src/widgets/libkswidgets.la \
-	$(top_builddir)/src/ui/libui.a $(top_builddir)/src/sqlite/libsqlite.la \
-	$(top_builddir)/src/objects/libksobjects.la $(LIBXSLT_LIBS) $(LIBXML_LIBS) -lkdeprint -lkhtml $(LIB_KDEUI)
+	$(top_builddir)/src/objects/libksobjects.la $(top_builddir)/src/ui/libui.a $(top_builddir)/src/sqlite/libsqlite.la \
+	$(LIBXSLT_LIBS) $(LIBXML_LIBS) -lkdeprint -lkhtml $(LIB_KDEUI)
 
 # this is where the desktop file will go 
-shelldesktopdir   = $(kde_appsdir)/Utilities
+shelldesktopdir = $(kde_appsdir)/Utilities
 shelldesktop_DATA = kslovar.desktop
 
 # this is where the shell's XML-GUI resource file goes
-shellrcdir   = $(kde_datadir)/kslovar
+shellrcdir = $(kde_datadir)/kslovar
 shellrc_DATA = kslovarui.rc languages.ksl
 
 mimedir = $(kde_mimedir)/application
@@ -45,4 +45,4 @@ EXTRA_DIST = $(mime_DATA)
 
 
 
-SUBDIRS = sqlite ui objects widgets styles
+SUBDIRS = sqlite objects ui widgets styles

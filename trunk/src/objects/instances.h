@@ -22,6 +22,7 @@
 
 #include <qobject.h>
 
+class KSConfigDialog;
 class KSlovar;
 
 /**
@@ -32,14 +33,14 @@ class Instances : public QObject
   Q_OBJECT
   public:
     static void setMainInstance(KSlovar *KSlovar);
-    static void setConfigInstance(QObject *Config);
+    static void setConfigInstance(KSConfigDialog *Config);
 
     static KSlovar *mainInstance();
-    static QObject *configInstance();
+    static KSConfigDialog *configInstance();
 
   private:
     static KSlovar *m_mainInstance;
-    static QObject *m_configInstance;
+    static KSConfigDialog *m_configInstance;
 
 };
 

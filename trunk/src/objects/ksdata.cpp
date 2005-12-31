@@ -21,11 +21,12 @@
 
 #include <qstringlist.h>
 #include <qvaluelist.h>
+#include "configuration.h"
 
 KSData *KSData::m_instance=0l;
 
 KSData::KSData()
-  : QObject()
+  : QObject(), m_selectedStyle(Configuration::dictionaryStyle())
 {
 }
 
@@ -133,6 +134,35 @@ int KSData::getLanguage()
 void KSData::clearPartOfSpeech()
 {
   m_partOfSpeech.clear();
+}
+
+void KSData::addPhrase(int id, QString name, QString search)
+{
+  KSPhrase temp;
+  temp.id=id;
+  temp.name=name;
+  temp.search=search;
+  m_phrases << temp;
+}
+
+QValueList<KSPhrase> KSData::getPhrases()
+{
+  return m_phrases;
+}
+
+void KSData::clearPhrases()
+{
+  m_phrases.clear();
+}
+
+void KSData::setStyle(QString selectedStyle)
+{
+  m_selectedStyle=selectedStyle;
+}
+
+QString KSData::getStyle()
+{
+  return m_selectedStyle;
 }
 
 KSData::~KSData()

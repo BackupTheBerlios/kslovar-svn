@@ -166,14 +166,15 @@ DBHandler *DBHandler::instance(QString path)
 
 bool DBHandler::saveWord(QString word, QString text, bool add, QString id)
 {
-  QString rawQuery;
+  QString rawQuery, search;
+  search=word;
   if(add)
   {
-    rawQuery="INSERT INTO phrases ( name , search ) VALUES ( '"+word+"' , '"+word+"' ); INSERT INTO dictionary ( text ) VALUES ( \""+text+"\" );";
+    rawQuery="INSERT INTO phrases ( name , search ) VALUES ( '"+word+"' , '"+search+"' ); INSERT INTO dictionary ( text ) VALUES ( \""+text+"\" );";
   }
   else
   {
-    rawQuery="UPDATE dictionary SET text=\""+text+"\" WHERE id='"+id+"';";
+    rawQuery="UPDATE phrases SET name='"+word+"', search='"+search+"' WHERE id='"+id+"'; UPDATE dictionary SET text=\""+text+"\" WHERE id='"+id+"';";
   }
   if(!query(rawQuery))
   {

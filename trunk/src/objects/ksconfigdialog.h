@@ -17,73 +17,34 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KSDATA_H
-#define KSDATA_H
+#ifndef KSCONFIGDIALOG_H
+#define KSCONFIGDIALOG_H
 
-#include <qobject.h>
-
-/**
- * @author Gregor Kališnik <gregor@podnapisi.net>
- */
-typedef struct
-{
-  QString name;
-  int id;
-}KSElement;
-
-typedef struct
-{
-  int id;
-  QString name;
-  QString search;
-}KSPhrase;
-
+#include <kconfigdialog.h>
 
 /**
 	@author Gregor Kališnik <gregor@podnapisi.net>
- */
-class KSData : public QObject
+*/
+class KSConfigDialog : public KConfigDialog
 {
-  Q_OBJECT
-  public:
-    KSData();
+Q_OBJECT
 
-    static KSData *instance();
+public:
+  KSConfigDialog(QWidget *parent = 0, const char *name = 0, KConfigSkeleton *config = 0);
 
-    void setDictionaryPath(QString path);
-    QString getDictionaryPath();
+    void manualUpdateButtons();
 
-    void setLanguage(int id);
-    int getLanguage();
+    ~KSConfigDialog();
 
-    void addLanguage(QString name, int id);
-    QStringList getLanguagesNames();
-    QString getLanguageId(QString name);
-
-    void addPartOfSpeech(QString name, int id);
-    QStringList getPartOfSpeech();
-    QString getPartOfSpeechName(int id);
-    int getPartOfSpeechId(QString name);
-    void clearPartOfSpeech();
-
-    void addPhrase(int id, QString name, QString search);
-    QValueList<KSPhrase> getPhrases();
-    void clearPhrases();
-
-    void setStyle(QString selectedStyle);
-    QString getStyle();
-
-    ~KSData();
+  private slots:
+    void slotLocalOk();
+    void slotLocalApply();
 
   private:
-    static KSData *m_instance;
+    void save();
 
-    QString m_dictionaryPath;
-    int m_languageId;
-    QValueList<KSElement> m_languages;
-    QValueList<KSElement> m_partOfSpeech;
-    QValueList<KSPhrase> m_phrases;
-    QString m_selectedStyle;
+
+    bool m_modified;
 
 };
 

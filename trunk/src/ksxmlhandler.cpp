@@ -21,6 +21,13 @@
 
 #include "objects/ksdata.h"
 
+#include <libxml/globals.h>
+#include <libxml/parser.h>
+
+#include <libxslt/xsltconfig.h>
+#include <libxslt/xsltInternals.h>
+#include <libxslt/transform.h>
+
 #include <qfile.h>
 
 #include <kdebug.h>
@@ -28,6 +35,9 @@
 #include <kstandarddirs.h>
 #include <qstring.h>
 #include <qstringlist.h>
+
+xsltStylesheetPtr styleSheet;
+xmlDocPtr xslDoc;
 
 KSXMLHandler::KSXMLHandler(QString document)
 {

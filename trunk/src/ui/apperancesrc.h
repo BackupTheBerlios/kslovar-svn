@@ -17,74 +17,30 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KSDATA_H
-#define KSDATA_H
+#ifndef APPERANCESRC_H
+#define APPERANCESRC_H
 
-#include <qobject.h>
+#include "appearancewdt.h"
 
-/**
- * @author Gregor Kališnik <gregor@podnapisi.net>
- */
-typedef struct
-{
-  QString name;
-  int id;
-}KSElement;
+class QListViewItem;
+class KHTMLPart;
+class KSXMLHandler;
 
-typedef struct
-{
-  int id;
-  QString name;
-  QString search;
-}KSPhrase;
-
-
-/**
-	@author Gregor Kališnik <gregor@podnapisi.net>
- */
-class KSData : public QObject
-{
-  Q_OBJECT
+class ApperanceSrc: public AppearanceWdt {
+Q_OBJECT
   public:
-    KSData();
+    ApperanceSrc(QWidget *parent = 0, const char *name = 0);
 
-    static KSData *instance();
-
-    void setDictionaryPath(QString path);
-    QString getDictionaryPath();
-
-    void setLanguage(int id);
-    int getLanguage();
-
-    void addLanguage(QString name, int id);
-    QStringList getLanguagesNames();
-    QString getLanguageId(QString name);
-
-    void addPartOfSpeech(QString name, int id);
-    QStringList getPartOfSpeech();
-    QString getPartOfSpeechName(int id);
-    int getPartOfSpeechId(QString name);
-    void clearPartOfSpeech();
-
-    void addPhrase(int id, QString name, QString search);
-    QValueList<KSPhrase> getPhrases();
-    void clearPhrases();
-
-    void setStyle(QString selectedStyle);
-    QString getStyle();
-
-    ~KSData();
+  private slots:
+    void selectStyle(QListViewItem *selected);
 
   private:
-    static KSData *m_instance;
+    void populateStyleList();
 
-    QString m_dictionaryPath;
-    int m_languageId;
-    QValueList<KSElement> m_languages;
-    QValueList<KSElement> m_partOfSpeech;
-    QValueList<KSPhrase> m_phrases;
-    QString m_selectedStyle;
+    QString m_exampleDefault;
 
+    KHTMLPart *m_previewDefault;
+    KSXMLHandler *m_defaultStyleParser;
 };
 
 #endif

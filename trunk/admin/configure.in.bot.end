@@ -43,3 +43,5 @@ else
   echo "Good - your configure finished. Start make now"
   echo ""
 fi
+
+ln -sf ./ui/appearancewdt.h ./src/appearancewdt.h

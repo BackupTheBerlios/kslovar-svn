@@ -44,7 +44,8 @@ class KListView;
 class KSListView;
 class KListViewSearchLine;
 class KSListViewItem;
-class KConfigDialog;
+class KSConfigDialog;
+class QPopupmenu;
 
 class KSXMLHandler;
 
@@ -79,7 +80,7 @@ public:
      */
     KSlovar();
 
-    QStringList getPhrases();
+    //QStringList getPhrases();
 
     void openFile(QString fileName);
     void refresh();
@@ -129,12 +130,13 @@ private slots:
   void slotRemovePhrase();
   void slotConfigure();
   void slotUpdateConfiguration();
+  void showPopup(KListView*, QListViewItem*, const QPoint &p);
 
 private:
   /**
   * Index of phrases.
   */
-  QStringList m_phrases;
+  //QStringList m_phrases;
   /**
   * Path to the dictionary's database file.
   */
@@ -168,7 +170,8 @@ private:
   bool m_selected;
   bool m_history;
   static KSlovar *m_instance;
-  KConfigDialog *m_configDialog;
+  KSConfigDialog *m_configDialog;
+  QPopupMenu *m_listPopup;
 
   KAction *m_newDictionary;
   KAction *m_openDictionary;

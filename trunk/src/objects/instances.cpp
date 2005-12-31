@@ -21,17 +21,17 @@
 
 #include "../kslovar.h"
 
-#include <qobject.h>
+#include "ksconfigdialog.h"
 
 KSlovar *Instances::m_mainInstance=0L;
-QObject *Instances::m_configInstance=0L;
+KSConfigDialog *Instances::m_configInstance=0L;
 
 void Instances::setMainInstance(KSlovar *KSlovar)
 {
   m_mainInstance=KSlovar;
 }
 
-void Instances::setConfigInstance(QObject *Config)
+void Instances::setConfigInstance(KSConfigDialog *Config)
 {
   m_configInstance=Config;
 }
@@ -41,7 +41,7 @@ KSlovar *Instances::mainInstance()
   return m_mainInstance;
 }
 
-QObject *Instances::configInstance()
+KSConfigDialog *Instances::configInstance()
 {
   return m_configInstance;
 }

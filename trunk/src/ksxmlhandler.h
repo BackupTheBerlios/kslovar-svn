@@ -20,12 +20,6 @@
 #ifndef KSXMLHANDLER_H
 #define KSXMLHANDLER_H
 
-#include <libxml/globals.h>
-#include <libxml/parser.h>
-
-#include <libxslt/xsltconfig.h>
-#include <libxslt/xsltInternals.h>
-#include <libxslt/transform.h>
 
 class QString;
 class QCString;
@@ -43,9 +37,6 @@ public:
     ~KSXMLHandler();
 
   private:
-    xsltStylesheetPtr styleSheet;
-    xmlDocPtr xslDoc;
-
     QCString openXSL(QString path);
 
 };

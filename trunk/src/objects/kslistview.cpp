@@ -29,7 +29,7 @@
 KSListView::KSListView(QWidget *parent, const char *name) : KListView(parent, name), mouseConfig(Configuration::mouseNavigation())
 {
   header()->hide();
-  connect( Instances::configInstance(), SIGNAL(settingsChanged()), this, SLOT(slotUpdateConfiguration()) );
+  connect( (QObject*) Instances::configInstance(), SIGNAL(settingsChanged()), this, SLOT(slotUpdateConfiguration()) );
   verticalScrollBar()->installEventFilter(this);
   if(!Configuration::scrollBar())
   {

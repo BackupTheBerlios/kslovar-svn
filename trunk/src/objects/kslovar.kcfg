@@ -3,12 +3,18 @@
 <kcfg> <kcfgfile name="kslovarrc"/>
   <group name="appearance">
     <entry name="MouseNavigation" type="Bool">
-      <label>Enable mouse navigation.</label>
+      <label>Scrolling with mouse movement.</label>
       <default>true</default>
+      <whatsthis>When this option is enabled, you can scroll all the lists by moving your mouse.(Thanks to Kopete Development Team)</whatsthis>
     </entry>
     <entry name="ScrollBar" type="Bool">
       <label>Enable vertical scroll bar.</label>
       <default>false</default>
+      <whatsthis>Makes vertical scroll bars in lists visible.</whatsthis>
+    </entry>
+    <entry name="DictionaryStyle" type="String">
+      <label>Selected dictionary style.</label>
+      <default>simpl1e</default>
     </entry>
   </group>
 </kcfg>
