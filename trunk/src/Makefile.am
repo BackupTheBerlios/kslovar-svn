@@ -34,7 +34,7 @@ shelldesktop_DATA = kslovar.desktop
 
 # this is where the shell's XML-GUI resource file goes
 shellrcdir = $(kde_datadir)/kslovar
-shellrc_DATA = kslovarui.rc languages.ksl
+shellrc_DATA = kslovarui.rc
 
 mimedir = $(kde_mimedir)/application
 mime_DATA = vnd.kslovar.ksd.desktop vnd.kslovar.ksl.desktop

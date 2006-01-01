@@ -502,7 +502,7 @@ void KSlovar::processFileOpen(QString fileName)
 
 void KSlovar::loadLanguages()
 {
-  QStringList input=KSDBHandler::instance(QString::fromUtf8(locate("appdata", "languages.ksl")))->processList("SELECT id, name FROM language;", 2);
+  QStringList input=KSDBHandler::instance(QString::fromUtf8(locateLocal("appdata", "languages.ksl")))->processList("SELECT id, name FROM language;", 2);
   if(!input.isEmpty())
   {
     QString id, name;

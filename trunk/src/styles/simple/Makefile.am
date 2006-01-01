@@ -1,6 +1,6 @@
 
 
-stylesdir = $(kde_datadir)/kslovar/styles
-EXTRA_DIST = $(styles_DATA)
+simpledir = $(kde_datadir)/kslovar/styles/simple
+EXTRA_DIST = $(simple_DATA)
 
-styles_DATA = simple-default.xsl
+simple_DATA = simple-default.xsl
