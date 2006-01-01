@@ -19,23 +19,24 @@
  ***************************************************************************/
 
 #include "kslovar.h"
-#include "objects/configuration.h"
+#include "configuration/configuration.h"
 
-#include "widgets/createdictionary.h"
-#include "widgets/addphrase.h"
+#include "dialog/createdictionary.h"
+#include "dialog/addphrase.h"
 
-//#include "ui/appearancewdt.h"
-#include "ui/apperancesrc.h"
 
-#include "dbhandler.h"
-#include "ksxmlhandler.h"
-#include "objects/ksdata.h"
+#include "configuration/apperancesrc.h"
+#include "configuration/ksconfigdialog.h"
 
-#include "objects/kslistview.h"
-#include "objects/kslistviewitem.h"
-#include "objects/kslistviewsearchline.h"
-#include "objects/instances.h"
-#include "objects/ksconfigdialog.h"
+#include "handler/dbhandler.h"
+#include "handler/ksxmlhandler.h"
+
+#include "misc/ksdata.h"
+
+#include "misc/widget/kslistview.h"
+#include "misc/widget/kslistviewitem.h"
+#include "misc/widget/kslistviewsearchline.h"
+
 
 #include <qvbox.h>
 #include <qhbox.h>
@@ -44,7 +45,6 @@
 #include <kpopupmenu.h>
 #include <kmenubar.h>
 #include <kapp.h>
-#include <klineedit.h>
 #include <khtml_part.h>
 #include <kurl.h>
 #include <kfiledialog.h>
@@ -54,7 +54,6 @@
 #include <kshortcut.h>
 #include <kaction.h>
 #include <khtmlview.h>
-//#include <kconfigdialog.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
@@ -66,9 +65,10 @@ KSlovar *KSlovar::m_instance=0L;
 KSlovar::KSlovar()
   : KMainWindow( 0, "KSlovar" )
 {
-  Instances::setMainInstance(this);
+  KSlovar::m_instance=this;
+  //Instances::setMainInstance(this);
   m_configDialog=new KSConfigDialog(this, "settings", Configuration::self());
-  Instances::setConfigInstance(m_configDialog);
+//  Instances::setConfigInstance(m_configDialog);
   XMLParser=new KSXMLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-default.xsl")));
   loadLanguages();
 
@@ -689,6 +689,15 @@ void KSlovar::refresh()
 void KSlovar::showPopup(KListView*, QListViewItem*, const QPoint &p)
 {
   m_listPopup->popup(p);
+}
+
+KSlovar *KSlovar::KSInstance()
+{
+  if(!m_instance)
+  {
+    return 0l;
+  }
+  return m_instance;
 }
 
 KSlovar::~KSlovar()

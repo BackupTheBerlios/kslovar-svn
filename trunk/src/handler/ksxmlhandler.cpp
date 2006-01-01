@@ -19,7 +19,7 @@
  ***************************************************************************/
 #include "ksxmlhandler.h"
 
-#include "objects/ksdata.h"
+#include "../misc/ksdata.h"
 
 #include <libxml/globals.h>
 #include <libxml/parser.h>

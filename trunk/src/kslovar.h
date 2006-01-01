@@ -80,7 +80,7 @@ public:
      */
     KSlovar();
 
-    //QStringList getPhrases();
+    static KSlovar *KSInstance();
 
     void openFile(QString fileName);
     void refresh();
@@ -169,9 +169,10 @@ private:
   QString m_welcomeMessage;
   bool m_selected;
   bool m_history;
-  static KSlovar *m_instance;
   KSConfigDialog *m_configDialog;
   QPopupMenu *m_listPopup;
+
+  static KSlovar *m_instance;
 
   KAction *m_newDictionary;
   KAction *m_openDictionary;

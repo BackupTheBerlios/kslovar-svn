@@ -19,7 +19,8 @@
  ***************************************************************************/
 
 #include "dbhandler.h"
-#include "sqlite/sqlite3.h"
+
+#include "../sqlite/sqlite3.h"
 
 #include <qstring.h>
 #include <qstringlist.h>
