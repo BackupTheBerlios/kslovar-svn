@@ -513,10 +513,6 @@ void KSlovar::loadLanguages()
       KSData::instance()->addLanguage(name.remove(QRegExp("^.+/")), id.remove(QRegExp("/.+$")).toInt());
     }
   }
-  else
-  {
-    KMessageBox::error(this, i18n("Cannot load languages!"));
-  }
 }
 
 void KSlovar::loadPartOfSpeech(int id)
