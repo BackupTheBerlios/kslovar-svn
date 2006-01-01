@@ -78,7 +78,5 @@ AC_SUBST(LIBXML_CFLAGS)
 AC_SUBST(LIBXML_RPATH)
 
 echo "Linking configuration with itself"
-mkdir ./src >&/dev/null
-mkdir ./src/configuration >&/dev/null
 rm ./src/configuration/configuration >&/dev/null
 ln -s ./ ./src/configuration/configuration

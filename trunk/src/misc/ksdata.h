@@ -36,7 +36,7 @@ typedef struct
   int id;
   QString name;
   QString search;
-}KSPhrase;
+}KSPhrases;
 
 
 /**
@@ -67,7 +67,7 @@ class KSData : public QObject
     void clearPartOfSpeech();
 
     void addPhrase(int id, QString name, QString search);
-    QValueList<KSPhrase> getPhrases();
+    QValueList<KSPhrases> getPhrases();
     void clearPhrases();
 
     void setStyle(QString selectedStyle);
@@ -82,7 +82,7 @@ class KSData : public QObject
     int m_languageId;
     QValueList<KSElement> m_languages;
     QValueList<KSElement> m_partOfSpeech;
-    QValueList<KSPhrase> m_phrases;
+    QValueList<KSPhrases> m_phrases;
     QString m_selectedStyle;
 
 };

@@ -34,12 +34,12 @@
 class KListBox;
 class KHTMLPart;
 class QSplitter;
-class DBHandler;
+class KSDBHandler;
 class KProgressDialog;
 class KProgress;
-class CreateDictionary;
+class KSDictionary;
 class KAction;
-class AddPhrase;
+class KSPhrase;
 class KListView;
 class KSListView;
 class KListViewSearchLine;
@@ -49,22 +49,6 @@ class QPopupmenu;
 
 class KSXMLHandler;
 
-
-/*class history
-{
-  public:
-    history() {}
-    history( int id, bool user ) : idd(id), userd(user)
-    {}
-
-    int id() const { return idd; };
-    bool user() const { return userd; };
-  private:
-    int idd;
-    bool userd;
-};
-
-typedef QValueList<history> historyList;*/
 
 /**
  * @short Application Main Window
@@ -134,24 +118,12 @@ private slots:
 
 private:
   /**
-  * Index of phrases.
-  */
-  //QStringList m_phrases;
-  /**
-  * Path to the dictionary's database file.
-  */
-  //QString m_path;
-  /**
   * Currently selected phrase.
   */
   QString m_selectedPhrase;
   /**
   * History managment variables
   */
-  /*historyList m_backHistory;
-  historyList m_forwardHistory;
-  historyList::iterator m_it;
-  historyList::iterator m_itForward;*/
   QValueList<int> m_backHistory;
   QValueList<int> m_forwardHistory;
   QValueList<int>::iterator m_it;
@@ -164,8 +136,8 @@ private:
   QSplitter *m_split;
   KProgressDialog *m_progress;
   KProgress *m_progressBar;
-  CreateDictionary *m_dictionarydlg;
-  AddPhrase *m_phrasedlg;
+  KSDictionary *m_dictionarydlg;
+  KSPhrase *m_phrasedlg;
   QString m_welcomeMessage;
   bool m_selected;
   bool m_history;

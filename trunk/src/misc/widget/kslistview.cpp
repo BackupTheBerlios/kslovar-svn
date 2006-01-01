@@ -56,19 +56,6 @@ bool KSListView::eventFilter(QObject *o, QEvent *e)
   return KListView::eventFilter(o, e);
 }
 
-/*void KSListView::setMouseConfig(bool option)
-{
-  mouseConfig=option;
-}
-
-void KSListView::setScrollConfig(bool option)
-{
-  if(!option)
-  {
-    setVScrollBarMode(AlwaysOff);
-  }
-}*/
-
 void KSListView::slotUpdateConfiguration()
 {
   mouseConfig=Configuration::mouseNavigation();
@@ -81,11 +68,6 @@ void KSListView::slotUpdateConfiguration()
     setVScrollBarMode(AlwaysOn);
   }
 }
-
-/*void KSListView::timerEvent(QTimerEvent *e)
-{
-  verticalScrollBar()->setValue(m_value);
-}*/
 
 KSListView::~KSListView()
 {

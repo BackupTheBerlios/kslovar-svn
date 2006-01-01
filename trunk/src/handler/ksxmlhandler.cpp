@@ -46,9 +46,7 @@ KSXMLHandler::KSXMLHandler(QString document)
 
 void KSXMLHandler::setXSL(QString document)
 {
-  //xsltFreeStylesheet(styleSheet);
   styleSheet=0;
-  //xmlFreeDoc(xslDoc);
   xslDoc=0;
 
   QCString rawDocument=openXSL(document);

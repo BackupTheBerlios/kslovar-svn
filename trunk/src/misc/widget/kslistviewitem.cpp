@@ -51,6 +51,3 @@ void KSListViewItem::setId(int id)
 KSListViewItem::~KSListViewItem()
 {
 }
-
-
-//#include "kslistviewitem.moc"

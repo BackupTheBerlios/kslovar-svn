@@ -27,7 +27,7 @@
  */
 class KSListViewItem : public KListViewItem
 {
-  //Q_OBJECT
+  Q_OBJECT
   public:
     KSListViewItem(KListView *parent = 0, QString label1=QString::null, QString id=QString::null, QString search=QString::null);
     KSListViewItem(KListView *parent = 0, QListViewItem *after=0l, QString label1=QString::null, QString id=QString::null);

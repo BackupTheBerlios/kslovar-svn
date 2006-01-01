@@ -23,8 +23,10 @@
 
 #include <qstringlist.h>
 #include <qvaluelist.h>
+#include <kstaticdeleter.h>
 
 KSData *KSData::m_instance=0l;
+static KStaticDeleter<KSData> staticKSDataDeleter;
 
 KSData::KSData()
   : QObject(), m_selectedStyle(Configuration::dictionaryStyle())
@@ -35,7 +37,8 @@ KSData *KSData::instance()
 {
   if(!KSData::m_instance)
   {
-    KSData::m_instance=new KSData();
+    //KSData::m_instance=new KSData();
+    staticKSDataDeleter.setObject(m_instance, new KSData());
   }
   return KSData::m_instance;
 }
@@ -139,14 +142,14 @@ void KSData::clearPartOfSpeech()
 
 void KSData::addPhrase(int id, QString name, QString search)
 {
-  KSPhrase temp;
+  KSPhrases temp;
   temp.id=id;
   temp.name=name;
   temp.search=search;
   m_phrases << temp;
 }
 
-QValueList<KSPhrase> KSData::getPhrases()
+QValueList<KSPhrases> KSData::getPhrases()
 {
   return m_phrases;
 }
@@ -168,6 +171,10 @@ QString KSData::getStyle()
 
 KSData::~KSData()
 {
+  if(m_instance==this)
+  {
+    staticKSDataDeleter.setObject(m_instance, 0, false);
+  }
 }
 
 #include "ksdata.moc"

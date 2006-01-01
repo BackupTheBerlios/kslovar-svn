@@ -34,7 +34,6 @@ class KSListView : public KListView
   ~KSListView();
 
   protected:
-//    virtual void timerEvent(QTimerEvent *e);
 
     virtual bool eventFilter(QObject *o, QEvent *e);
 
