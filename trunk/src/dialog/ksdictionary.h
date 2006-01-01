@@ -17,30 +17,45 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef APPERANCESRC_H
-#define APPERANCESRC_H
+#ifndef CREATEDICTIONARY_H
+#define CREATEDICTIONARY_H
 
-#include "configuration/ui/appearancewdt.h"
+#include <kdialogbase.h>
 
-class QListViewItem;
-class KHTMLPart;
-class KSXMLHandler;
+class KSDictionaryWdt;
 
-class ApperanceSrc: public AppearanceWdt {
-Q_OBJECT
+/**
+@author Gregor Kališnik
+ */
+class KSDictionary : public KDialogBase
+{
+  Q_OBJECT
   public:
-    ApperanceSrc(QWidget *parent = 0, const char *name = 0);
+    KSDictionary(QWidget *parent = 0, const char *caption="Create dictionary", QString nameDictionary=0, QString text=0, bool edit=false);
+
+    ~KSDictionary();
 
   private slots:
-    void selectStyle(QListViewItem *selected);
+    void slotBold();
+    void slotItalic();
+    void slotUnderline();
+    void slotSize(int newSize);
+    void slotAddLang();
+    void slotEditLang();
 
   private:
-    void populateStyleList();
+    void populateLanguages();
+    bool save();
 
-    QString m_exampleDefault;
+    KSDictionaryWdt *m_mainWidget;
+    QString m_name;
+    QString m_text;
+    bool m_edit;
 
-    KHTMLPart *m_previewDefault;
-    KSXMLHandler *m_defaultStyleParser;
+  protected slots:
+    virtual void slotOk();
+    virtual void slotApply();
+
 };
 
 #endif

@@ -1,8 +1,8 @@
 <!DOCTYPE UI><UI version="3.3" stdsetdef="1">
-<class>AppearanceWdt</class>
+<class>KSAppearanceWdt</class>
 <widget class="QWidget">
     <property name="name">
-        <cstring>AppearanceWdt</cstring>
+        <cstring>KSAppearanceWdt</cstring>
     </property>
     <property name="geometry">
         <rect>
@@ -13,7 +13,7 @@
         </rect>
     </property>
     <property name="caption">
-        <string>AppearanceWdt</string>
+        <string>KSAppearanceWdt</string>
     </property>
     <grid>
         <property name="name">

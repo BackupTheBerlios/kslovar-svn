@@ -17,44 +17,41 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CREATEDICTIONARY_H
-#define CREATEDICTIONARY_H
+#ifndef KSLANGUAGES_H
+#define KSLANGUAGES_H
 
 #include <kdialogbase.h>
 
-class CreateDictionaryWdt;
+class KSLanguageWdt;
 
 /**
 @author Gregor Kališnik
  */
-class CreateDictionary : public KDialogBase
+class KSLanguage : public KDialogBase
 {
   Q_OBJECT
   public:
-    CreateDictionary(QWidget *parent = 0, const char *caption="Create dictionary", QString nameDictionary=0, QString text=0, bool edit=false);
+    KSLanguage(QWidget *parent=0, const char *caption=0, QString language=0l, int langid=0l, const char *name=0);
 
-    ~CreateDictionary();
-
-  private slots:
-    void slotBold();
-    void slotItalic();
-    void slotUnderline();
-    void slotSize(int newSize);
-    void slotAddLang();
-    void slotEditLang();
-
-  private:
-    void populateLanguages();
-    bool save();
-
-    CreateDictionaryWdt *m_mainWidget;
-    QString m_name;
-    QString m_text;
-    bool m_edit;
+    ~KSLanguage();
 
   protected slots:
-    virtual void slotOk();
-    virtual void slotApply();
+    void slotOk();
+    void slotApply();
+
+  private:
+    KSLanguageWdt *m_mainWidget;
+    QString m_path;
+    int m_id;
+    bool m_edit;
+
+    void populateTypeList();
+    bool save();
+
+  private slots:
+    void slotAddType();
+    void slotDeleteType();
+    void slotEnableApply();
 
 };
 

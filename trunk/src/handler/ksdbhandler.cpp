@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "dbhandler.h"
+#include "ksdbhandler.h"
 
 #include "../sqlite/sqlite3.h"
 
@@ -29,44 +29,26 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
+#include <kstaticdeleter.h>
 
-DBHandler *DBHandler::m_instance=0L;
-QString DBHandler::m_currentPath=0L;
+KSDBHandler *KSDBHandler::m_instance=0L;
+QString KSDBHandler::m_currentPath=0L;
+static KStaticDeleter<KSDBHandler> staticKSDBHandlerDeleter;
 
-DBHandler::DBHandler(QString databasePath)
+KSDBHandler::KSDBHandler(QString databasePath)
+  : QObject()
 {
   sqlite3_open(databasePath.utf8(), &m_db);
   query("PRAGMA auto_vacuum = 1;");
 }
 
-/*QString DBHandler::readText(QString id)
-{
-  sqlite3_stmt *stmt;
-  //QString database="user_dictionary";
-  /*if(!user)
-{
-  database="dictionary";
-}*//*
-
-  QString query1="SELECT text FROM dictionary WHERE id='";
-  query1=query1.append(id);
-  query1=query1.append("' LIMIT 1;");
-
-  Query(query1, &stmt);
-
-  sqlite3_step(stmt);
-  QString output=QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 0 ) );
-  sqlite3_reset(stmt);
-  return output;
-}*/
-
-bool DBHandler::query(QString sqlQuery, sqlite3_stmt ** output)
+bool KSDBHandler::query(QString sqlQuery, sqlite3_stmt ** output)
 {
   int statusCode;
 
   if( sqlQuery.isEmpty() )
   {
-    kdError() << "[DBHandler]->Query Query is not assigned!";
+    kdError() << "[KSDBHandler]->Query Query is not assigned!";
     return false;
   }
 
@@ -78,19 +60,19 @@ bool DBHandler::query(QString sqlQuery, sqlite3_stmt ** output)
 
   if(statusCode!=SQLITE_OK)
   {
-    kdDebug() << "[DBHandler]->Query SQLITE err code: " << statusCode << endl;
+    kdDebug() << "[KSDBHandler]->Query SQLITE err code: " << statusCode << endl;
     return false;
   }
   return true;
 }
 
-bool DBHandler::query(QString sqlQuery)
+bool KSDBHandler::query(QString sqlQuery)
 {
   int statusCode;
 
   if( sqlQuery.isEmpty() )
   {
-    kdError() << "[DBHandler]->Query Query is not assigned!";
+    kdError() << "[KSDBHandler]->Query Query is not assigned!";
     return false;
   }
 
@@ -98,50 +80,21 @@ bool DBHandler::query(QString sqlQuery)
 
   if(statusCode!=SQLITE_OK)
   {
-    kdDebug() << "[DBHandler]->Query SQLITE err code: " << statusCode << endl;
+    kdDebug() << "[KSDBHandler]->Query SQLITE err code: " << statusCode << endl;
     return false;
   }
   return true;
 }
 
-/*QStringList DBHandler::readIndex(int * count)
-{
-  int error;
-  QString temp;
-  QStringList output;
-
-  sqlite3_stmt *stmt;
-
-  Query("SELECT name, search, id FROM phrases ORDER BY search ASC;", &stmt);
-
-  while(true)
-{
-    error = sqlite3_step(stmt);
-    if ( error == SQLITE_DONE || error == SQLITE_ERROR )
-{
-      break;
-}
-    temp = QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 0 ) );
-    temp = temp + "/" + QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 2 ) ) + "/" + QString::fromUtf8( (const char*) sqlite3_column_text( stmt, 1 ) );
-    output << temp;
-    *count++;
-}
-  sqlite3_reset(stmt);
-  return output;
-}*/
-
-bool DBHandler::saveDictionary(QString text, QString lang, bool create)
+bool KSDBHandler::saveDictionary(QString text, QString lang, bool create)
 {
   QString rawQuery;
   QString type;
   type.setNum(0);
   if(create)
   {
-    /*query1="BEGIN TRANSACTION; CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT ); CREATE TABLE user_dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , rand INTEGER , new INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name VARCHAR( 36 ) , search VARCHAR( 36 ) , ido INTEGER UNIQUE , idu INTEGER UNIQUE ); ";
-    query1=query1+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' ); COMMIT;";*/
     rawQuery="BEGIN TRANSACTION; CREATE TABLE head ( lang INTEGER , type INTEGER , version TEXT ); CREATE TABLE media ( id INTEGER PRIMARY KEY AUTOINCREMENT , mime TEXT , data BLOB ); CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , modified INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT , search TEXT ); ";
     rawQuery=rawQuery+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' ); COMMIT;"+"INSERT INTO head ( lang , type ) VALUES ( '"+lang+"' , '"+type+"' );";
-    //query1=query1.utf8();
   }
   else
   {
@@ -155,17 +108,17 @@ bool DBHandler::saveDictionary(QString text, QString lang, bool create)
   return true;
 }
 
-DBHandler *DBHandler::instance(QString path)
+KSDBHandler *KSDBHandler::instance(QString path)
 {
   if((!m_instance) || (m_currentPath!=path))
   {
-    m_instance=new DBHandler(path);
+    staticKSDBHandlerDeleter.setObject(m_instance, new KSDBHandler(path));
   }
 
   return m_instance;
 }
 
-bool DBHandler::saveWord(QString word, QString text, bool add, QString id)
+bool KSDBHandler::saveWord(QString word, QString text, bool add, QString id)
 {
   QString rawQuery, search;
   search=word;
@@ -184,28 +137,7 @@ bool DBHandler::saveWord(QString word, QString text, bool add, QString id)
   return true;
 }
 
-/*bool DBHandler::Query(QString query)
-{
-  if(query.isEmpty())
-{
-    kdError() << "[DBHandler] Query not defined!" << endl;
-    return false;
-}
-
-  int statusCode;
-
-  const char *tail;
-  statusCode=sqlite3_prepare(m_db, query.utf8(), query.length(), &m_rawOutput, &tail);
-
-  if(statusCode!=SQLITE_OK)
-{
-    kdError() << "[DBHandler]->Query SQLITE err code: " << statusCode << endl;
-    return false;
-}
-  return true;
-}*/
-
-QString DBHandler::processString(QString rawQuery, int columns)
+QString KSDBHandler::processString(QString rawQuery, int columns)
 {
   sqlite3_stmt *rawOutput;
   QString output;
@@ -220,11 +152,10 @@ QString DBHandler::processString(QString rawQuery, int columns)
 
   if(statusCode!=SQLITE_OK && statusCode < SQLITE_ROW)
   {
-    kdError() << "[DBHandler]->ProcessOutput SQLITE err code: " << statusCode << endl;
+    kdError() << "[KSDBHandler]->ProcessOutput SQLITE err code: " << statusCode << endl;
     return 0L;
   }
 
-  //QString output=QString::fromUtf8( (const char*) sqlite3_column_text( rawOutput, 0 ) );
   output = QString::fromUtf8( (const char*) sqlite3_column_text( rawOutput, 0 ) );
   for(int count=1; count<columns; count++)
   {
@@ -235,14 +166,14 @@ QString DBHandler::processString(QString rawQuery, int columns)
 
   if(statusCode!=SQLITE_OK)
   {
-    kdError() << "[DBHandler]->ProcessOutput->Reset SQLITE err code: " << statusCode << endl;
+    kdError() << "[KSDBHandler]->ProcessOutput->Reset SQLITE err code: " << statusCode << endl;
     return 0L;
   }
 
   return output;
 }
 
-QStringList DBHandler::processList(QString rawQuery, int columns)
+QStringList KSDBHandler::processList(QString rawQuery, int columns)
 {
   QString temp;
   QStringList output;
@@ -272,14 +203,16 @@ QStringList DBHandler::processList(QString rawQuery, int columns)
   return output;
 }
 
-bool DBHandler::processQuery(QString rawQuery)
+bool KSDBHandler::processQuery(QString rawQuery)
 {
   return query(rawQuery);
 }
 
-DBHandler::~DBHandler()
+KSDBHandler::~KSDBHandler()
 {
   sqlite3_close(m_db);
-  kdDebug() << "VACUUM procedure ended." << endl;
+  if(m_instance==this)
+  {
+    staticKSDBHandlerDeleter.setObject(m_instance, 0, false);
+  }
 }
-

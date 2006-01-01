@@ -1,8 +1,8 @@
 <!DOCTYPE UI><UI version="3.3" stdsetdef="1">
-<class>AddPhraseWdt</class>
+<class>KSPhraseWdt</class>
 <widget class="QWidget">
     <property name="name">
-        <cstring>AddPhraseWdt</cstring>
+        <cstring>KSPhraseWdt</cstring>
     </property>
     <property name="geometry">
         <rect>

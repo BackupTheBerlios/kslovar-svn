@@ -18,6 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#ifndef KSDBHANDLER_H
+#define KSDBHANDLER_H
+#include <qobject.h>
+
 class QString;
 class QStringList;
 class KProgressDialog;
@@ -31,45 +35,33 @@ typedef struct sqlite3_stmt sqlite3_stmt;
 * @author Gregor Kališnik <gregor@podnapisi.net>
 */
 
-class DBHandler
+class KSDBHandler : public QObject
 {
+  Q_OBJECT
   public:
 
     /**
     * Class's constructor that opens a connection to the database
     * @param databasePath Path to the databases
     */
-    DBHandler(QString databasePath);
-    /**
-    * Method to read text from database
-    * @param id id of the phrase
-    * @return Returns the text of the phrase or false
-    * @todo Improve error handling
-    */
-    //QString readText(QString id);
-    /**
-    * Method to read the index from databases
-    * @return returns the index
-    */
-    //QStringList readIndex(int * count);
+    KSDBHandler(QString databasePath);
     /**
     * Desctructor that closes the connection
     */
     bool saveDictionary(QString text, QString lang, bool create=true);
     bool saveWord(QString word, QString text, bool add, QString id);
-    static DBHandler *instance(QString path);
-    //bool Query(QString query);
+    static KSDBHandler *instance(QString path);
     bool processQuery(QString rawQuery);
     QString processString(QString rawQuery, int columns=1);
     QStringList processList(QString rawQuery, int columns=1);
 
-    ~DBHandler();
+    ~KSDBHandler();
 
   private:
     sqlite3 *m_db;
     sqlite3_stmt *m_rawOutput;
     static QString m_currentPath;
-    static DBHandler *m_instance;
+    static KSDBHandler *m_instance;
 
     /**
     * Query excetution method
@@ -79,3 +71,5 @@ class DBHandler
     bool query(QString sqlQuery, sqlite3_stmt ** output);
     bool query(QString sqlQuery);
 };
+
+#endif

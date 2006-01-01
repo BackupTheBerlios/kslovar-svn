@@ -17,7 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "apperancesrc.h"
+#include "ksappearance.h"
 
 #include "configuration.h"
 #include "ksconfigdialog.h"
@@ -39,8 +39,8 @@
 #include <khtmlview.h>
 #include <kparts/browserextension.h>
 
-ApperanceSrc::ApperanceSrc(QWidget *parent, const char *name)
-  :AppearanceWdt(parent, name)
+KSAppearance::KSAppearance(QWidget *parent, const char *name)
+  :KSAppearanceWdt(parent, name)
 {
   styleList->addColumn("name");
   styleList->setFullWidth(true);
@@ -63,7 +63,7 @@ ApperanceSrc::ApperanceSrc(QWidget *parent, const char *name)
   connect(styleList, SIGNAL(selectionChanged(QListViewItem*)), this, SLOT(selectStyle(QListViewItem*)));
 }
 
-void ApperanceSrc::populateStyleList()
+void KSAppearance::populateStyleList()
 {
   QStringList styles=KGlobal::dirs()->findAllResources("appdata", QString::fromLatin1("styles/*/*-default.xsl"));
   for(QStringList::iterator count=styles.begin();count!=styles.end();count++)
@@ -77,7 +77,7 @@ void ApperanceSrc::populateStyleList()
   styleList->sort();
 }
 
-void ApperanceSrc::selectStyle(QListViewItem *selected)
+void KSAppearance::selectStyle(QListViewItem *selected)
 {
   m_defaultStyleParser=new KSXMLHandler(QString::fromUtf8(locate("appdata", "styles/"+selected->text(0)+"/"+selected->text(0)+"-default.xsl")));
 
@@ -93,4 +93,4 @@ void ApperanceSrc::selectStyle(QListViewItem *selected)
 
 
 
-#include "apperancesrc.moc"
+//#include "ksappearance.moc"

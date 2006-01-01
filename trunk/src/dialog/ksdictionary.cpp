@@ -17,17 +17,17 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "createdictionary.h"
+#include "ksdictionary.h"
 
-#include "kslanguages.h"
+#include "kslanguage.h"
 
 #include "../kslovar.h"
 
-#include "../handler/dbhandler.h"
+#include "../handler/ksdbhandler.h"
 
 #include "../misc/ksdata.h"
 
-#include "ui/createdictionarywdt.h"
+#include "ui/ksdictionarywdt.h"
 
 #include <klocale.h>
 #include <kiconloader.h>
@@ -40,13 +40,11 @@
 #include <ktextedit.h>
 #include <knuminput.h>
 
-CreateDictionary::CreateDictionary(QWidget *parent, const char *caption, QString nameDictionary, QString text, bool edit)
-  : KDialogBase(parent, "CreateDictionary", true, caption), m_name(nameDictionary), m_text(text), m_edit(edit)
+KSDictionary::KSDictionary(QWidget *parent, const char *caption, QString nameDictionary, QString text, bool edit)
+  : KDialogBase(parent, "KSDictionary", true, caption), m_name(nameDictionary), m_text(text), m_edit(edit)
 {
-  //KMessageBox::information(this, "This is curently under rewrite. It doesn't work!"); //For the time being...
-
   KIconLoader *icons=new KIconLoader();
-  m_mainWidget=new CreateDictionaryWdt(this);
+  m_mainWidget=new KSDictionaryWdt(this);
 
   if(m_name)
   {
@@ -60,11 +58,6 @@ CreateDictionary::CreateDictionary(QWidget *parent, const char *caption, QString
   m_mainWidget->italicButton->setIconSet(icons->loadIconSet("text_italic", KIcon::Toolbar));
   m_mainWidget->underlineButton->setIconSet(icons->loadIconSet("text_under", KIcon::Toolbar));
 
-  //Currently disabled, because of quick presentation...
-  /*m_mainWidget->addLangButton->setEnabled(false);
-  m_mainWidget->editLangButton->setEnabled(false);
-  m_mainWidget->languageSelect->setEnabled(false);*/
-
   enableButtonApply(false);
 
   connect(m_mainWidget->boldButton, SIGNAL(clicked()), this, SLOT(slotBold()));
@@ -77,7 +70,7 @@ CreateDictionary::CreateDictionary(QWidget *parent, const char *caption, QString
   setMainWidget(m_mainWidget);
 }
 
-void CreateDictionary::slotBold()
+void KSDictionary::slotBold()
 {
   if(m_mainWidget->mainEdit->bold())
   {
@@ -89,7 +82,7 @@ void CreateDictionary::slotBold()
   }
 }
 
-void CreateDictionary::slotItalic()
+void KSDictionary::slotItalic()
 {
   if(m_mainWidget->mainEdit->italic())
   {
@@ -101,7 +94,7 @@ void CreateDictionary::slotItalic()
   }
 }
 
-void CreateDictionary::slotUnderline()
+void KSDictionary::slotUnderline()
 {
   if(m_mainWidget->mainEdit->underline())
   {
@@ -113,12 +106,12 @@ void CreateDictionary::slotUnderline()
   }
 }
 
-void CreateDictionary::slotSize(int newSize)
+void KSDictionary::slotSize(int newSize)
 {
   m_mainWidget->mainEdit->setPointSize(newSize);
 }
 
-void CreateDictionary::populateLanguages()
+void KSDictionary::populateLanguages()
 {
   m_mainWidget->languageSelect->clear();
   QStringList languages=KSData::instance()->getLanguagesNames();
@@ -131,19 +124,19 @@ void CreateDictionary::populateLanguages()
   }
 }
 
-void CreateDictionary::slotEditLang()
+void KSDictionary::slotEditLang()
 {
-  KSLanguages *widget=new KSLanguages(this, i18n("Edit language"), m_mainWidget->languageSelect->currentText(), m_mainWidget->languageSelect->currentItem());
+  KSLanguage *widget=new KSLanguage(this, i18n("Edit language"), m_mainWidget->languageSelect->currentText(), m_mainWidget->languageSelect->currentItem());
   widget->show();
 }
 
-void CreateDictionary::slotAddLang()
+void KSDictionary::slotAddLang()
 {
-  KSLanguages *widget=new KSLanguages(this, i18n("Add language"));
+  KSLanguage *widget=new KSLanguage(this, i18n("Add language"));
   widget->show();
 }
 
-void CreateDictionary::slotOk()
+void KSDictionary::slotOk()
 {
   if(!save())
   {
@@ -153,7 +146,7 @@ void CreateDictionary::slotOk()
   accept();
 }
 
-void CreateDictionary::slotApply()
+void KSDictionary::slotApply()
 {
   if(!save())
   {
@@ -162,7 +155,7 @@ void CreateDictionary::slotApply()
   emit applyClicked();
 }
 
-bool CreateDictionary::save()
+bool KSDictionary::save()
 {
   m_mainWidget->mainEdit->setTextFormat(Qt::RichText);
   QString text="<h1>"+m_mainWidget->nameEdit->text()+"</h1>"+m_mainWidget->mainEdit->text();
@@ -170,7 +163,7 @@ bool CreateDictionary::save()
   QString lang=id;
   if(m_edit)
   {
-    if(!DBHandler::instance(KSData::instance()->getDictionaryPath())->saveDictionary(text, lang, false))
+    if(!KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveDictionary(text, lang, false))
     {
       return false;
     }
@@ -195,21 +188,20 @@ bool CreateDictionary::save()
         return false;
       }
     }
-    if(!DBHandler::instance(path)->saveDictionary(text, lang))
+    if(!KSDBHandler::instance(path)->saveDictionary(text, lang))
     {
       return false;
     }
     KSData::instance()->setDictionaryPath(path);
     m_edit=true;
-    //Instances::mainInstance()->openFile(path);
     KSlovar::KSInstance()->openFile(path);
   }
   return true;
 }
 
-CreateDictionary::~CreateDictionary()
+KSDictionary::~KSDictionary()
 {
 }
 
 
-#include "createdictionary.moc"
+#include "ksdictionary.moc"

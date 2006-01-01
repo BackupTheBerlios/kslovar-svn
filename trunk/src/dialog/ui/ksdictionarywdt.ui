@@ -1,8 +1,8 @@
 <!DOCTYPE UI><UI version="3.3" stdsetdef="1">
-<class>CreateDictionaryWdt</class>
+<class>KSDictionaryWdt</class>
 <widget class="QWidget">
     <property name="name">
-        <cstring>CreateDictionaryWdt</cstring>
+        <cstring>KSDictionaryWdt</cstring>
     </property>
     <property name="geometry">
         <rect>
@@ -197,8 +197,6 @@
         </widget>
     </grid>
 </widget>
-<customwidgets>
-</customwidgets>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
     <includehint>ktextedit.h</includehint>

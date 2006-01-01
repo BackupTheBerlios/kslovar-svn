@@ -28,17 +28,16 @@
 #include <kdialogbase.h>
 
 class KIconLoader;
-class AddPhraseWdt;
+class KSPhraseWdt;
 class KSpell;
 class KSlovar;
 
-class AddPhrase : public KDialogBase
+class KSPhrase : public KDialogBase
 {
   Q_OBJECT
   public:
-    AddPhrase(QWidget *parent, QString caption);
+    KSPhrase(QWidget *parent, QString caption);
     void setWord(QString text, QString id);
-    //void setPath(QString filename);
 
   private slots:
     void slotAddExplanation();
@@ -53,8 +52,7 @@ class AddPhrase : public KDialogBase
     void slotOk();
 
   private:
-    AddPhraseWdt *m_mainWidget;
-    //QString m_path;
+    KSPhraseWdt *m_mainWidget;
     QStringList m_words;
     QString m_id;
     QString m_text;
@@ -62,7 +60,6 @@ class AddPhrase : public KDialogBase
     bool m_edit;
 
     void populateAvailableList();
-    void populateAddPhraseDialog();
     void populatePartsOfSpeech();
     void initialize();
     void connectSlots();

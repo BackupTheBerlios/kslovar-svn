@@ -17,43 +17,30 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KSLANGUAGES_H
-#define KSLANGUAGES_H
+#ifndef APPERANCESRC_H
+#define APPERANCESRC_H
 
-#include <kdialogbase.h>
+#include "configuration/ui/ksappearancewdt.h"
 
-class LanguagesWdt;
+class QListViewItem;
+class KHTMLPart;
+class KSXMLHandler;
 
-/**
-@author Gregor Kališnik
- */
-class KSLanguages : public KDialogBase
-{
-  Q_OBJECT
+class KSAppearance: public KSAppearanceWdt {
+Q_OBJECT
   public:
-    KSLanguages(QWidget *parent=0, const char *caption=0, QString language=0l, int langid=0l, const char *name=0);
-
-    ~KSLanguages();
-
-  protected slots:
-    void slotOk();
-    void slotApply();
-
-  private:
-    LanguagesWdt *m_mainWidget;
-    QString m_path;
-    int m_id;
-    bool m_edit;
-
-    void populateTypeList();
-    bool save();
+    KSAppearance(QWidget *parent = 0, const char *name = 0);
 
   private slots:
-    //void slotPopulateSecondaryList(QListViewItem *selectedItem);
-    void slotAddType();
-    void slotDeleteType();
-    void slotEnableApply();
+    void selectStyle(QListViewItem *selected);
 
+  private:
+    void populateStyleList();
+
+    QString m_exampleDefault;
+
+    KHTMLPart *m_previewDefault;
+    KSXMLHandler *m_defaultStyleParser;
 };
 
 #endif

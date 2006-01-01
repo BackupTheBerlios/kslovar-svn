@@ -1,8 +1,8 @@
 <!DOCTYPE UI><UI version="3.3" stdsetdef="1">
-<class>LanguagesWdt</class>
+<class>KSLanguageWdt</class>
 <widget class="QWidget">
     <property name="name">
-        <cstring>LanguagesWdt</cstring>
+        <cstring>KSLanguageWdt</cstring>
     </property>
     <property name="geometry">
         <rect>

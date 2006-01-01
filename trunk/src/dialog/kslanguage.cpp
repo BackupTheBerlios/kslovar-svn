@@ -17,14 +17,14 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "kslanguages.h"
+#include "kslanguage.h"
 
-#include "ui/languageswdt.h"
+#include "ui/kslanguagewdt.h"
 
 #include "../misc/widget/kslistview.h"
 #include "../misc/widget/kslistviewitem.h"
 
-#include "../handler/dbhandler.h"
+#include "../handler/ksdbhandler.h"
 
 #include "../kslovar.h"
 
@@ -38,13 +38,13 @@
 #include <kstandarddirs.h>
 #include <kmessagebox.h>
 
-KSLanguages::KSLanguages(QWidget *parent, const char *caption, QString language, int langid, const char *name)
+KSLanguage::KSLanguage(QWidget *parent, const char *caption, QString language, int langid, const char *name)
   : KDialogBase(parent, name, true, caption), m_id(langid)
 {
   m_path=locate("appdata", "languages.ksl");
   enableButtonApply(false);
 
-  m_mainWidget=new LanguagesWdt(this);
+  m_mainWidget=new KSLanguageWdt(this);
 
   m_mainWidget->typeList->setItemsRenameable(true);
   m_mainWidget->typeList->setFullWidth(true);
@@ -59,7 +59,7 @@ KSLanguages::KSLanguages(QWidget *parent, const char *caption, QString language,
   }
   else
   {
-    QStringList test=DBHandler::instance(m_path)->processList("SELECT id FROM language;");
+    QStringList test=KSDBHandler::instance(m_path)->processList("SELECT id FROM language;");
     m_id=test.last().toInt()+1;
     m_edit=false;
   }
@@ -73,9 +73,9 @@ KSLanguages::KSLanguages(QWidget *parent, const char *caption, QString language,
   setMainWidget(m_mainWidget);
 }
 
-void KSLanguages::populateTypeList()
+void KSLanguage::populateTypeList()
 {
-  QStringList types=DBHandler::instance(m_path)->processList("SELECT id, name FROM type WHERE id_lang='"+QString::number(m_id+1)+"';", 2);
+  QStringList types=KSDBHandler::instance(m_path)->processList("SELECT id, name FROM type WHERE id_lang='"+QString::number(m_id+1)+"';", 2);
   if(!types.isEmpty())
   {
     for(QStringList::iterator count=types.begin(); count!=types.end(); count++)
@@ -87,22 +87,7 @@ void KSLanguages::populateTypeList()
   }
 }
 
-/*void KSLanguages::slotPopulateSecondaryList(QListViewItem *selectedItem)
-{
-  m_mainWidget->secondaryList->clear();
-  QStringList text=DBHandler::instance(m_path)->processList("SELECT id, name FROM poss WHERE pospid='"+static_cast<KSListViewItem*> (selectedItem)->getId()+"' AND langid='"+QString::number(m_id)+"';", 2);
-  if(!text.isEmpty())
-  {
-    for(QStringList::iterator count=text.begin(); count!=text.end(); count++)
-    {
-      QString text=*count;
-      QString id=*count;
-      new KSListViewItem(m_mainWidget->secondaryList, text.remove(QRegExp(".+/")), id.remove(QRegExp("/.+")));
-    }
-  }
-}*/
-
-void KSLanguages::slotAddType()
+void KSLanguage::slotAddType()
 {
   KSListViewItem *item;
   QListViewItem *last=m_mainWidget->typeList->lastItem();
@@ -118,38 +103,17 @@ void KSLanguages::slotAddType()
   }
 }
 
-void KSLanguages::slotDeleteType()
+void KSLanguage::slotDeleteType()
 {
   delete m_mainWidget->typeList->selectedItem();
 }
 
-/*void KSLanguages::slotAddSecondary()
-{
-  KSListViewItem *item;
-  QListViewItem *last=m_mainWidget->secondaryList->lastItem();
-  if(!last)
-  {
-    item=new KSListViewItem(m_mainWidget->secondaryList, i18n("Name"));
-    item->setId(1);
-  }
-  else
-  {
-    item=new KSListViewItem(m_mainWidget->secondaryList, last, i18n("Name"));
-    item->setId(static_cast<KSListViewItem*> (last)->getId().toInt()+1);
-  }
-}
-
-void KSLanguages::slotDeleteSecondary()
-{
-  delete m_mainWidget->secondaryList->selectedItem();
-}*/
-
-void KSLanguages::slotEnableApply()
+void KSLanguage::slotEnableApply()
 {
   enableButtonApply(true);
 }
 
-void KSLanguages::slotOk()
+void KSLanguage::slotOk()
 {
   if(!save())
   {
@@ -160,7 +124,7 @@ void KSLanguages::slotOk()
   accept();
 }
 
-void KSLanguages::slotApply()
+void KSLanguage::slotApply()
 {
   if(!save())
   {
@@ -171,18 +135,18 @@ void KSLanguages::slotApply()
   emit applyClicked();
 }
 
-bool KSLanguages::save()
+bool KSLanguage::save()
 {
   if(m_edit)
   {
-    if(!DBHandler::instance(m_path)->processQuery("UPDATE language SET name='"+m_mainWidget->nameEdit->text()+"' WHERE id='"+QString::number(m_id)+"'; DELETE FROM type WHERE langid='"+QString::number(m_id)+"';"))
+    if(!KSDBHandler::instance(m_path)->processQuery("UPDATE language SET name='"+m_mainWidget->nameEdit->text()+"' WHERE id='"+QString::number(m_id)+"'; DELETE FROM type WHERE langid='"+QString::number(m_id)+"';"))
     {
       return false;
     }
     for(QListViewItem *count=m_mainWidget->typeList->firstChild();count;count=count->nextSibling())
     {
       KSListViewItem *temp=static_cast<KSListViewItem*> (count);
-      if(!DBHandler::instance(m_path)->processQuery("INSERT INTO type ( name , id_lang ) VALUES ( '"+temp->text(0)+"' , '"+QString::number(m_id)+"' );"))
+      if(!KSDBHandler::instance(m_path)->processQuery("INSERT INTO type ( name , id_lang ) VALUES ( '"+temp->text(0)+"' , '"+QString::number(m_id)+"' );"))
       {
         return false;
       }
@@ -190,27 +154,26 @@ bool KSLanguages::save()
   }
   else
   {
-    if(!DBHandler::instance(m_path)->processQuery("INSERT INTO language ( name ) VALUES ( '"+m_mainWidget->nameEdit->text()+"' );"))
+    if(!KSDBHandler::instance(m_path)->processQuery("INSERT INTO language ( name ) VALUES ( '"+m_mainWidget->nameEdit->text()+"' );"))
     {
       return false;
     }
     for(QListViewItem *count=m_mainWidget->typeList->firstChild();count;count=count->nextSibling())
     {
       KSListViewItem *temp=static_cast<KSListViewItem*> (count);
-      if(!DBHandler::instance(m_path)->processQuery("INSERT INTO type ( name , id_lang ) VALUES ( '"+temp->text(0)+"' , '"+QString::number(m_id)+"' );"))
+      if(!KSDBHandler::instance(m_path)->processQuery("INSERT INTO type ( name , id_lang ) VALUES ( '"+temp->text(0)+"' , '"+QString::number(m_id)+"' );"))
       {
         return false;
       }
     }
   }
-  //Instances::mainInstance()->loadLanguages();
   KSlovar::KSInstance()->loadLanguages();
   return true;
 }
 
-KSLanguages::~KSLanguages()
+KSLanguage::~KSLanguage()
 {
 }
 
 
-#include "kslanguages.moc"
+#include "kslanguage.moc"
