@@ -530,10 +530,6 @@ void KSlovar::loadPartOfSpeech(int id)
       KSData::instance()->addPartOfSpeech(name.remove(QRegExp("^.+/")), id.remove(QRegExp("/.+$")).toInt());
     }
   }
-  else
-  {
-    KMessageBox::error(this, i18n("Cannot load parts of speech!"));
-  }
 }
 
 void KSlovar::refresh()

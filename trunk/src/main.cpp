@@ -21,15 +21,19 @@
 
 #include "kslovar.h"
 
+#include <qpixmap.h>
+
 #include <kapplication.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <klocale.h>
+#include <kstandarddirs.h>
+#include <ksplashscreen.h>
 
 static const char description[] =
     I18N_NOOP("A dictionary for KDE");
 
-static const char version[] = "0.1.0 20060101"; //Ne pozabi dodat vseh novih map in datotek... 1.1.2006 NOVO LETO!!
+static const char version[] = "0.2.0 20060102"; //Ne pozabi dodat vseh novih map in datotek...
 
 static KCmdLineOptions options[] =
 {
@@ -47,6 +51,10 @@ int main(int argc, char **argv)
     KCmdLineArgs::addCmdLineOptions( options );
     KCmdLineArgs *args=KCmdLineArgs::parsedArgs();
     KApplication app;
+    QPixmap splash(locate("appdata", "splash.png"));
+    KSplashScreen *splashScreen=new KSplashScreen(splash);
+    splashScreen->show();
+
     KSlovar *mainWin = 0;
 
     if (app.isRestored())
@@ -68,6 +76,7 @@ int main(int argc, char **argv)
         app.setMainWidget( mainWin );
         mainWin->resize(1000, 800);
         mainWin->show();
+        splashScreen->finish(mainWin);
 
         args->clear();
     }
