@@ -32,6 +32,7 @@
 #include "../misc/ksdata.h"
 
 #include <qregexp.h>
+#include <qdom.h>
 
 #include <klocale.h>
 #include <klineedit.h>
@@ -45,8 +46,9 @@
 
 
 KSPhrase::KSPhrase(QWidget *parent, QString caption)
-  : KDialogBase(parent, "KSPhrase", true, caption, Ok|Cancel)
+  : KDialogBase(parent, "KSPhrase", true, caption, Ok|Apply|Cancel), m_modified(false)
 {
+  m_create=true;
   initialize();
   populateAvailableList();
   enableButtonApply(false);
@@ -59,11 +61,13 @@ KSPhrase::KSPhrase(QWidget *parent, QString caption)
 void KSPhrase::slotAddExplanation()
 {
   new KListViewItem(m_mainWidget->explanationList, i18n("Type an explanation."), i18n("Type an example."));
+  slotModified();
 }
 
 void KSPhrase::slotRemoveExplanation()
 {
   m_mainWidget->explanationList->takeItem(m_mainWidget->explanationList->currentItem());
+  slotModified();
 }
 
 void KSPhrase::populateAvailableList()
@@ -71,18 +75,43 @@ void KSPhrase::populateAvailableList()
   QValueList<KSPhrases> temp=KSData::instance()->getPhrases();
   for(QValueList<KSPhrases>::iterator count=temp.begin();count!=temp.end();count++)
   {
-    new KSListViewItem(m_mainWidget->availableList, (*count).name, QString::number((*count).id), (*count).search);
+    new KSListViewItem(m_mainWidget->availableSynonymList, (*count).name, QString::number((*count).id), (*count).search);
+    new KSListViewItem(m_mainWidget->availableAntonymList, (*count).name, QString::number((*count).id), (*count).search);
   }
 }
 
-void KSPhrase::slotAddWord()
+void KSPhrase::slotAddSynonym()
 {
-  m_mainWidget->selectedList->insertItem(m_mainWidget->availableList->currentItem());
+  delete m_mainWidget->availableAntonymList->findItem(m_mainWidget->availableSynonymList->currentItem()->text(0), 0);
+
+  m_mainWidget->selectedSynonymList->insertItem(m_mainWidget->availableSynonymList->currentItem());
+  slotModified();
 }
 
-void KSPhrase::slotRemoveWord()
+void KSPhrase::slotRemoveSynonym()
 {
-  m_mainWidget->availableList->insertItem(m_mainWidget->selectedList->currentItem());
+  KSListViewItem *temp=static_cast<KSListViewItem*> (m_mainWidget->selectedSynonymList->currentItem());
+  new KSListViewItem(m_mainWidget->availableAntonymList, temp->text(0), temp->getId());
+
+  m_mainWidget->availableSynonymList->insertItem(m_mainWidget->selectedSynonymList->currentItem());
+  slotModified();
+}
+
+void KSPhrase::slotAddAntonym()
+{
+  delete m_mainWidget->availableSynonymList->findItem(m_mainWidget->availableAntonymList->currentItem()->text(0), 0);
+
+  m_mainWidget->selectedAntonymList->insertItem(m_mainWidget->availableAntonymList->currentItem());
+  slotModified();
+}
+
+void KSPhrase::slotRemoveAntonym()
+{
+  KSListViewItem *temp=static_cast<KSListViewItem*> (m_mainWidget->selectedAntonymList->currentItem());
+  new KSListViewItem(m_mainWidget->availableSynonymList, temp->text(0), temp->getId());
+
+  m_mainWidget->availableAntonymList->insertItem(m_mainWidget->selectedAntonymList->currentItem());
+  slotModified();
 }
 
 void KSPhrase::slotBeginCheck()
@@ -107,6 +136,11 @@ void KSPhrase::slotCheck(KSpell *speller)
 void KSPhrase::slotEndCheck(const QString& checked)
 {
   QStringList check=QStringList::split(" \n ", checked);
+  if((check.first()!=m_mainWidget->explanationList->currentItem()->text(0))||(check.last()!=m_mainWidget->explanationList->currentItem()->text(1)))
+  {
+    m_modified=true;
+    enableButtonApply(true);
+  }
   m_mainWidget->explanationList->currentItem()->setText(0, check.first());
   if(check.count()==2)
   {
@@ -114,26 +148,56 @@ void KSPhrase::slotEndCheck(const QString& checked)
   }
 }
 
-void KSPhrase::slotOk()
+void KSPhrase::save()
 {
-  QString explanations;
+  QDomDocument document("default");
+  QDomElement phrase=document.createElement("phrase");
+  document.appendChild(phrase);
+
+  QDomElement word=document.createElement("word");
+  phrase.appendChild(word);
+  word.appendChild(document.createTextNode(m_mainWidget->wordEdit->text()));
+
+  QDomElement type=document.createElement("type");
+  phrase.appendChild(type);
+  type.appendChild(document.createTextNode(QString::number(KSData::instance()->getPartOfSpeechId(m_mainWidget->typeBox->currentText()))));
+
+  short counting=0;
   for(QListViewItem *count=m_mainWidget->explanationList->firstChild();count;count=count->nextSibling())
   {
-    explanations+="<explanations><explanation>"+count->text(0)+"</explanation><example>"+count->text(1)+"</example></explanations>";
+    QDomElement explanations=document.createElement("explanations");
+    phrase.appendChild(explanations);
+    QDomElement explanation=document.createElement("explanation");
+    explanation.appendChild(document.createTextNode(count->text(0)));
+    QDomElement example=document.createElement("example");
+    example.appendChild(document.createTextNode(count->text(1)));
+    explanations.appendChild(explanation);
+    explanations.appendChild(example);
+    counting++;
   }
-  QString seealso;
 
-  for(QListViewItem *current=m_mainWidget->selectedList->firstChild();current;current=current->nextSibling())
+  for(QListViewItem *count=m_mainWidget->selectedSynonymList->firstChild();count;count=count->nextSibling())
   {
-    KSListViewItem *item=static_cast<KSListViewItem*> (current);
-    seealso+="<other><seealso id='"+item->getId()+"'>"+item->text(0)+"</seealso></other>";
+    KSListViewItem *current=static_cast<KSListViewItem*> (count);
+    QDomElement synonym=document.createElement("synonym");
+    synonym.setAttribute("id", current->getId());
+    synonym.appendChild(document.createTextNode(current->text(0)));
+    phrase.appendChild(synonym);
   }
 
-  QString text;
-  text="<?xml version='1.0' encoding='UTF-8'?><phrase><word>"+m_mainWidget->wordEdit->text()+"</word><type>"+QString::number(KSData::instance()->getPartOfSpeechId(m_mainWidget->typeBox->currentText()))+"</type>"+explanations+seealso+"</phrase>";
+  for(QListViewItem *count=m_mainWidget->selectedAntonymList->firstChild();count;count=count->nextSibling())
+  {
+    KSListViewItem *current=static_cast<KSListViewItem*> (count);
+    QDomElement antonym=document.createElement("antonym");
+    antonym.setAttribute("id", current->getId());
+    antonym.appendChild(document.createTextNode(current->text(0)));
+    phrase.appendChild(antonym);
+  }
+
+  QString xml="<?xml version='1.0' encoding='UTF-8'?>"+document.toString().replace("\"", "'");
   if(m_edit==true)
   {
-    if(!KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(m_mainWidget->wordEdit->text(), text, false, m_id))
+    if(!KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(m_mainWidget->wordEdit->text(), xml, false, m_id))
     {
       KMessageBox::error(this, i18n("Cannot edit phrase!"));
     }
@@ -141,15 +205,34 @@ void KSPhrase::slotOk()
   }
   else
   {
-    if(!KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(m_mainWidget->wordEdit->text(), text, true, 0L))
+    if(!KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(m_mainWidget->wordEdit->text(), xml, true, 0L))
     {
       KMessageBox::error(this, i18n("Cannot add new phrase!"));
     }
     KSlovar::KSInstance()->openFile(KSData::instance()->getDictionaryPath());
   }
 
+  m_modified=false;
+}
+
+void KSPhrase::slotOk()
+{
+  if(m_modified)
+  {
+    save();
+  }
   emit okClicked();
   accept();
+}
+
+void KSPhrase::slotApply()
+{
+  if(m_modified)
+  {
+    save();
+  }
+  enableButtonApply(false);
+  emit applyClicked();
 }
 
 void KSPhrase::setWord(QString text, QString id)
@@ -182,27 +265,31 @@ void KSPhrase::setWord(QString text, QString id)
       new KListViewItem(m_mainWidget->explanationList, node.firstChild().toElement().text(), node.lastChild().toElement().text());
       continue;
     }
-    if(name=="other")
+    if(name=="synonym")
     {
-      for(QDomNode node2=node.firstChild();!node2.isNull();node2=node2.nextSibling())
+      for(QListViewItem *count=m_mainWidget->availableSynonymList->firstChild();count;count=count->nextSibling())
       {
-        QString name2=node2.nodeName();
-        if(name2=="seealso")
+        if(node.toElement().text()==count->text(0))
         {
-          for(QListViewItem *count=m_mainWidget->availableList->firstChild();count;count=count->nextSibling())
-          {
-            if(node2.toElement().text()==count->text(0))
-            {
-              m_mainWidget->selectedList->insertItem(count);
-            }
-          }
-          continue;
+          m_mainWidget->selectedSynonymList->insertItem(count);
+        }
+      }
+      continue;
+    }
+    if(name=="antonym")
+    {
+      for(QListViewItem *count=m_mainWidget->availableAntonymList->firstChild();count;count=count->nextSibling())
+      {
+        if(node.toElement().text()==count->text(0))
+        {
+          m_mainWidget->selectedAntonymList->insertItem(count);
         }
       }
       continue;
     }
   }
-  delete m_mainWidget->availableList->findItem(m_mainWidget->wordEdit->text(), 0);
+  delete m_mainWidget->availableSynonymList->findItem(m_mainWidget->wordEdit->text(), 0);
+  delete m_mainWidget->availableAntonymList->findItem(m_mainWidget->wordEdit->text(), 0);
 }
 
 void KSPhrase::populatePartsOfSpeech()
@@ -221,16 +308,21 @@ void KSPhrase::initialize()
   m_mainWidget->explanationList->addColumn(i18n("Example"));
   m_mainWidget->explanationList->setRenameable(1);
 
-  m_mainWidget->rightButton->setIconSet(icons->loadIconSet("forward", KIcon::Toolbar));
-  m_mainWidget->leftButton->setIconSet(icons->loadIconSet("back", KIcon::Toolbar));
+  m_mainWidget->rightSynonymButton->setIconSet(icons->loadIconSet("forward", KIcon::Toolbar));
+  m_mainWidget->leftSynonymButton->setIconSet(icons->loadIconSet("back", KIcon::Toolbar));
 
-  m_mainWidget->availableList->setColumnWidth(0, 193);
-  m_mainWidget->selectedList->setColumnWidth(0, 193);
+  m_mainWidget->rightAntonymButton->setIconSet(icons->loadIconSet("forward", KIcon::Toolbar));
+  m_mainWidget->leftAntonymButton->setIconSet(icons->loadIconSet("back", KIcon::Toolbar));
 
-  m_mainWidget->availableList->setFullWidth(true);
-  m_mainWidget->availableList->addColumn("name");
-  m_mainWidget->selectedList->setFullWidth(true);
-  m_mainWidget->selectedList->addColumn("name");
+  m_mainWidget->availableSynonymList->setFullWidth(true);
+  m_mainWidget->availableSynonymList->addColumn("name");
+  m_mainWidget->selectedSynonymList->setFullWidth(true);
+  m_mainWidget->selectedSynonymList->addColumn("name");
+
+  m_mainWidget->availableAntonymList->setFullWidth(true);
+  m_mainWidget->availableAntonymList->addColumn("name");
+  m_mainWidget->selectedAntonymList->setFullWidth(true);
+  m_mainWidget->selectedAntonymList->addColumn("name");
 
   m_mainWidget->typeBox->insertStringList(KSData::instance()->getPartOfSpeech());
 }
@@ -240,8 +332,26 @@ void KSPhrase::connectSlots()
   connect(m_mainWidget->addButton, SIGNAL(clicked()), this, SLOT(slotAddExplanation()));
   connect(m_mainWidget->removeButton, SIGNAL(clicked()), this, SLOT(slotRemoveExplanation()));
   connect(m_mainWidget->spellButton, SIGNAL(clicked()), this, SLOT(slotBeginCheck()));
-  connect(m_mainWidget->rightButton, SIGNAL(clicked()), this, SLOT(slotAddWord()));
-  connect(m_mainWidget->leftButton, SIGNAL(clicked()), this, SLOT(slotRemoveWord()));
+  connect(m_mainWidget->rightSynonymButton, SIGNAL(clicked()), this, SLOT(slotAddSynonym()));
+  connect(m_mainWidget->leftSynonymButton, SIGNAL(clicked()), this, SLOT(slotRemoveSynonym()));
+  connect(m_mainWidget->rightAntonymButton, SIGNAL(clicked()), this, SLOT(slotAddAntonym()));
+  connect(m_mainWidget->leftAntonymButton, SIGNAL(clicked()), this, SLOT(slotRemoveAntonym()));
+  connect(m_mainWidget->wordEdit, SIGNAL(textChanged(const QString&)), this, SLOT(slotModified()));
+  connect(m_mainWidget->typeBox, SIGNAL(activated(int)), this, SLOT(slotModified()));
+  connect(m_mainWidget->explanationList, SIGNAL(itemRenamed(QListViewItem*)), this, SLOT(slotModified()));
+}
+
+void KSPhrase::slotModified()
+{
+  if(m_create)
+  {
+    m_create=false;
+  }
+  else
+  {
+    m_modified=true;
+    enableButtonApply(true);
+  }
 }
 
 #include "ksphrase.moc"

@@ -46,7 +46,7 @@ KSAppearance::KSAppearance(QWidget *parent, const char *name)
   styleList->setFullWidth(true);
   populateStyleList();
 
-  m_exampleDefault="<?xml version='1.0' encoding='UTF-8'?><phrase><word>Example</word><type>noun</type><explanations><explanation>An example style for the default dictionary.</explanation><example>You could use this style!</example></explanations><explanations><explanation>Example of another explanation.</explanation><example>The second example is strange.</example></explanations><other><seealso id='1'>Explanation</seealso></other><other><seealso id='2'>Type</seealso></other></phrase>";
+  m_exampleDefault="<?xml version='1.0' encoding='UTF-8'?><phrase><word>Example</word><type>noun</type><explanations><explanation>An example style for the default dictionary.</explanation><example>You could use this style!</example></explanations><explanations><explanation>Example of another explanation.</explanation><example>The second example is strange.</example></explanations><other><synonym id='1'>Explanation</synonym><antonym id='3'>Something?</antonym></other><other><synonym id='2'>Type</synonym></other></phrase>";
 
   m_defaultStyleParser=new KSXMLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-default.xsl")));
 

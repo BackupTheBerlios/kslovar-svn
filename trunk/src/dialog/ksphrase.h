@@ -42,14 +42,18 @@ class KSPhrase : public KDialogBase
   private slots:
     void slotAddExplanation();
     void slotRemoveExplanation();
-    void slotAddWord();
-    void slotRemoveWord();
+    void slotAddSynonym();
+    void slotRemoveSynonym();
+    void slotAddAntonym();
+    void slotRemoveAntonym();
     void slotBeginCheck();
     void slotCheck(KSpell *speller);
     void slotEndCheck(const QString& checked);
+    void slotModified();
 
   protected slots:
     void slotOk();
+    void slotApply();
 
   private:
     KSPhraseWdt *m_mainWidget;
@@ -58,11 +62,14 @@ class KSPhrase : public KDialogBase
     QString m_text;
     QString m_word;
     bool m_edit;
+    bool m_modified;
+    bool m_create;
 
     void populateAvailableList();
     void populatePartsOfSpeech();
     void initialize();
     void connectSlots();
+    void save();
 };
 
 #endif

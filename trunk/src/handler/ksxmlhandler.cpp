@@ -29,12 +29,13 @@
 #include <libxslt/transform.h>
 
 #include <qfile.h>
+#include <qstring.h>
+#include <qstringlist.h>
 
 #include <kdebug.h>
 #include <kapplication.h>
 #include <kstandarddirs.h>
-#include <qstring.h>
-#include <qstringlist.h>
+#include <klocale.h>
 
 xsltStylesheetPtr styleSheet;
 xmlDocPtr xslDoc;
@@ -135,6 +136,10 @@ QCString KSXMLHandler::openXSL(QString path)
     }
     input.close();
   }
+  //TODO: an if to divide betwen dictionaries. (or switch)
+  temp.replace("{explanations-examples}", i18n("Explanations and examples"));
+  temp.replace("{synonym}", i18n("Synonym"));
+  temp.replace("{antonym}", i18n("Antonym"));
   return temp.utf8();
 }
 

@@ -6,15 +6,21 @@
       <body>
         <h1><xsl:value-of select='word'/>, <xsl:value-of select='type'/></h1>
         <p>
-          <h2>Explanations and <i>examples</i></h2>
+          <h2>{explanations-examples}</h2>
           <xsl:for-each select='explanations'>
-            <li><xsl:value-of select='explanation'/>, <i><xsl:value-of select='example'/></i></li>
+            <li><xsl:value-of select='explanation'/> <i><xsl:value-of select='example'/></i></li>
           </xsl:for-each>
         </p>
         <p>
-          <h2>See also</h2>
-          <xsl:for-each select='other'>
-            <li><a><xsl:attribute name='href'>http://<xsl:value-of select='seealso/@id'/></xsl:attribute><xsl:value-of select='seealso'/></a></li>
+          <h2>{synonym}</h2>
+          <xsl:for-each select='synonym'>
+            <li><a><xsl:attribute name='href'>http://<xsl:value-of select='@id'/></xsl:attribute><xsl:value-of select='.'/></a></li>
+          </xsl:for-each>
+        </p>
+        <p>
+          <h2>{antonym}</h2>
+          <xsl:for-each select='antonym'>
+            <li><a><xsl:attribute name='href'>http://<xsl:value-of select='@id'/></xsl:attribute><xsl:value-of select='.'/></a></li>
           </xsl:for-each>
         </p>
       </body>
