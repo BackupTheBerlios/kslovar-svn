@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KSlovar
+GenericName=Dictionary viewer and editor
 Exec=kslovar
 Icon=kslovar
 Type=Application
