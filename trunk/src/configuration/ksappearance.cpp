@@ -65,10 +65,28 @@ KSAppearance::KSAppearance(QWidget *parent, const char *name)
 
 void KSAppearance::populateStyleList()
 {
+  bool skip=false;
   QStringList styles=KGlobal::dirs()->findAllResources("appdata", QString::fromLatin1("styles/*/*-default.xsl"));
+  QStringList added;
   for(QStringList::iterator count=styles.begin();count!=styles.end();count++)
   {
-    KSListViewItem *temp=new KSListViewItem(styleList, (*count).remove(QRegExp(".+/")).remove(QRegExp("-.+")));
+    (*count).remove(QRegExp(".+/")).remove(QRegExp("-.+"));
+    for(QStringList::iterator count2=added.begin();count2!=added.end();count2++)
+    {
+      (*count2).remove(QRegExp(".+/")).remove(QRegExp("-.+"));
+      if(*count==*count2)
+      {
+        skip=true;
+        break;
+      }
+    }
+    if(skip)
+    {
+      skip=false;
+      continue;
+    }
+    added << *count;
+    KSListViewItem *temp=new KSListViewItem(styleList, *count);
     if((*count)==Configuration::dictionaryStyle())
     {
       styleList->setSelected(temp, true);
@@ -87,7 +105,6 @@ void KSAppearance::selectStyle(QListViewItem *selected)
 
   KSData::instance()->setStyle(selected->text(0));
   Configuration::setDictionaryStyle(selected->text(0));
-//  Instances::configInstance()->manualUpdateButtons();
   KSConfigDialog::instance()->manualUpdateButtons();
 }
 
