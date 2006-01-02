@@ -6,4 +6,4 @@ Icon=kslovar
 Type=Application
 Comment=Dictionary for KDE
 Comment[sl]=Slovar za KDE
-Categories=Qt;KDE;Education
+Categories=Qt;KDE;Education;Languages
