@@ -70,7 +70,7 @@ KSlovar::KSlovar()
   XMLParser=new KSXMLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-default.xsl")));
   loadLanguages();
 
-  m_welcomeMessage=i18n("<h1>Welcome to KSlovarju</h1> This needs to be changed :).");
+  m_welcomeMessage=i18n("<h1>Welcome to KSlovar</h1> This needs to be changed :).");
 
   registerButtons();
   addMenu();
@@ -476,6 +476,7 @@ void KSlovar::processFileOpen(QString fileName)
       return;
     }
     file.close();
+    m_search->setListView(0);
 
     temp=KSDBHandler::instance(fileName)->processList("SELECT name, id, search FROM phrases ORDER BY search ASC;", 3);
 
@@ -497,6 +498,9 @@ void KSlovar::processFileOpen(QString fileName)
     m_backHistory.clear();
     KSData::instance()->setDictionaryPath(fileName);
     loadPartOfSpeech(KSDBHandler::instance(fileName)->processString("SELECT lang FROM head;").toInt());
+
+    m_search->setListView(m_list);
+    m_search->updateSearch();
   }
 }
 
