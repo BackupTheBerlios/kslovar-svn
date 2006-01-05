@@ -150,6 +150,8 @@ void KSPhrase::slotEndCheck(const QString& checked)
 
 void KSPhrase::save()
 {
+  QValueList<KSElement> saveSynonyms, saveAntonyms;
+
   QDomDocument document("default");
   QDomElement phrase=document.createElement("phrase");
   document.appendChild(phrase);
@@ -178,20 +180,32 @@ void KSPhrase::save()
 
   for(QListViewItem *count=m_mainWidget->selectedSynonymList->firstChild();count;count=count->nextSibling())
   {
+    KSElement temp;
+
     KSListViewItem *current=static_cast<KSListViewItem*> (count);
     QDomElement synonym=document.createElement("synonym");
     synonym.setAttribute("id", current->getId());
     synonym.appendChild(document.createTextNode(current->text(0)));
     phrase.appendChild(synonym);
+
+    temp.name=current->text(0);
+    temp.id=current->getId().toInt();
+    saveSynonyms << temp;
   }
 
   for(QListViewItem *count=m_mainWidget->selectedAntonymList->firstChild();count;count=count->nextSibling())
   {
+    KSElement temp;
+
     KSListViewItem *current=static_cast<KSListViewItem*> (count);
     QDomElement antonym=document.createElement("antonym");
     antonym.setAttribute("id", current->getId());
     antonym.appendChild(document.createTextNode(current->text(0)));
     phrase.appendChild(antonym);
+
+    temp.name=current->text(0);
+    temp.id=current->getId().toInt();
+    saveAntonyms << temp;
   }
 
   QString xml="<?xml version='1.0' encoding='UTF-8'?>"+document.toString().replace("\"", "'");
@@ -210,6 +224,70 @@ void KSPhrase::save()
       KMessageBox::error(this, i18n("Cannot add new phrase!"));
     }
     KSlovar::KSInstance()->openFile(KSData::instance()->getDictionaryPath());
+  }
+
+  for(QValueList<KSElement>::iterator count=saveSynonyms.begin();count!=saveSynonyms.end();count++)
+  {
+    bool exists=false;
+    QString temp=KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number((*count).id)+"';");
+    QDomDocument save("default");
+    save.setContent(temp);
+    QDomElement root=save.documentElement();
+
+    for(QDomNode node=root.firstChild();!node.isNull();node=node.nextSibling())
+    {
+      QDomElement current=node.toElement();
+      if(current.tagName()=="synonym")
+      {
+        if(current.text()==m_mainWidget->wordEdit->text())
+        {
+          exists=true;
+          break;
+        }
+      }
+    }
+
+    if(!exists)
+    {
+      QDomElement temp=save.createElement("synonym");
+      root.appendChild(temp);
+      temp.appendChild(save.createTextNode(m_mainWidget->wordEdit->text()));
+      temp.setAttribute("id", m_id);
+      QString output=save.toString().replace("\"", "'").replace("<?xml version = '1.0' encoding = 'UTF-8'?>\n<!", "<?xml version='1.0' encoding='UTF-8'?><!");
+      KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord((*count).name, output, false, QString::number((*count).id));
+    }
+  }
+
+  for(QValueList<KSElement>::iterator count=saveAntonyms.begin();count!=saveAntonyms.end();count++)
+  {
+    bool exists=false;
+    QString temp=KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number((*count).id)+"';");
+    QDomDocument save("default");
+    save.setContent(temp);
+    QDomElement root=save.documentElement();
+
+    for(QDomNode node=root.firstChild();!node.isNull();node=node.nextSibling())
+    {
+      QDomElement current=node.toElement();
+      if(current.tagName()=="antonym")
+      {
+        if(current.text()==m_mainWidget->wordEdit->text())
+        {
+          exists=true;
+          break;
+        }
+      }
+    }
+
+    if(!exists)
+    {
+      QDomElement temp=save.createElement("antonym");
+      root.appendChild(temp);
+      temp.appendChild(save.createTextNode(m_mainWidget->wordEdit->text()));
+      temp.setAttribute("id", m_id);
+      QString output=save.toString().replace("\"", "'").replace("<?xml version = '1.0' encoding = 'UTF-8'?>\n<!", "<?xml version='1.0' encoding='UTF-8'?><!");
+      KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord((*count).name, output, false, QString::number((*count).id));
+    }
   }
 
   m_modified=false;
@@ -272,6 +350,7 @@ void KSPhrase::setWord(QString text, QString id)
         if(node.toElement().text()==count->text(0))
         {
           m_mainWidget->selectedSynonymList->insertItem(count);
+          delete m_mainWidget->availableAntonymList->findItem(count->text(0), 0);
         }
       }
       continue;
@@ -283,6 +362,7 @@ void KSPhrase::setWord(QString text, QString id)
         if(node.toElement().text()==count->text(0))
         {
           m_mainWidget->selectedAntonymList->insertItem(count);
+          delete m_mainWidget->availableSynonymList->findItem(count->text(0), 0);
         }
       }
       continue;
