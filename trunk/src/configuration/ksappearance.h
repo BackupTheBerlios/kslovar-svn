@@ -24,7 +24,7 @@
 
 class QListViewItem;
 class KHTMLPart;
-class KSXMLHandler;
+class KSXSLHandler;
 
 class KSAppearance: public KSAppearanceWdt {
 Q_OBJECT
@@ -40,7 +40,7 @@ Q_OBJECT
     QString m_exampleDefault;
 
     KHTMLPart *m_previewDefault;
-    KSXMLHandler *m_defaultStyleParser;
+    KSXSLHandler *m_defaultStyleParser;
 };
 
 #endif

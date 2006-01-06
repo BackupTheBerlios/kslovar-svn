@@ -27,14 +27,14 @@ class QCString;
 /**
 	@author Gregor Kališnik <gregor@podnapisi.net>
 */
-class KSXMLHandler{
+class KSXSLHandler{
 public:
-    KSXMLHandler(QString document);
+    KSXSLHandler(QString document);
 
     void setXSL(QString document);
     QString parse(QString xmlString);
 
-    ~KSXMLHandler();
+    ~KSXSLHandler();
 
   private:
     QCString openXSL(QString path);

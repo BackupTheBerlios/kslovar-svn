@@ -27,7 +27,7 @@
 
 #include "../misc/ksdata.h"
 
-#include "../handler/ksxmlhandler.h"
+#include "../handler/ksxslhandler.h"
 
 #include <qregexp.h>
 #include <qlayout.h>
@@ -48,7 +48,7 @@ KSAppearance::KSAppearance(QWidget *parent, const char *name)
 
   m_exampleDefault="<?xml version='1.0' encoding='UTF-8'?><phrase><word>Example</word><type>noun</type><explanations><explanation>An example style for the default dictionary.</explanation><example>You could use this style!</example></explanations><explanations><explanation>Example of another explanation.</explanation><example>The second example is strange.</example></explanations><other><synonym id='1'>Explanation</synonym><antonym id='3'>Something?</antonym></other><other><synonym id='2'>Type</synonym></other></phrase>";
 
-  m_defaultStyleParser=new KSXMLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-default.xsl")));
+  m_defaultStyleParser=new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-default.xsl")));
 
 
   QVBoxLayout *defaultStyleLayout=new QVBoxLayout(defaultStyle);
@@ -97,7 +97,7 @@ void KSAppearance::populateStyleList()
 
 void KSAppearance::selectStyle(QListViewItem *selected)
 {
-  m_defaultStyleParser=new KSXMLHandler(QString::fromUtf8(locate("appdata", "styles/"+selected->text(0)+"/"+selected->text(0)+"-default.xsl")));
+  m_defaultStyleParser=new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+selected->text(0)+"/"+selected->text(0)+"-default.xsl")));
 
   m_previewDefault->begin();
   m_previewDefault->write(m_defaultStyleParser->parse(m_exampleDefault));

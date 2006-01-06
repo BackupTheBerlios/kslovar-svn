@@ -47,7 +47,7 @@ class KSListViewItem;
 class KSConfigDialog;
 class QPopupmenu;
 
-class KSXMLHandler;
+class KSXSLHandler;
 
 
 /**
@@ -163,7 +163,7 @@ private:
   KAction *m_removePhrase;
   KAction *m_config;
 
-  KSXMLHandler *XMLParser;
+  KSXSLHandler *XMLParser;
 
   /**
    * Updating history

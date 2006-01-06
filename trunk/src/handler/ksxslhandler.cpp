@@ -17,7 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "ksxmlhandler.h"
+#include "ksxslhandler.h"
 
 #include "../misc/ksdata.h"
 
@@ -40,12 +40,12 @@
 xsltStylesheetPtr styleSheet;
 xmlDocPtr xslDoc;
 
-KSXMLHandler::KSXMLHandler(QString document)
+KSXSLHandler::KSXSLHandler(QString document)
 {
   setXSL(document);
 }
 
-void KSXMLHandler::setXSL(QString document)
+void KSXSLHandler::setXSL(QString document)
 {
   styleSheet=0;
   xslDoc=0;
@@ -64,7 +64,7 @@ void KSXMLHandler::setXSL(QString document)
   }
 }
 
-QString KSXMLHandler::parse(QString xmlString)
+QString KSXSLHandler::parse(QString xmlString)
 {
   //check if the message is allready a HTML
   if(xmlString.find("<?xml version='1.0' encoding='UTF-8'?>")==-1)
@@ -123,7 +123,7 @@ QString KSXMLHandler::parse(QString xmlString)
   return result;
 }
 
-QCString KSXMLHandler::openXSL(QString path)
+QCString KSXSLHandler::openXSL(QString path)
 {
   QString temp;
   QFile input(path);
@@ -143,7 +143,7 @@ QCString KSXMLHandler::openXSL(QString path)
   return temp.utf8();
 }
 
-KSXMLHandler::~KSXMLHandler()
+KSXSLHandler::~KSXSLHandler()
 {
   xsltFreeStylesheet(styleSheet);
   xmlFreeDoc(xslDoc);

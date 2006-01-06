@@ -29,7 +29,7 @@
 #include "configuration/ksconfigdialog.h"
 
 #include "handler/ksdbhandler.h"
-#include "handler/ksxmlhandler.h"
+#include "handler/ksxslhandler.h"
 
 #include "misc/ksdata.h"
 
@@ -67,7 +67,7 @@ KSlovar::KSlovar()
 {
   KSlovar::m_instance=this;
   m_configDialog=new KSConfigDialog(this, "settings", Configuration::self());
-  XMLParser=new KSXMLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-default.xsl")));
+  XMLParser=new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-default.xsl")));
   loadLanguages();
 
   m_welcomeMessage=i18n("<h1>Welcome to KSlovar</h1> This needs to be changed :).");
