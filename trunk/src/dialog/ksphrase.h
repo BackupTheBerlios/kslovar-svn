@@ -65,7 +65,7 @@ class KSPhrase : public KDialogBase
     bool m_edit;
     bool m_modified;
     bool m_create;
-    KSXMLHandler *XMLHandler;
+    KSXMLHandler *m_XMLHandler;
 
     void populateAvailableList();
     void populatePartsOfSpeech();

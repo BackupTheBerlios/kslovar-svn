@@ -150,6 +150,7 @@ void KSDictionary::slotApply()
 {
   if(!save())
   {
+    KMessageBox::error(this, i18n("Cannot save dictionary!"));
     return;
   }
   emit applyClicked();

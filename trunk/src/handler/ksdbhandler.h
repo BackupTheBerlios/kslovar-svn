@@ -22,8 +22,8 @@
 #define KSDBHANDLER_H
 #include <qobject.h>
 
-class QString;
-class QStringList;
+/*class QString;
+class QStringList;*/
 class KProgressDialog;
 class KProgress;
 typedef struct sqlite3;
@@ -54,6 +54,7 @@ class KSDBHandler : public QObject
     bool processQuery(QString rawQuery);
     QString processString(QString rawQuery, int columns=1);
     QStringList processList(QString rawQuery, int columns=1);
+    int getId(const QString &search);
 
     ~KSDBHandler();
 

@@ -19,27 +19,29 @@
  ***************************************************************************/
 #include "ksxmlhandler.h"
 
-#include <qdom.h>
+//#include <qdom.h>
 #include <qvaluelist.h>
 #include <qstringlist.h>
-
-QDomDocument xmlDocument;
 
 KSXMLHandler::KSXMLHandler(const QString &XML)
   : QObject()
 {
   if(XML.isNull())
   {
+    m_xmlDocument=QDomDocument("default");
+    m_root=m_xmlDocument.createElement("phrase");
+    m_xmlDocument.appendChild(m_root);
   }
   else
   {
-    xmlDocument.setContent(XML);
+    m_xmlDocument.setContent(XML);
+    m_root=m_xmlDocument.documentElement();
   }
 }
 
 QString KSXMLHandler::readString(const QString &search)
 {
-  for(QDomNode count=xmlDocument.firstChild().firstChild();!count.isNull();count=count.nextSibling())
+  for(QDomNode count=m_xmlDocument.firstChild().firstChild();!count.isNull();count=count.nextSibling())
   {
     if(count.nodeName()==search)
     {
@@ -52,7 +54,7 @@ QString KSXMLHandler::readString(const QString &search)
 QValueList<KSExplanation> KSXMLHandler::readExplanation()
 {
   QValueList<KSExplanation> output;
-  for(QDomNode count=xmlDocument.firstChild().firstChild();!count.isNull();count=count.nextSibling())
+  for(QDomNode count=m_xmlDocument.firstChild().firstChild();!count.isNull();count=count.nextSibling())
   {
     if(count.nodeName()=="explanations")
     {
@@ -79,7 +81,7 @@ QValueList<KSExplanation> KSXMLHandler::readExplanation()
 QStringList KSXMLHandler::readStringList(const QString &search)
 {
   QStringList output;
-  for(QDomNode count=xmlDocument.firstChild().firstChild();!count.isNull();count=count.nextSibling())
+  for(QDomNode count=m_xmlDocument.firstChild().firstChild();!count.isNull();count=count.nextSibling())
   {
     if(count.nodeName()==search)
     {
@@ -87,6 +89,71 @@ QStringList KSXMLHandler::readStringList(const QString &search)
     }
   }
   return output;
+}
+
+void KSXMLHandler::addString(const QString &name, const QString &value, const QString &attributeName, const QString &attributeValue)
+{
+  QDomElement element=m_xmlDocument.createElement(name);
+  element.appendChild(m_xmlDocument.createTextNode(value));
+  if(!attributeName.isNull())
+  {
+    element.setAttribute(attributeName, attributeValue);
+  }
+  m_root.appendChild(element);
+}
+
+void KSXMLHandler::createNode(const QString &name)
+{
+  m_element=m_xmlDocument.createElement(name);
+  m_root.appendChild(m_element);
+}
+
+void KSXMLHandler::addChildString(const QString &name, const QString &value)
+{
+  QDomElement element=m_xmlDocument.createElement(name);
+  element.appendChild(m_xmlDocument.createTextNode(value));
+  m_element.appendChild(element);
+}
+
+QString KSXMLHandler::parse()
+{
+  QString output=m_xmlDocument.toString().replace("\"", "'");
+  output.replace("<?xml version = '1.0' encoding = 'UTF-8'?>", "<?xml version='1.0' encoding='UTF-8'?>");
+  if(output.find("<?xml version='1.0' encoding='UTF-8'?>")==-1)
+  {
+    output.prepend("<?xml version='1.0' encoding='UTF-8'?>");
+  }
+  return output;
+}
+
+void KSXMLHandler::appendString(const QString &name, const QString &value, const QString &attributeName, const QString &attributeValue)
+{
+  if(!search(name, value))
+  {
+    QDomElement element=m_xmlDocument.createElement(name);
+    element.appendChild(m_xmlDocument.createTextNode(value));
+    if(!attributeName.isNull())
+    {
+      element.setAttribute(attributeName, attributeValue);
+    }
+    m_root.appendChild(element);
+  }
+}
+
+bool KSXMLHandler::search(const QString &name, const QString &value)
+{
+  //QDomNode node=m_xmlDocument.firstChild();
+  for(QDomNode count=m_root.firstChild();!count.isNull();count=count.nextSibling())
+  {
+    if(count.nodeName()==name)
+    {
+      if(count.toElement().text()==value)
+      {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 KSXMLHandler::~KSXMLHandler()

@@ -21,8 +21,8 @@
 #define KSXMLHANDLER_H
 
 #include <qobject.h>
+#include <qdom.h>
 
-class QDomDocument;
 
 typedef struct
 {
@@ -43,10 +43,19 @@ class KSXMLHandler : public QObject
     QValueList<KSExplanation> readExplanation();
     QStringList readStringList(const QString &search);
 
+    void createNode(const QString &name);
+    void addString(const QString &name, const QString &value, const QString &attributeName=QString::null, const QString &attributeValue=QString::null);
+    void addChildString(const QString &name, const QString &value);
+    void appendString(const QString &name, const QString &value, const QString &attributeName=QString::null, const QString &attributeValue=QString::null);
+    bool search(const QString &name, const QString &value);
+    QString parse();
+
     ~KSXMLHandler();
 
   private:
-
+    QDomDocument m_xmlDocument;
+    QDomElement m_root;
+    QDomElement m_element;
 
 };
 

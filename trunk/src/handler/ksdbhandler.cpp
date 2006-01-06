@@ -60,7 +60,8 @@ bool KSDBHandler::query(QString sqlQuery, sqlite3_stmt ** output)
 
   if(statusCode!=SQLITE_OK)
   {
-    kdDebug() << "[KSDBHandler]->Query SQLITE err code: " << statusCode << endl;
+    kdDebug() << "[KSDBHandler]->Query SQLITE err code: " << statusCode << endl
+        << "Error Description: " << QString::fromAscii(sqlite3_errmsg(m_db)) << endl;
     return false;
   }
   return true;
@@ -80,7 +81,8 @@ bool KSDBHandler::query(QString sqlQuery)
 
   if(statusCode!=SQLITE_OK)
   {
-    kdDebug() << "[KSDBHandler]->Query SQLITE err code: " << statusCode << endl;
+    kdDebug() << "[KSDBHandler]->Query SQLITE err code: " << statusCode << endl
+        << "Error Description: " << QString::fromAscii(sqlite3_errmsg(m_db)) << endl;
     return false;
   }
   return true;
@@ -93,8 +95,8 @@ bool KSDBHandler::saveDictionary(QString text, QString lang, bool create)
   type.setNum(0);
   if(create)
   {
-    rawQuery="BEGIN TRANSACTION; CREATE TABLE head ( lang INTEGER , type INTEGER , version TEXT ); CREATE TABLE media ( id INTEGER PRIMARY KEY AUTOINCREMENT , mime TEXT , data BLOB ); CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , modified INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT , search TEXT ); ";
-    rawQuery=rawQuery+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' ); COMMIT;"+"INSERT INTO head ( lang , type ) VALUES ( '"+lang+"' , '"+type+"' );";
+    rawQuery="BEGIN TRANSACTION; CREATE TABLE head ( lang INTEGER , type INTEGER , version TEXT ); CREATE TABLE media ( id INTEGER PRIMARY KEY AUTOINCREMENT , mime TEXT , data BLOB ); CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , modified INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT UNIQUE , search TEXT );";
+    rawQuery=rawQuery+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' );"+"INSERT INTO head ( lang , type ) VALUES ( '"+lang+"' , '"+type+"' ); CREATE INDEX dictionary_index ON dictionary (id); CREATE INDEX phrases_index ON phrases (id, name); COMMIT;";
   }
   else
   {
@@ -110,12 +112,12 @@ bool KSDBHandler::saveDictionary(QString text, QString lang, bool create)
 
 KSDBHandler *KSDBHandler::instance(QString path)
 {
-  if((!m_instance) || (m_currentPath!=path))
+  if((!KSDBHandler::m_instance) || (KSDBHandler::m_currentPath!=path))
   {
-    staticKSDBHandlerDeleter.setObject(m_instance, new KSDBHandler(path));
+    staticKSDBHandlerDeleter.setObject(KSDBHandler::m_instance, new KSDBHandler(path));
   }
 
-  return m_instance;
+  return KSDBHandler::m_instance;
 }
 
 bool KSDBHandler::saveWord(QString word, QString text, bool add, QString id)
@@ -124,11 +126,11 @@ bool KSDBHandler::saveWord(QString word, QString text, bool add, QString id)
   search=word;
   if(add)
   {
-    rawQuery="INSERT INTO phrases ( name , search ) VALUES ( '"+word+"' , '"+search+"' ); INSERT INTO dictionary ( text ) VALUES ( \""+text+"\" );";
+    rawQuery="BEGIN TRANSACTION; INSERT INTO phrases ( name , search ) VALUES ( '"+word+"' , '"+search+"' ); INSERT INTO dictionary ( text ) VALUES ( \""+text+"\" ); COMMIT;";
   }
   else
   {
-    rawQuery="UPDATE phrases SET name='"+word+"', search='"+search+"' WHERE id='"+id+"'; UPDATE dictionary SET text=\""+text+"\" WHERE id='"+id+"';";
+    rawQuery="BEGIN TRANSACTION; UPDATE phrases SET name='"+word+"', search='"+search+"' WHERE id='"+id+"'; UPDATE dictionary SET text=\""+text+"\" WHERE id='"+id+"'; COMMIT;";
   }
   if(!query(rawQuery))
   {
@@ -208,8 +210,14 @@ bool KSDBHandler::processQuery(QString rawQuery)
   return query(rawQuery);
 }
 
+int KSDBHandler::getId(const QString &search)
+{
+  return processString("SELECT id FROM phrases WHERE name='"+search+"' LIMIT 1;").toInt();
+}
+
 KSDBHandler::~KSDBHandler()
 {
+  query("REINDEX phrases; REINDEX dictionary;");
   sqlite3_close(m_db);
   if(m_instance==this)
   {

@@ -291,6 +291,7 @@ void KSlovar::registerButtons()
   m_removePhrase=new KAction(i18n("&Remove phrase"), "editdelete", KShortcut(KKey("Delete")), this, SLOT(slotRemovePhrase()), actionCollection(), "removePhrase");
 
   m_listPopup=new QPopupMenu;
+  m_addPhrase->plug(m_listPopup);
   m_editPhrase->plug(m_listPopup);
   m_removePhrase->plug(m_listPopup);
 
