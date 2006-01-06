@@ -33,7 +33,7 @@
 static const char description[] =
     I18N_NOOP("A dictionary for KDE");
 
-static const char version[] = "0.2.0 20060102"; //Ne pozabi dodat vseh novih map in datotek...
+static const char version[] = "0.2.0 20060106"; //Ne pozabi dodat vseh novih map in datotek... 6.1.2006
 
 static KCmdLineOptions options[] =
 {

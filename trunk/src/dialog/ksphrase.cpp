@@ -25,6 +25,7 @@
 #include "../kslovar.h"
 
 #include "../handler/ksdbhandler.h"
+#include "../handler/ksxmlhandler.h"
 
 #include "../misc/widget/kslistview.h"
 #include "../misc/widget/kslistviewitem.h"
@@ -322,7 +323,46 @@ void KSPhrase::setWord(QString text, QString id)
   m_id=id;
   m_edit=true;
 
-  QDomDocument phrase;
+  XMLHandler=new KSXMLHandler(text);
+  m_mainWidget->wordEdit->setText(XMLHandler->readString("word"));
+  m_mainWidget->typeBox->setCurrentItem(XMLHandler->readString("type").toInt()-1);
+
+  QValueList<KSExplanation> explanations=XMLHandler->readExplanation();
+  for(QValueList<KSExplanation>::iterator count=explanations.begin();count!=explanations.end();count++)
+  {
+    new KListViewItem(m_mainWidget->explanationList, (*count).explanation, (*count).example);
+  }
+
+  QStringList synonym=XMLHandler->readStringList("synonym");
+  for(QStringList::iterator count=synonym.begin();count!=synonym.end();count++)
+  {
+    for(QListViewItem *current=m_mainWidget->availableSynonymList->firstChild();current;current=current->nextSibling())
+    {
+      if(*count==current->text(0))
+      {
+        m_mainWidget->selectedSynonymList->insertItem(current);
+        delete m_mainWidget->availableAntonymList->findItem(*count, 0);
+      }
+    }
+  }
+
+  QStringList antonym=XMLHandler->readStringList("antonym");
+  for(QStringList::iterator count=antonym.begin();count!=antonym.end();count++)
+  {
+    for(QListViewItem *current=m_mainWidget->availableAntonymList->firstChild();current;current=current->nextSibling())
+    {
+      if(*count==current->text(0))
+      {
+        m_mainWidget->selectedAntonymList->insertItem(current);
+        delete m_mainWidget->availableSynonymList->findItem(*count, 0);
+      }
+    }
+  }
+
+  delete m_mainWidget->availableSynonymList->findItem(m_mainWidget->wordEdit->text(), 0);
+  delete m_mainWidget->availableAntonymList->findItem(m_mainWidget->wordEdit->text(), 0);
+
+  /*QDomDocument phrase;
   phrase.setContent(text);
   QDomNode node=phrase.firstChild();
   for(node=node.firstChild();!node.isNull();node=node.nextSibling())
@@ -369,7 +409,8 @@ void KSPhrase::setWord(QString text, QString id)
     }
   }
   delete m_mainWidget->availableSynonymList->findItem(m_mainWidget->wordEdit->text(), 0);
-  delete m_mainWidget->availableAntonymList->findItem(m_mainWidget->wordEdit->text(), 0);
+  delete m_mainWidget->availableAntonymList->findItem(m_mainWidget->wordEdit->text(), 0);*/
+
 }
 
 void KSPhrase::populatePartsOfSpeech()

@@ -8,4 +8,5 @@ noinst_HEADERS = ksphrase.h ksdictionary.h kslanguage.h
 SUBDIRS= ui
 
 libdialog_la_LDFLAGS = $(all_libraries)
-libdialog_la_LIBADD = $(top_builddir)/src/dialog/ui/libui.la
+libdialog_la_LIBADD = $(top_builddir)/src/dialog/ui/libui.la \
+	$(top_builddir)/src/handler/libhandler.la

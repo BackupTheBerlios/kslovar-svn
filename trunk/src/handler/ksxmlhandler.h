@@ -17,61 +17,37 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef KSXMLHANDLER_H
+#define KSXMLHANDLER_H
 
-#ifndef _ADDPHRASE_H_
-#define _ADDPHRASE_H_
+#include <qobject.h>
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
+class QDomDocument;
 
-#include <kdialogbase.h>
+typedef struct
+{
+  QString explanation;
+  QString example;
+}KSExplanation;
 
-class KIconLoader;
-class KSPhraseWdt;
-class KSpell;
-class KSlovar;
-class KSXMLHandler;
-
-class KSPhrase : public KDialogBase
+/**
+	@author Gregor Kališnik <gregor@podnapisi.net>
+ */
+class KSXMLHandler : public QObject
 {
   Q_OBJECT
   public:
-    KSPhrase(QWidget *parent, QString caption);
-    void setWord(QString text, QString id);
+    KSXMLHandler(const QString &XML=QString::null);
 
-  private slots:
-    void slotAddExplanation();
-    void slotRemoveExplanation();
-    void slotAddSynonym();
-    void slotRemoveSynonym();
-    void slotAddAntonym();
-    void slotRemoveAntonym();
-    void slotBeginCheck();
-    void slotCheck(KSpell *speller);
-    void slotEndCheck(const QString& checked);
-    void slotModified();
+    QString readString(const QString &search);
+    QValueList<KSExplanation> readExplanation();
+    QStringList readStringList(const QString &search);
 
-  protected slots:
-    void slotOk();
-    void slotApply();
+    ~KSXMLHandler();
 
   private:
-    KSPhraseWdt *m_mainWidget;
-    QStringList m_words;
-    QString m_id;
-    QString m_text;
-    QString m_word;
-    bool m_edit;
-    bool m_modified;
-    bool m_create;
-    KSXMLHandler *XMLHandler;
 
-    void populateAvailableList();
-    void populatePartsOfSpeech();
-    void initialize();
-    void connectSlots();
-    void save();
+
 };
 
 #endif
