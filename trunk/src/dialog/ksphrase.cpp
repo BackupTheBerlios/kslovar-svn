@@ -83,6 +83,14 @@ void KSPhrase::populateAvailableList()
 
 void KSPhrase::slotAddSynonym()
 {
+  for(QStringList::iterator count=m_deletedSynonyms.begin();count!=m_deletedSynonyms.end();count++)
+  {
+    if(*count==m_mainWidget->availableSynonymList->currentItem()->text(0))
+    {
+      m_deletedSynonyms.remove(count);
+      break;
+    }
+  }
   delete m_mainWidget->availableAntonymList->findItem(m_mainWidget->availableSynonymList->currentItem()->text(0), 0);
 
   m_mainWidget->selectedSynonymList->insertItem(m_mainWidget->availableSynonymList->currentItem());
@@ -91,6 +99,7 @@ void KSPhrase::slotAddSynonym()
 
 void KSPhrase::slotRemoveSynonym()
 {
+  m_deletedSynonyms << m_mainWidget->selectedSynonymList->currentItem()->text(0);
   KSListViewItem *temp=static_cast<KSListViewItem*> (m_mainWidget->selectedSynonymList->currentItem());
   new KSListViewItem(m_mainWidget->availableAntonymList, temp->text(0), temp->getId());
 
@@ -100,6 +109,14 @@ void KSPhrase::slotRemoveSynonym()
 
 void KSPhrase::slotAddAntonym()
 {
+  for(QStringList::iterator count=m_deletedAntonyms.begin();count!=m_deletedAntonyms.end();count++)
+  {
+    if(*count==m_mainWidget->availableAntonymList->currentItem()->text(0))
+    {
+      m_deletedAntonyms.remove(count);
+      break;
+    }
+  }
   delete m_mainWidget->availableSynonymList->findItem(m_mainWidget->availableAntonymList->currentItem()->text(0), 0);
 
   m_mainWidget->selectedAntonymList->insertItem(m_mainWidget->availableAntonymList->currentItem());
@@ -108,6 +125,7 @@ void KSPhrase::slotAddAntonym()
 
 void KSPhrase::slotRemoveAntonym()
 {
+  m_deletedAntonyms << m_mainWidget->selectedAntonymList->currentItem()->text(0);
   KSListViewItem *temp=static_cast<KSListViewItem*> (m_mainWidget->selectedAntonymList->currentItem());
   new KSListViewItem(m_mainWidget->availableSynonymList, temp->text(0), temp->getId());
 
@@ -217,6 +235,20 @@ void KSPhrase::save()
     m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number((*count).id)+"';"));
     m_XMLHandler->appendString("antonym", m_mainWidget->wordEdit->text(), "id", m_id);
     KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord((*count).name, m_XMLHandler->parse(), false, QString::number((*count).id));
+  }
+
+  for(QStringList::iterator count=m_deletedSynonyms.begin();count!=m_deletedSynonyms.end();count++)
+  {
+    m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(*count))+"';"));
+    m_XMLHandler->removeString("synonym", m_mainWidget->wordEdit->text());
+    KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(*count)));
+  }
+
+  for(QStringList::iterator count=m_deletedAntonyms.begin();count!=m_deletedAntonyms.end();count++)
+  {
+    m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(*count))+"';"));
+    m_XMLHandler->removeString("antonym", m_mainWidget->wordEdit->text());
+    KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(*count)));
   }
 
   delete m_XMLHandler;

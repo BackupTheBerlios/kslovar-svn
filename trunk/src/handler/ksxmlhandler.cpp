@@ -140,9 +140,23 @@ void KSXMLHandler::appendString(const QString &name, const QString &value, const
   }
 }
 
+void KSXMLHandler::removeString(const QString &name, const QString &value)
+{
+  for(QDomNode count=m_root.firstChild();!count.isNull();count=count.nextSibling())
+  {
+    if(count.nodeName()==name)
+    {
+      if(count.toElement().text()==value)
+      {
+        m_root.removeChild(count);
+        return;
+      }
+    }
+  }
+}
+
 bool KSXMLHandler::search(const QString &name, const QString &value)
 {
-  //QDomNode node=m_xmlDocument.firstChild();
   for(QDomNode count=m_root.firstChild();!count.isNull();count=count.nextSibling())
   {
     if(count.nodeName()==name)

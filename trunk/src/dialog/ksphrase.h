@@ -66,6 +66,8 @@ class KSPhrase : public KDialogBase
     bool m_modified;
     bool m_create;
     KSXMLHandler *m_XMLHandler;
+    QStringList m_deletedSynonyms;
+    QStringList m_deletedAntonyms;
 
     void populateAvailableList();
     void populatePartsOfSpeech();

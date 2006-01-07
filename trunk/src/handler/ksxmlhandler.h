@@ -47,6 +47,7 @@ class KSXMLHandler : public QObject
     void addString(const QString &name, const QString &value, const QString &attributeName=QString::null, const QString &attributeValue=QString::null);
     void addChildString(const QString &name, const QString &value);
     void appendString(const QString &name, const QString &value, const QString &attributeName=QString::null, const QString &attributeValue=QString::null);
+    void removeString(const QString &name, const QString &value);
     bool search(const QString &name, const QString &value);
     QString parse();
 
