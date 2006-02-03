@@ -2,8 +2,9 @@ INCLUDES = $(all_includes)
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libdialog.la
 
-libdialog_la_SOURCES = ksphrase.cpp ksdictionary.cpp kslanguage.cpp
-noinst_HEADERS = ksphrase.h ksdictionary.h kslanguage.h
+libdialog_la_SOURCES = ksphrase.cpp ksdictionary.cpp kslanguage.cpp \
+	ksconversion.cpp
+noinst_HEADERS = ksphrase.h ksdictionary.h kslanguage.h ksconversion.h
 
 SUBDIRS= ui
 

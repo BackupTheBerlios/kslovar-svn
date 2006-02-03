@@ -23,6 +23,7 @@
 
 #include "dialog/ksdictionary.h"
 #include "dialog/ksphrase.h"
+#include "dialog/ksconversion.h"
 
 
 #include "configuration/ksappearance.h"
@@ -296,6 +297,8 @@ void KSlovar::registerButtons()
   m_removePhrase->plug(m_listPopup);
 
   m_config=KStdAction::preferences(this, SLOT(slotConfigure()), actionCollection());
+
+  m_conversion = new KAction(i18n("Edit &conversion table"), "conversion", this, SLOT(slotConversionTable()), actionCollection(), "editConversion");
 }
 
 void KSlovar::addMenu()
@@ -327,6 +330,7 @@ void KSlovar::addMenu()
 
   KPopupMenu *setmenu=new KPopupMenu;
   m_config->plug(setmenu);
+  m_conversion->plug(setmenu);
 
   KPopupMenu *help = helpMenu( );
 
@@ -436,6 +440,13 @@ void KSlovar::slotRemovePhrase()
   m_removePhrase->setEnabled(false);
 }
 
+void KSlovar::slotConversionTable()
+{
+  KSConversion *temp = new KSConversion(this, "Edit Conversion table");
+  temp->resize(300, 300);
+  temp->show();
+}
+
 void KSlovar::slotConfigure()
 {
   m_configDialog->addPage(new KSAppearance(0), i18n("Appearance"), "looknfeel");
@@ -516,6 +527,19 @@ void KSlovar::loadLanguages()
       id=*count;
       name=*count;
       KSData::instance()->addLanguage(name.remove(QRegExp("^.+/")), id.remove(QRegExp("/.+$")).toInt());
+    }
+  }
+
+  input.clear();
+  input=KSDBHandler::instance(QString::fromUtf8(locateLocal("appdata", "languages.ksl")))->processList("SELECT fromc, toc FROM conversion_table;", 2);
+  if(!input.isEmpty())
+  {
+    QChar from, to;
+    for(QStringList::iterator count=input.begin();count!=input.end();count++)
+    {
+      from=(*count).at(0);
+      to=(*count).at(2);
+      KSData::instance()->addConversion(from, to);
     }
   }
 }

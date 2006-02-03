@@ -115,6 +115,7 @@ private slots:
   void slotConfigure();
   void slotUpdateConfiguration();
   void showPopup(KListView*, QListViewItem*, const QPoint &p);
+  void slotConversionTable();
 
 private:
   /**
@@ -162,6 +163,7 @@ private:
   KAction *m_editPhrase;
   KAction *m_removePhrase;
   KAction *m_config;
+  KAction *m_conversion;
 
   KSXSLHandler *XMLParser;
 

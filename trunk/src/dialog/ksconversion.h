@@ -17,77 +17,36 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KSDATA_H
-#define KSDATA_H
+#ifndef KSCONVERSION_H
+#define KSCONVERSION_H
 
-#include <qobject.h>
+#include <kdialogbase.h>
 
-/**
- * @author Gregor Kališnik <gregor@podnapisi.net>
- */
-typedef struct
-{
-  QString name;
-  int id;
-}KSElement;
-
-typedef struct
-{
-  int id;
-  QString name;
-  QString search;
-}KSPhrases;
-
+class KSConversionWdt;
 
 /**
 	@author Gregor Kališnik <gregor@podnapisi.net>
  */
-class KSData : public QObject
+class KSConversion : public KDialogBase
 {
   Q_OBJECT
   public:
-    KSData();
+    KSConversion(QWidget *parent = 0, const char *name = 0);
 
-    static KSData *instance();
+    ~KSConversion();
 
-    void setDictionaryPath(QString path);
-    QString getDictionaryPath();
+  private slots:
+    void slotAddConversion();
+    void slotDeleteConversion();
+    void slotSave(QListViewItem*, const QString &text, int col);
 
-    void setLanguage(int id);
-    int getLanguage();
-
-    void addLanguage(QString name, int id);
-    QStringList getLanguagesNames();
-    QString getLanguageId(QString name);
-
-    void addPartOfSpeech(QString name, int id);
-    QStringList getPartOfSpeech();
-    QString getPartOfSpeechName(int id);
-    int getPartOfSpeechId(QString name);
-    void clearPartOfSpeech();
-
-    void addPhrase(int id, QString name, QString search);
-    QValueList<KSPhrases> getPhrases();
-    void clearPhrases();
-
-    void addConversion(const QChar &from, const QChar &to);
-    QMap<QChar, QChar> getConvertTable();
-
-    void setStyle(QString selectedStyle);
-    QString getStyle();
-
-    ~KSData();
+  protected slots:
+    void slotOk();
 
   private:
-    static KSData *m_instance;
+    KSConversionWdt *m_mainWidget;
 
-    QString m_dictionaryPath;
-    int m_languageId;
-    QValueList<KSElement> m_languages;
-    QValueList<KSElement> m_partOfSpeech;
-    QValueList<KSPhrases> m_phrases;
-    QString m_selectedStyle;
-    QMap<QChar, QChar> m_convertTable;
+    void populateConversionList();
 
 };
 

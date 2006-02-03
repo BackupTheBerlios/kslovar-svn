@@ -21,11 +21,8 @@
 #include "ksdbhandler.h"
 
 #include "../sqlite/sqlite3.h"
+#include "../misc/ksdata.h"
 
-#include <qstring.h>
-#include <qstringlist.h>
-
-#include <kprogress.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
@@ -35,14 +32,15 @@ KSDBHandler *KSDBHandler::m_instance=0L;
 QString KSDBHandler::m_currentPath=0L;
 static KStaticDeleter<KSDBHandler> staticKSDBHandlerDeleter;
 
-KSDBHandler::KSDBHandler(QString databasePath)
+KSDBHandler::KSDBHandler(const QString &databasePath)
   : QObject()
 {
+  m_currentPath=databasePath;
   sqlite3_open(databasePath.utf8(), &m_db);
   query("PRAGMA auto_vacuum = 1;");
 }
 
-bool KSDBHandler::query(QString sqlQuery, sqlite3_stmt ** output)
+bool KSDBHandler::query(const QString &sqlQuery, sqlite3_stmt ** output)
 {
   int statusCode;
 
@@ -67,7 +65,7 @@ bool KSDBHandler::query(QString sqlQuery, sqlite3_stmt ** output)
   return true;
 }
 
-bool KSDBHandler::query(QString sqlQuery)
+bool KSDBHandler::query(const QString &sqlQuery)
 {
   int statusCode;
 
@@ -88,7 +86,7 @@ bool KSDBHandler::query(QString sqlQuery)
   return true;
 }
 
-bool KSDBHandler::saveDictionary(QString text, QString lang, bool create)
+bool KSDBHandler::saveDictionary(const QString &text, const QString &lang, bool create)
 {
   QString rawQuery;
   QString type;
@@ -110,7 +108,7 @@ bool KSDBHandler::saveDictionary(QString text, QString lang, bool create)
   return true;
 }
 
-KSDBHandler *KSDBHandler::instance(QString path)
+KSDBHandler *KSDBHandler::instance(const QString &path)
 {
   if((!KSDBHandler::m_instance) || (KSDBHandler::m_currentPath!=path))
   {
@@ -120,26 +118,33 @@ KSDBHandler *KSDBHandler::instance(QString path)
   return KSDBHandler::m_instance;
 }
 
-bool KSDBHandler::saveWord(QString word, QString text, bool add, QString id)
+bool KSDBHandler::saveWord(const QString &word, const QString &text, bool add, const QString &id)
 {
+  bool output;
   QString rawQuery, search;
-  search=word;
+  search=convertString(word);
   if(add)
   {
-    rawQuery="BEGIN TRANSACTION; INSERT INTO phrases ( name , search ) VALUES ( '"+word+"' , '"+search+"' ); INSERT INTO dictionary ( text ) VALUES ( \""+text+"\" ); COMMIT;";
+    rawQuery="INSERT INTO phrases ( name , search ) VALUES ( '"+word+"' , '"+search+"' );";
+    if(output=query(rawQuery))
+    {
+      rawQuery="INSERT INTO dictionary ( text ) VALUES ( \""+text+"\" );";
+      output=query(rawQuery);
+    }
   }
   else
   {
-    rawQuery="BEGIN TRANSACTION; UPDATE phrases SET name='"+word+"', search='"+search+"' WHERE id='"+id+"'; UPDATE dictionary SET text=\""+text+"\" WHERE id='"+id+"'; COMMIT;";
+    rawQuery="UPDATE phrases SET name='"+word+"', search='"+search+"' WHERE id='"+id+"';";
+    if(output=query(rawQuery))
+    {
+      rawQuery="UPDATE dictionary SET text=\""+text+"\" WHERE id='"+id+"';";
+      output=query(rawQuery);
+    }
   }
-  if(!query(rawQuery))
-  {
-    return false;
-  }
-  return true;
+  return output;
 }
 
-QString KSDBHandler::processString(QString rawQuery, int columns)
+QString KSDBHandler::processString(const QString &rawQuery, int columns)
 {
   sqlite3_stmt *rawOutput;
   QString output;
@@ -175,7 +180,7 @@ QString KSDBHandler::processString(QString rawQuery, int columns)
   return output;
 }
 
-QStringList KSDBHandler::processList(QString rawQuery, int columns)
+QStringList KSDBHandler::processList(const QString &rawQuery, int columns)
 {
   QString temp;
   QStringList output;
@@ -205,14 +210,36 @@ QStringList KSDBHandler::processList(QString rawQuery, int columns)
   return output;
 }
 
-bool KSDBHandler::processQuery(QString rawQuery)
+bool KSDBHandler::processQuery(const QString &rawQuery)
 {
   return query(rawQuery);
 }
 
 int KSDBHandler::getId(const QString &search)
 {
-  return processString("SELECT id FROM phrases WHERE name='"+search+"' LIMIT 1;").toInt();
+  return sqlite3_last_insert_rowid(m_db);
+}
+
+QString KSDBHandler::convertString(const QString &input)
+{
+  QMap<QChar, QChar> table=KSData::instance()->getConvertTable();
+  QString converting;
+  for(ushort count=0;count<input.length();count++)
+  {
+    if(table.contains(input[count].lower()))
+    {
+      converting.append(table[input[count].lower()]);
+    }
+    else
+    {
+      converting.append(input[count]);
+    }
+    if(input[count].upper()==input[count])
+    {
+      converting.replace(converting[count], converting[count].upper());
+    }
+  }
+  return converting;
 }
 
 KSDBHandler::~KSDBHandler()

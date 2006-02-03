@@ -5,12 +5,12 @@
   <!ENTITY package "kde-module"><!-- kdebase, kdeadmin, etc -->
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE"><!-- change language only here -->
-  
-  
+
+
   <!-- Do not define any other entities; instead, use the entities
        from kde-genent.entities and $LANG/user.entities. -->
 ]>
-<!-- kdoctemplate v0.8 October 1 1999 
+<!-- kdoctemplate v0.8 October 1 1999
      Minor update to "Credits and Licenses" section on August 24, 2000
      Removed "Revision history" section on 22 January 2001
      Changed to Installation/Help menu entities 18 October 2001
@@ -48,9 +48,9 @@ as Authors, publish date, the abstract, and Keywords -->
 
 <authorgroup>
 <author>
-<firstname></firstname>
+<firstname>Gregor</firstname>
 <othername></othername>
-<surname>Gregor Kališnik</surname>
+<surname>Kališnik</surname>
 <affiliation>
 <address><email>gregor@podnapisi.net</email></address>
 </affiliation>
@@ -61,7 +61,7 @@ as Authors, publish date, the abstract, and Keywords -->
 
 <copyright>
 <year>1999</year>
-<year>2005</year>
+<year>2006</year>
 <holder>Gregor Kališnik</holder>
 </copyright>
 <!-- Translators: put here the copyright notice of the translation -->
@@ -76,8 +76,8 @@ Please respect the format of the date (YYYY-MM-DD) and of the version
 (V.MM.LL), it could be used by automation scripts.
 Do NOT change these in the translation. -->
 
-<date>2001-10-18</date>
-<releaseinfo>0.1</releaseinfo>
+<date>2005-01-14</date>
+<releaseinfo>0.1.0</releaseinfo>
 
 <!-- Abstract about this handbook -->
 
@@ -95,8 +95,8 @@ Please at least include KDE, the KDE package it is in, the name
 <keywordset>
 <keyword>KDE</keyword>
 <keyword>KSlovar</keyword>
-<keyword>nothing</keyword>
-<keyword>nothing else</keyword>
+<keyword>Education</keyword>
+<keyword>Languages</keyword>
 </keywordset>
 
 </bookinfo>
@@ -268,7 +268,7 @@ taken from that reference and shortened a bit for readability. -->
 <refpurpose>remove a list of children from a parent widget's managed
 list.
 <indexterm id="ix-1007-unmanagechildren-1"><primary>widgets</primary><secondary>removing</secondary></indexterm>
-<indexterm id="ix-1007-unmanagechildren-2"><primary>XtUnmanageChildren</primary></indexterm> 
+<indexterm id="ix-1007-unmanagechildren-2"><primary>XtUnmanageChildren</primary></indexterm>
 </refpurpose>
 
 </refnamediv>
@@ -456,10 +456,10 @@ Documentation copyright 2005 Gregor Kališnik <email>gregor@podnapisi.net</email
 
 &underFDL;               <!-- FDL: do not remove -->
 
-<!-- Determine which license your application is licensed under, 
+<!-- Determine which license your application is licensed under,
      and delete all the remaining licenses below:
 
-     (NOTE:  All documentation are licensed under the FDL, 
+     (NOTE:  All documentation are licensed under the FDL,
      regardless of what license the application uses) -->
 
 &underGPL;        	 <!-- GPL License -->
@@ -477,7 +477,7 @@ Documentation copyright 2005 Gregor Kališnik <email>gregor@podnapisi.net</email
 
 <!-- This first entity contains boiler plate for applications that are
 part of KDE CVS.  You should remove it if you are releasing your
-application --> 
+application -->
 
 &install.intro.documentation;
 
@@ -550,6 +550,6 @@ sgml-indent-step:0
 sgml-indent-data:nil
 End:
 
-vim:tabstop=2:shiftwidth=2:expandtab 
+vim:tabstop=2:shiftwidth=2:expandtab
 -->
 

@@ -21,8 +21,7 @@
 
 #include "../configuration/configuration.h"
 
-#include <qstringlist.h>
-#include <qvaluelist.h>
+
 #include <kstaticdeleter.h>
 
 KSData *KSData::m_instance=0l;
@@ -167,6 +166,16 @@ void KSData::setStyle(QString selectedStyle)
 QString KSData::getStyle()
 {
   return m_selectedStyle;
+}
+
+void KSData::addConversion(const QChar &from, const QChar &to)
+{
+  m_convertTable[from]=to;
+}
+
+QMap<QChar, QChar> KSData::getConvertTable()
+{
+  return m_convertTable;
 }
 
 KSData::~KSData()

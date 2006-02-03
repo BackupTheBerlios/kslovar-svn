@@ -22,8 +22,6 @@
 #define KSDBHANDLER_H
 #include <qobject.h>
 
-/*class QString;
-class QStringList;*/
 class KProgressDialog;
 class KProgress;
 typedef struct sqlite3;
@@ -44,17 +42,19 @@ class KSDBHandler : public QObject
     * Class's constructor that opens a connection to the database
     * @param databasePath Path to the databases
     */
-    KSDBHandler(QString databasePath);
+    KSDBHandler(const QString &databasePath);
     /**
     * Desctructor that closes the connection
     */
-    bool saveDictionary(QString text, QString lang, bool create=true);
-    bool saveWord(QString word, QString text, bool add, QString id);
-    static KSDBHandler *instance(QString path);
-    bool processQuery(QString rawQuery);
-    QString processString(QString rawQuery, int columns=1);
-    QStringList processList(QString rawQuery, int columns=1);
+    bool saveDictionary(const QString &text, const QString &lang, bool create=true);
+    bool saveWord(const QString &word, const QString &text, bool add, const QString &id);
+    static KSDBHandler *instance(const QString &path);
+    bool processQuery(const QString &rawQuery);
+    QString processString(const QString &rawQuery, int columns=1);
+    QStringList processList(const QString &rawQuery, int columns=1);
     int getId(const QString &search);
+
+    static QString convertString(const QString &input);
 
     ~KSDBHandler();
 
@@ -69,8 +69,8 @@ class KSDBHandler : public QObject
     * @param sqlQuery Query to excetute
     * @retval output Returns the result of the SQL query (statement)
     */
-    bool query(QString sqlQuery, sqlite3_stmt ** output);
-    bool query(QString sqlQuery);
+    bool query(const QString &sqlQuery, sqlite3_stmt ** output);
+    bool query(const QString &sqlQuery);
 };
 
 #endif
