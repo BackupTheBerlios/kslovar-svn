@@ -47,6 +47,7 @@ int main(int argc, char **argv)
          KAboutData::License_GPL, "(C) 2005 Gregor Kališnik", 0, 0, "gregor@podnapisi.net");
     about.addAuthor( "Gregor Kališnik", I18N_NOOP("Lead developer"), "gregor@podnapisi.net" );
     about.addCredit("Kopete development team", I18N_NOOP("Mouse navigation in lists"), "kopete-devel@kde.org", "http://kopete.kde.org");
+    about.addCredit("Grega Štajer", I18N_NOOP("Creator of the icons and Logo for KSlovar"), "grega.stajer@email.si", "http://blender.kicks-ass.net");
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions( options );
     KCmdLineArgs *args=KCmdLineArgs::parsedArgs();
