@@ -46,6 +46,7 @@ class KListViewSearchLine;
 class KSListViewItem;
 class KSConfigDialog;
 class QPopupmenu;
+class KStatusBar;
 
 class KSXSLHandler;
 
@@ -181,6 +182,7 @@ private:
   void addToolbar();
   void disableNavButtons();
   void processFileOpen(QString fileName);
+  void downloadLanguageFile();
 
 };
 

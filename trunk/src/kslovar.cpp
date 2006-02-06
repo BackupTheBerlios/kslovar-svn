@@ -59,6 +59,8 @@
 #include <klocale.h>
 #include <kstandarddirs.h>
 #include <kcmenumngr.h>
+#include <kio/netaccess.h>
+#include <kio/job.h>
 
 
 KSlovar *KSlovar::m_instance=0L;
@@ -69,6 +71,11 @@ KSlovar::KSlovar()
   KSlovar::m_instance=this;
   m_configDialog=new KSConfigDialog(this, "settings", Configuration::self());
   XMLParser=new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-default.xsl")));
+
+  if(Configuration::autoUpdateLanguage())
+  {
+    downloadLanguageFile();
+  }
   loadLanguages();
 
   m_welcomeMessage=i18n("<h1>Welcome to KSlovar</h1> This needs to be changed :).");
@@ -578,6 +585,38 @@ KSlovar *KSlovar::KSInstance()
     return 0l;
   }
   return m_instance;
+}
+
+void KSlovar::downloadLanguageFile()
+{
+  QString localVersion = "000", remoteVersion = "000";
+  QString versionFile = locateLocal("appdata", "version");
+  QString languageFile = locateLocal("appdata", "languages.ksl", false);
+
+  QFile local(versionFile);
+  if(local.exists())
+  {
+    local.open(IO_ReadOnly);
+    QString input;
+    local.readLine(input, 5);
+    localVersion = input;
+  }
+
+  KIO::NetAccess::download("ftp://ftp.berlios.de/pub/kslovar/version", versionFile, this);
+  QFile remote(versionFile);
+  if(remote.exists())
+  {
+    remote.open(IO_ReadOnly);
+    QString input;
+    remote.readLine(input, 5);
+    remoteVersion = input;
+  }
+
+  if(remoteVersion > localVersion)
+  {
+    KIO::NetAccess::download("ftp://ftp.berlios.de/pub/kslovar/languages.ksl", languageFile, this);
+    loadLanguages();
+  }
 }
 
 KSlovar::~KSlovar()

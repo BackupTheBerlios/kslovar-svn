@@ -17,4 +17,11 @@
       <default>simpl1e</default>
     </entry>
   </group>
+  <group name="behavior">
+    <entry name="AutoUpdateLanguage" type="Bool">
+      <label>Update languages database at startup</label>
+      <default>true</default>
+      <whatsthis>If enabled, languages.ksl will be updated at every start of KSlovar. Needs connection to the internet. If you do not have connection to the internet, it's advised to deactivate it.</whatsthis>
+    </entry>
+  </group>
 </kcfg>
