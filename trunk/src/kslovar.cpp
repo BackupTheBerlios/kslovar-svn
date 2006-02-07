@@ -306,7 +306,7 @@ void KSlovar::registerButtons()
 
   m_config = KStdAction::preferences(this, SLOT(slotConfigure()), actionCollection());
   m_conversion = new KAction(i18n("Edit &conversion table"), "conversion", this, SLOT(slotConversionTable()), actionCollection(), "editConversion");
-  m_update = new KAction(i18n("Update &languages"), "down", KShortcut(KKey("CTRL+l")), this, SLOT(slotDownloadLanguage()), actionCollection(), "updateLnguages");
+  m_update = new KAction(i18n("Update &languages"), "ktalkd", KShortcut(KKey("CTRL+l")), this, SLOT(slotDownloadLanguage()), actionCollection(), "updateLnguages");
 }
 
 void KSlovar::addMenu()
