@@ -27,6 +27,7 @@
 
 
 #include "configuration/ksappearance.h"
+#include "configuration/ui/ksbehaviourwdt.h"
 #include "configuration/ksconfigdialog.h"
 
 #include "handler/ksdbhandler.h"
@@ -74,7 +75,7 @@ KSlovar::KSlovar()
 
   if(Configuration::autoUpdateLanguage())
   {
-    downloadLanguageFile();
+    slotDownloadLanguage();
   }
   loadLanguages();
 
@@ -303,9 +304,9 @@ void KSlovar::registerButtons()
   m_editPhrase->plug(m_listPopup);
   m_removePhrase->plug(m_listPopup);
 
-  m_config=KStdAction::preferences(this, SLOT(slotConfigure()), actionCollection());
-
+  m_config = KStdAction::preferences(this, SLOT(slotConfigure()), actionCollection());
   m_conversion = new KAction(i18n("Edit &conversion table"), "conversion", this, SLOT(slotConversionTable()), actionCollection(), "editConversion");
+  m_update = new KAction(i18n("Update &languages"), "down", KShortcut(KKey("CTRL+l")), this, SLOT(slotDownloadLanguage()), actionCollection(), "updateLnguages");
 }
 
 void KSlovar::addMenu()
@@ -338,6 +339,7 @@ void KSlovar::addMenu()
   KPopupMenu *setmenu=new KPopupMenu;
   m_config->plug(setmenu);
   m_conversion->plug(setmenu);
+  m_update->plug(setmenu);
 
   KPopupMenu *help = helpMenu( );
 
@@ -457,7 +459,9 @@ void KSlovar::slotConversionTable()
 void KSlovar::slotConfigure()
 {
   m_configDialog->addPage(new KSAppearance(0), i18n("Appearance"), "looknfeel");
+  m_configDialog->addPage(new KSBehaviourWdt(0), i18n("Behaviour"), "package_settings");
 
+  m_configDialog->resize(700, 700);
   m_configDialog->show();
 }
 
@@ -587,7 +591,7 @@ KSlovar *KSlovar::KSInstance()
   return m_instance;
 }
 
-void KSlovar::downloadLanguageFile()
+void KSlovar::slotDownloadLanguage()
 {
   QString localVersion = "000", remoteVersion = "000";
   QString versionFile = locateLocal("appdata", "version");

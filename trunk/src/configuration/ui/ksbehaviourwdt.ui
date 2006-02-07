@@ -1,8 +1,8 @@
 <!DOCTYPE UI><UI version="3.3" stdsetdef="1">
-<class>KSBehaviorWdt</class>
+<class>KSBehaviourWdt</class>
 <widget class="QWidget">
     <property name="name">
-        <cstring>KSBehaviorWdt</cstring>
+        <cstring>KSBehaviourWdt</cstring>
     </property>
     <property name="geometry">
         <rect>
@@ -13,7 +13,7 @@
         </rect>
     </property>
     <property name="caption">
-        <string>KSBehaviorWdt</string>
+        <string>KSBehaviourWdt</string>
     </property>
     <grid>
         <property name="name">
@@ -50,10 +50,10 @@
                                     <cstring>kcfg_AutoUpdateLanguage</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Update languages data&amp;base at startup</string>
+                                    <string>&amp;Update languages database at startup</string>
                                 </property>
                                 <property name="accel">
-                                    <string>Alt+B</string>
+                                    <string>Alt+U</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>If enabled, languages.ksl will be updated at every start of KSlovar. Needs connection to the internet. If you do not have connection to the internet, it's advised to deactivate it.</string>

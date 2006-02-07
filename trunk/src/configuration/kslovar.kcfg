@@ -17,7 +17,7 @@
       <default>simpl1e</default>
     </entry>
   </group>
-  <group name="behavior">
+  <group name="behaviour">
     <entry name="AutoUpdateLanguage" type="Bool">
       <label>Update languages database at startup</label>
       <default>true</default>

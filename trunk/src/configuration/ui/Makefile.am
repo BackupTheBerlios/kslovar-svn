@@ -2,7 +2,7 @@ INCLUDES = $(all_includes)
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libui.la
 
-libui_la_SOURCES = ksappearancewdt.ui void.cpp ksbehaviorwdt.ui
+libui_la_SOURCES = ksappearancewdt.ui void.cpp ksbehaviourwdt.ui
 
 
 

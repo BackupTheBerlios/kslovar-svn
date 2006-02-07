@@ -117,6 +117,7 @@ private slots:
   void slotUpdateConfiguration();
   void showPopup(KListView*, QListViewItem*, const QPoint &p);
   void slotConversionTable();
+  void slotDownloadLanguage();
 
 private:
   /**
@@ -165,6 +166,7 @@ private:
   KAction *m_removePhrase;
   KAction *m_config;
   KAction *m_conversion;
+  KAction *m_update;
 
   KSXSLHandler *XMLParser;
 
@@ -182,7 +184,6 @@ private:
   void addToolbar();
   void disableNavButtons();
   void processFileOpen(QString fileName);
-  void downloadLanguageFile();
 
 };
 
