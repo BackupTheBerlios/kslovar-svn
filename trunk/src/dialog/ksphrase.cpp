@@ -219,7 +219,7 @@ void KSPhrase::save()
     {
       KMessageBox::error(this, i18n("Cannot add new phrase!"));
     }
-    m_id=QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(m_mainWidget->wordEdit->text()));
+    m_id=QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId());
     KSlovar::KSInstance()->openFile(KSData::instance()->getDictionaryPath());
   }
 
@@ -239,16 +239,16 @@ void KSPhrase::save()
 
   for(QStringList::iterator count=m_deletedSynonyms.begin();count!=m_deletedSynonyms.end();count++)
   {
-    m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(*count))+"';"));
+    m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId())));
     m_XMLHandler->removeString("synonym", m_mainWidget->wordEdit->text());
-    KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(*count)));
+    KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId()));
   }
 
   for(QStringList::iterator count=m_deletedAntonyms.begin();count!=m_deletedAntonyms.end();count++)
   {
-    m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(*count))+"';"));
+    m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId())));
     m_XMLHandler->removeString("antonym", m_mainWidget->wordEdit->text());
-    KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(*count)));
+    KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId()));
   }
 
   delete m_XMLHandler;

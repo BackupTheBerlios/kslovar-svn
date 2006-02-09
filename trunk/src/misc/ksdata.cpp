@@ -28,7 +28,7 @@ KSData *KSData::m_instance=0l;
 static KStaticDeleter<KSData> staticKSDataDeleter;
 
 KSData::KSData()
-  : QObject(), m_selectedStyle(Configuration::dictionaryStyle())
+  : QObject(), m_selectedStyle(Configuration::dictionaryStyle()), m_literalSearch(false)
 {
 }
 
@@ -176,6 +176,16 @@ void KSData::addConversion(const QChar &from, const QChar &to)
 QMap<QChar, QChar> KSData::getConvertTable()
 {
   return m_convertTable;
+}
+
+void KSData::setLiteralSearch(bool searchType)
+{
+  m_literalSearch = searchType;
+}
+
+bool KSData::literalSearch()
+{
+  return m_literalSearch;
 }
 
 KSData::~KSData()

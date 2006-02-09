@@ -55,6 +55,7 @@
 #include <kparts/browserextension.h>
 #include <kshortcut.h>
 #include <kaction.h>
+#include <kactionclasses.h>
 #include <khtmlview.h>
 #include <kdebug.h>
 #include <klocale.h>
@@ -290,8 +291,10 @@ void KSlovar::registerButtons()
   m_editDictionary = new KAction(i18n("&Edit dictionary"), "edit", KShortcut(KKey("CTRL+e")), this, SLOT(slotEditDictionary()), actionCollection(), "editDictionary");
   m_close=KStdAction::close(this, SLOT(slotClose()), actionCollection());
 
-  m_find=KStdAction::find(this, SLOT(slotFind()), actionCollection());
-  m_findNext=KStdAction::findNext(this, SLOT(slotFindNext()), actionCollection());
+  m_find = KStdAction::find(this, SLOT(slotFind()), actionCollection());
+  m_findNext = KStdAction::findNext(this, SLOT(slotFindNext()), actionCollection());
+  m_literalSearch = new KToggleAction(i18n("&Literal search"), "filter", KShortcut(KKey("CTRL+l")), this, SLOT(slotToggleLiteral()), actionCollection(), "literalSearch");
+
   m_print=KStdAction::print(this, SLOT(slotPrint()), actionCollection());
   m_selectAll=KStdAction::selectAll(this, SLOT(slotSelectAll()), actionCollection());
 
@@ -306,7 +309,7 @@ void KSlovar::registerButtons()
 
   m_config = KStdAction::preferences(this, SLOT(slotConfigure()), actionCollection());
   m_conversion = new KAction(i18n("Edit &conversion table"), "conversion", this, SLOT(slotConversionTable()), actionCollection(), "editConversion");
-  m_update = new KAction(i18n("Update &languages"), "ktalkd", KShortcut(KKey("CTRL+l")), this, SLOT(slotDownloadLanguage()), actionCollection(), "updateLnguages");
+  m_update = new KAction(i18n("Update &languages"), "ktalkd", KShortcut(KKey("")), this, SLOT(slotDownloadLanguage()), actionCollection(), "updateLanguages");
 }
 
 void KSlovar::addMenu()
@@ -330,6 +333,7 @@ void KSlovar::addMenu()
   editmenu->insertSeparator();
   m_find->plug(editmenu);
   m_findNext->plug(editmenu);
+  m_literalSearch->plug(editmenu);
 
   KPopupMenu *gomenu=new KPopupMenu;
   m_back->plug(gomenu);
@@ -354,6 +358,7 @@ void KSlovar::addMenu()
 void KSlovar::addToolbar()
 {
   KToolBar *toolbar = new KToolBar(this);
+  m_literalSearch->plug(toolbar);
   m_back->plug(toolbar);
   m_forward->plug(toolbar);
   m_home->plug(toolbar);
@@ -621,6 +626,11 @@ void KSlovar::slotDownloadLanguage()
     KIO::NetAccess::download("ftp://ftp.berlios.de/pub/kslovar/languages.ksl", languageFile, this);
     loadLanguages();
   }
+}
+
+void KSlovar::slotToggleLiteral()
+{
+  KSData::instance()->setLiteralSearch(m_literalSearch->isChecked());
 }
 
 KSlovar::~KSlovar()

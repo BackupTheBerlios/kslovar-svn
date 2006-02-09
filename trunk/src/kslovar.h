@@ -29,7 +29,7 @@
 #include <kmainwindow.h>
 #include <kurl.h>
 #include <kparts/browserextension.h>
-#include <klistview.h>
+//#include <klistview.h>
 
 class KListBox;
 class KHTMLPart;
@@ -39,14 +39,17 @@ class KProgressDialog;
 class KProgress;
 class KSDictionary;
 class KAction;
+class KToggleAction;
 class KSPhrase;
 class KListView;
+class QListViewItem;
 class KSListView;
 class KListViewSearchLine;
 class KSListViewItem;
 class KSConfigDialog;
 class QPopupmenu;
 class KStatusBar;
+
 
 class KSXSLHandler;
 
@@ -118,6 +121,7 @@ private slots:
   void showPopup(KListView*, QListViewItem*, const QPoint &p);
   void slotConversionTable();
   void slotDownloadLanguage();
+  void slotToggleLiteral();
 
 private:
   /**
@@ -159,6 +163,7 @@ private:
   KAction *m_close;
   KAction *m_find;
   KAction *m_findNext;
+  KToggleAction *m_literalSearch;
   KAction *m_print;
   KAction *m_selectAll;
   KAction *m_addPhrase;

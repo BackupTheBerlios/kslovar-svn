@@ -52,7 +52,7 @@ class KSDBHandler : public QObject
     bool processQuery(const QString &rawQuery);
     QString processString(const QString &rawQuery, int columns=1);
     QStringList processList(const QString &rawQuery, int columns=1);
-    int getId(const QString &search);
+    int getId();
 
     static QString convertString(const QString &input);
 

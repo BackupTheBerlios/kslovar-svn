@@ -22,6 +22,8 @@
 #include "kslistview.h"
 #include "kslistviewitem.h"
 
+#include "../ksdata.h"
+
 #include <kdebug.h>
 
 KSListViewSearchLine::KSListViewSearchLine(QWidget *parent, KSListView *listView, const char *name)
@@ -36,9 +38,19 @@ bool KSListViewSearchLine::itemMatches(const QListViewItem *item, const QString 
     return true;
   }
 
-  if(static_cast<KSListViewItem*> (const_cast<QListViewItem*> (item))->getSearch().find(s, 0, 0) >= 0)
+  if(!KSData::instance()->literalSearch())
   {
-    return true;
+    if(static_cast<KSListViewItem*> (const_cast<QListViewItem*> (item))->getSearch().find(s, 0, 0) >= 0)
+    {
+      return true;
+    }
+  }
+  else
+  {
+    if(static_cast<KSListViewItem*> (const_cast<QListViewItem*> (item))->text(0).find(s, 0, 0) >= 0)
+    {
+      return true;
+    }
   }
 
   return false;

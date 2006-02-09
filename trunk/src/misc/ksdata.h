@@ -76,6 +76,9 @@ class KSData : public QObject
     void setStyle(QString selectedStyle);
     QString getStyle();
 
+    void setLiteralSearch(bool searchType);
+    bool literalSearch();
+
     ~KSData();
 
   private:
@@ -88,6 +91,7 @@ class KSData : public QObject
     QValueList<KSPhrases> m_phrases;
     QString m_selectedStyle;
     QMap<QChar, QChar> m_convertTable;
+    bool m_literalSearch;
 
 };
 

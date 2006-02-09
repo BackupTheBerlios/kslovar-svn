@@ -215,7 +215,7 @@ bool KSDBHandler::processQuery(const QString &rawQuery)
   return query(rawQuery);
 }
 
-int KSDBHandler::getId(const QString &search)
+int KSDBHandler::getId()
 {
   return sqlite3_last_insert_rowid(m_db);
 }

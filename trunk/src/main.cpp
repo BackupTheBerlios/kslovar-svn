@@ -31,9 +31,9 @@
 #include <ksplashscreen.h>
 
 static const char description[] =
-    I18N_NOOP("A dictionary for KDE");
+    I18N_NOOP("A KDE dictionary application that can read, add, modify and download various dictionaries.");
 
-static const char version[] = "0.2.0 20060207"; //Ne pozabi dodat vseh novih map in datotek... 7.2.2006
+static const char version[] = "0.2.0 20060209"; //Ne pozabi dodat vseh novih map in datotek... 9.2.2006
 
 static KCmdLineOptions options[] =
 {
@@ -47,7 +47,7 @@ int main(int argc, char **argv)
          KAboutData::License_GPL, "(C) 2005 Gregor Kališnik", 0, 0, "gregor@podnapisi.net");
     about.addAuthor( "Gregor Kališnik", I18N_NOOP("Lead developer"), "gregor@podnapisi.net" );
     about.addCredit("Kopete development team", I18N_NOOP("Mouse navigation in lists"), "kopete-devel@kde.org", "http://kopete.kde.org");
-    about.addCredit("Grega Štajer", I18N_NOOP("Creator of the icons and Logo for KSlovar"), "grega.stajer@email.si", "http://blender.kicks-ass.net");
+    about.addCredit("Grega Štajer", I18N_NOOP("Creator of the icons, logo and (K)Ubuntu binary packages for KSlovar"), "grega.stajer@email.si", "http://blender.kicks-ass.net");
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions( options );
     KCmdLineArgs *args=KCmdLineArgs::parsedArgs();
