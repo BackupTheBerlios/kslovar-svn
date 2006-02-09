@@ -23,6 +23,12 @@
             <li><a><xsl:attribute name='href'>http://<xsl:value-of select='@id'/></xsl:attribute><xsl:value-of select='.'/></a></li>
           </xsl:for-each>
         </p>
+        <p>
+          <h2>{word-family}</h2>
+          <xsl:for-each select='word-family'>
+            <li><a><xsl:attribute name='href'>http://<xsl:value-of select='@id'/></xsl:attribute><xsl:value-of select='.'/></a></li>
+          </xsl:for-each>
+        </p>
       </body>
     </html>
   </xsl:template>

@@ -220,6 +220,11 @@ int KSDBHandler::getId()
   return sqlite3_last_insert_rowid(m_db);
 }
 
+int KSDBHandler::getId(const QString& name)
+{
+  return processString("SELECT id FROM phrases WHERE name='"+name+"';").toInt();
+}
+
 QString KSDBHandler::convertString(const QString &input)
 {
   QMap<QChar, QChar> table=KSData::instance()->getConvertTable();

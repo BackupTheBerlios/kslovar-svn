@@ -140,6 +140,7 @@ QCString KSXSLHandler::openXSL(QString path)
   temp.replace("{explanations-examples}", i18n("Explanations and examples"));
   temp.replace("{synonym}", i18n("Synonym"));
   temp.replace("{antonym}", i18n("Antonym"));
+  temp.replace("{word-family}", i18n("Word family"));
   return temp.utf8();
 }
 

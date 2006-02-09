@@ -47,6 +47,8 @@ class KSPhrase : public KDialogBase
     void slotRemoveSynonym();
     void slotAddAntonym();
     void slotRemoveAntonym();
+    void slotAddFamily();
+    void slotRemoveFamily();
     void slotBeginCheck();
     void slotCheck(KSpell *speller);
     void slotEndCheck(const QString& checked);
@@ -68,6 +70,7 @@ class KSPhrase : public KDialogBase
     KSXMLHandler *m_XMLHandler;
     QStringList m_deletedSynonyms;
     QStringList m_deletedAntonyms;
+    QStringList m_deletedFamily;
 
     void populateAvailableList();
     void populatePartsOfSpeech();

@@ -78,6 +78,7 @@ void KSPhrase::populateAvailableList()
   {
     new KSListViewItem(m_mainWidget->availableSynonymList, (*count).name, QString::number((*count).id), (*count).search);
     new KSListViewItem(m_mainWidget->availableAntonymList, (*count).name, QString::number((*count).id), (*count).search);
+    new KSListViewItem(m_mainWidget->availableFamilyList, (*count).name, QString::number((*count).id), (*count).search);
   }
 }
 
@@ -133,6 +134,29 @@ void KSPhrase::slotRemoveAntonym()
   slotModified();
 }
 
+void KSPhrase::slotAddFamily()
+{
+  for(QStringList::iterator count=m_deletedFamily.begin();count!=m_deletedFamily.end();count++)
+  {
+    if(*count==m_mainWidget->availableFamilyList->currentItem()->text(0))
+    {
+      m_deletedFamily.remove(count);
+      break;
+    }
+  }
+
+  m_mainWidget->selectedFamilyList->insertItem(m_mainWidget->availableFamilyList->currentItem());
+  slotModified();
+}
+
+void KSPhrase::slotRemoveFamily()
+{
+  m_deletedFamily << m_mainWidget->selectedFamilyList->currentItem()->text(0);
+
+  m_mainWidget->availableFamilyList->insertItem(m_mainWidget->selectedFamilyList->currentItem());
+  slotModified();
+}
+
 void KSPhrase::slotBeginCheck()
 {
   new KSpell(this, i18n("Spell Check"), this, SLOT(slotCheck(KSpell *)), 0, true, true);
@@ -169,7 +193,7 @@ void KSPhrase::slotEndCheck(const QString& checked)
 
 void KSPhrase::save()
 {
-  QValueList<KSElement> saveSynonyms, saveAntonyms;
+  QValueList<KSElement> saveSynonyms, saveAntonyms, saveFamily;
 
   m_XMLHandler=new KSXMLHandler();
   m_XMLHandler->addString("word", m_mainWidget->wordEdit->text());
@@ -202,6 +226,17 @@ void KSPhrase::save()
     temp.name=current->text(0);
     temp.id=current->getId().toInt();
     saveAntonyms << temp;
+  }
+
+  for(QListViewItem *count=m_mainWidget->selectedFamilyList->firstChild();count;count=count->nextSibling())
+  {
+    KSElement temp;
+    KSListViewItem *current=static_cast<KSListViewItem*> (count);
+
+    m_XMLHandler->addString("word-family", current->text(0), "id", current->getId());
+    temp.name=current->text(0);
+    temp.id=current->getId().toInt();
+    saveFamily << temp;
   }
 
   QString xml=m_XMLHandler->parse();
@@ -239,16 +274,30 @@ void KSPhrase::save()
 
   for(QStringList::iterator count=m_deletedSynonyms.begin();count!=m_deletedSynonyms.end();count++)
   {
-    m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId())));
+    m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(*count))+"';"));
     m_XMLHandler->removeString("synonym", m_mainWidget->wordEdit->text());
     KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId()));
   }
 
   for(QStringList::iterator count=m_deletedAntonyms.begin();count!=m_deletedAntonyms.end();count++)
   {
-    m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId())));
+    m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(*count))+"';"));
     m_XMLHandler->removeString("antonym", m_mainWidget->wordEdit->text());
-    KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId()));
+    KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(*count)));
+  }
+
+  for(QValueList<KSElement>::iterator count=saveFamily.begin();count!=saveFamily.end();count++)
+  {
+    m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number((*count).id)+"';"));
+    m_XMLHandler->appendString("word-family", m_mainWidget->wordEdit->text(), "id", m_id);
+    KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord((*count).name, m_XMLHandler->parse(), false, QString::number((*count).id));
+  }
+
+  for(QStringList::iterator count=m_deletedFamily.begin();count!=m_deletedFamily.end();count++)
+  {
+    m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(*count))+"';"));
+    m_XMLHandler->removeString("word-family", m_mainWidget->wordEdit->text());
+    KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(*count)));
   }
 
   delete m_XMLHandler;
@@ -319,8 +368,21 @@ void KSPhrase::setWord(QString text, QString id)
     }
   }
 
+  QStringList family=m_XMLHandler->readStringList("word-family");
+  for(QStringList::iterator count=family.begin();count!=family.end();count++)
+  {
+    for(QListViewItem *current=m_mainWidget->availableFamilyList->firstChild();current;current=current->nextSibling())
+    {
+      if(*count==current->text(0))
+      {
+        m_mainWidget->selectedFamilyList->insertItem(current);
+      }
+    }
+  }
+
   delete m_mainWidget->availableSynonymList->findItem(m_mainWidget->wordEdit->text(), 0);
   delete m_mainWidget->availableAntonymList->findItem(m_mainWidget->wordEdit->text(), 0);
+  delete m_mainWidget->availableFamilyList->findItem(m_mainWidget->wordEdit->text(), 0);
   delete m_XMLHandler;
   m_XMLHandler=0;
 
@@ -348,6 +410,9 @@ void KSPhrase::initialize()
   m_mainWidget->rightAntonymButton->setIconSet(icons->loadIconSet("forward", KIcon::Toolbar));
   m_mainWidget->leftAntonymButton->setIconSet(icons->loadIconSet("back", KIcon::Toolbar));
 
+  m_mainWidget->rightFamilyButton->setIconSet(icons->loadIconSet("forward", KIcon::Toolbar));
+  m_mainWidget->leftFamilyButton->setIconSet(icons->loadIconSet("back", KIcon::Toolbar));
+
   m_mainWidget->availableSynonymList->setFullWidth(true);
   m_mainWidget->availableSynonymList->addColumn("name");
   m_mainWidget->selectedSynonymList->setFullWidth(true);
@@ -357,6 +422,11 @@ void KSPhrase::initialize()
   m_mainWidget->availableAntonymList->addColumn("name");
   m_mainWidget->selectedAntonymList->setFullWidth(true);
   m_mainWidget->selectedAntonymList->addColumn("name");
+
+  m_mainWidget->availableFamilyList->setFullWidth(true);
+  m_mainWidget->availableFamilyList->addColumn("name");
+  m_mainWidget->selectedFamilyList->setFullWidth(true);
+  m_mainWidget->selectedFamilyList->addColumn("name");
 
   m_mainWidget->typeBox->insertStringList(KSData::instance()->getPartOfSpeech());
 }
@@ -370,6 +440,8 @@ void KSPhrase::connectSlots()
   connect(m_mainWidget->leftSynonymButton, SIGNAL(clicked()), this, SLOT(slotRemoveSynonym()));
   connect(m_mainWidget->rightAntonymButton, SIGNAL(clicked()), this, SLOT(slotAddAntonym()));
   connect(m_mainWidget->leftAntonymButton, SIGNAL(clicked()), this, SLOT(slotRemoveAntonym()));
+  connect(m_mainWidget->rightFamilyButton, SIGNAL(clicked()), this, SLOT(slotAddFamily()));
+  connect(m_mainWidget->leftFamilyButton, SIGNAL(clicked()), this, SLOT(slotRemoveFamily()));
   connect(m_mainWidget->wordEdit, SIGNAL(textChanged(const QString&)), this, SLOT(slotModified()));
   connect(m_mainWidget->typeBox, SIGNAL(activated(int)), this, SLOT(slotModified()));
   connect(m_mainWidget->explanationList, SIGNAL(itemRenamed(QListViewItem*)), this, SLOT(slotModified()));
