@@ -59,7 +59,6 @@ class KSData : public QObject
     void addLanguage(QString name, int id);
     QStringList getLanguagesNames();
     QString getLanguageId(QString name);
-    void clearLanguages();
 
     void addPartOfSpeech(QString name, int id);
     QStringList getPartOfSpeech();

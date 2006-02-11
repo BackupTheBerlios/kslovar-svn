@@ -94,11 +94,6 @@ QString KSData::getLanguageId(QString name)
   return QString::null;
 }
 
-void KSData::clearLanguages()
-{
-  m_languages.clear();
-}
-
 void KSData::addPartOfSpeech(QString name, int id)
 {
   KSElement temp;

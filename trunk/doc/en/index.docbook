@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
-  <!ENTITY kslovar "<application>KSlovar 0.1</application>">
+  <!ENTITY kslovar "<application>KSlovar 0.2.0</application>">
   <!ENTITY kappname "&kslovar;"><!-- Do *not* replace kappname-->
   <!ENTITY package "kde-module"><!-- kdebase, kdeadmin, etc -->
   <!ENTITY % addindex "IGNORE">
@@ -76,15 +76,14 @@ Please respect the format of the date (YYYY-MM-DD) and of the version
 (V.MM.LL), it could be used by automation scripts.
 Do NOT change these in the translation. -->
 
-<date>2005-01-14</date>
-<releaseinfo>0.1.0</releaseinfo>
+<date>2006-02-11</date>
+<releaseinfo>0.2.0</releaseinfo>
 
 <!-- Abstract about this handbook -->
 
 <abstract>
 <para>
-&kslovar; is an application specially designed to do nothing you would
-ever want.
+&kslovar; is a tool for making, editing and viewing dictionaries.
 </para>
 </abstract>
 
@@ -119,8 +118,7 @@ problems. Basically a long version of the abstract.  Don't include a
 revision history. (see installation appendix comment) -->
 
 <para>
-&kslovar; is a program that lets you do absolutely nothing. Please report
-any problems or feature requests to the &kde; mailing lists.
+With &kslovar; you can create, edit and view dictionaries. Report any bugs to gregor@podnapisi.net.
 </para>
 </chapter>
 
@@ -132,11 +130,13 @@ many sections (Chapter, Sect1, Sect3, etc...) as is necessary to fully document
 your application. -->
 
 <para>
+When starting &kslovar;, it will update its languages file. You can disable it in Settings->Configure KSlovar->Behaviour. To start, you
+should create a dictionary by clicking File->New Dictionary or opening an existing one.
 
 <!-- Note that all graphics should be in .png format. Use no gifs because of
 patent issues. -->
 
-<screenshot>
+<!--<screenshot>
 <screeninfo>Here's a screenshot of &kslovar;</screeninfo>
 	<mediaobject>
 	  <imageobject>
@@ -149,29 +149,59 @@ patent issues. -->
 	    <phrase>Screenshot</phrase>
 	  </textobject>
 	</mediaobject>
-</screenshot>
+</screenshot>-->
 </para>
 
 
-<sect1 id="kslovar-features">
-<title>More &kslovar; features</title>
+<sect1 id="kslovar-creating-dict">
+<title>Creating a dictionary with &kslovar;</title>
+<para>First click New dictionary button in File. Into the name field you type in the name of the dictionary. Then select a language,
+if your language is not present, then you can create it. Into First page field you describe your new dictionary. After filling the
+information, press enter and save the dictionary.</para>
+</sect1>
 
-<para>It slices! It dices! and it comes with a free toaster!</para>
-<para>
-The Squiggle Tool <guiicon><inlinemediaobject>
-	  <imageobject>
-	    <imagedata fileref="squiggle.png" format="PNG"/>
-	  </imageobject>
-	  <imageobject>
-	    <imagedata fileref="squiggle.eps" format="EPS"/>
-	  </imageobject>
-	  <textobject>
-	    <phrase>Squiggle</phrase>
-	  </textobject>
-</inlinemediaobject></guiicon> is used to draw squiggly lines all over
-the &kslovar; main window. It's not a bug, it's a feature!
-</para>
+<sect2 id="kslovar-editing-dict">
+<title>Editing a dictionarey</title>
+<para>By clicking on Edit->Edit dictionary you can edit a dicionary. The dialog is the same as with creating a dictionary.</para>
+</sect2>
 
+<sect3 id="kslovar-creating-lang">
+<title>Creating a new language</title>
+<para>If you click on the add button, there should be a dialog with the name and parts of speech fields empty. Fill in the information
+about your language and press ok.</para>
+</sect3>
+
+<sect4 id="kslovar-editing-conversion">
+<title>Editing the conversion table</title>
+<para>In Settings->Edit converion table you can add or remve conversion characters. This conversion table is used only in search.</para>
+</sect4>
+
+<sect5 id="kslovar-creating-phrase">
+<title>Creating a phrase</title>
+<para>After making a dictionary you can create a phrase by Edit->Add phrase or right clicking on the phrase list on the left and
+selecting Add phrase. After clicking the button, there should appear a dialog with 4 tabs. Fill in all the information about the phrase
+and select synonyms, antonyms and word families. After filling in the information, click on ok to save the phrase.</para>
+</sect5>
+
+<sect6 id="kslovar-editing-phrase">
+<title>Editing a phrase</title>
+<para>You can edit a phrase by right clicking on it and click on the Edit phrase button. Or by selecting a phrase and clicking on
+Edit->Edit phrase or just by double clicking on a phrase. The apeared dialog is the same as when creating a phrase.</para>
+</sect6>
+
+<sect7 id="kslovar-removing-phrase">
+<title>Removing a phrase</title>
+<para>You can remove a phrase by right clicking on a phrase and click Remove phrase or by selecting a phrase and clicking on
+Edit->Remove phrase.</para>
+</sect7>
+</chapter>
+
+<chapter id="dictionaries">
+<title>Dictionaries and languages</title>
+<sect1 id="send-it">
+<title>Help apritiated<title>
+<para>If you made your own language or dictionary file. Please send it to me at my mail, gregor@podnapisi.net so I could put it
+on the page. Later in the development, the process of upload will be automated.</para>
 </sect1>
 </chapter>
 
@@ -197,21 +227,41 @@ or menu bars. -->
 <keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo>
 </shortcut>
 <guimenu>File</guimenu>
-<guimenuitem>New</guimenuitem>
+<guimenuitem>New dictionary</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Creates a new document</action></para></listitem>
+<listitem><para><action>Creates a new dictionary</action></para></listitem>
 </varlistentry>
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Ctrl;<keycap>S</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>O</keycap></keycombo>
 </shortcut>
 <guimenu>File</guimenu>
-<guimenuitem>Save</guimenuitem>
+<guimenuitem>Open</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Saves the document</action></para></listitem>
+<listitem><para><action>Opens a dictionary</action></para></listitem>
 </varlistentry>
 <varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo>
+</shortcut>
+<guimenu>File</guimenu>
+<guimenuitem>Print</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Prints curently viewed text</action></para></listitem>
+</varlistentry>
+</variablelist>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>W</keycap></keycombo>
+</shortcut>
+<guimenu>File</guimenu>
+<guimenuitem>Close</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Closes currently opened dictionary</action></para></listitem>
+</varlistentry>
+</variablelist>
 <term><menuchoice>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>Q</keycap></keycombo>
@@ -224,6 +274,162 @@ or menu bars. -->
 </variablelist>
 </para>
 
+</sect2>
+
+<sect2>
+<title>The Edit Menu</title>
+<para>
+<variablelist>
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>E</keycap></keycombo>
+</shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Edit dictionary</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Edits currently opened dictionary</action></para></listitem>
+</varlistentry>
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>A</keycap></keycombo>
+</shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Select All</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Selects whole viewed text</action></para></listitem>
+</varlistentry>
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>A</keycap></keycombo>
+</shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Add phrase</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Adds a new phrase</action></para></listitem>
+</varlistentry>
+</variablelist>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>T</keycap></keycombo>
+</shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Edit phrase</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Edits currently selected phrase</action></para></listitem>
+</varlistentry>
+</variablelist>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Delete;</keycombo>
+</shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Remove phrase</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Removes currently selected phrase</action></para></listitem>
+</varlistentry>
+</variablelist>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>F</keycap></keycombo>
+</shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Find</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Searches for a string in the selected phrase</action></para></listitem>
+</varlistentry>
+</variablelist>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&F3;</keycombo>
+</shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Find next</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Searches for another instance of the string in the selected phrase</action></para></listitem>
+</varlistentry>
+</variablelist>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo>
+</shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Literal search</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Switches the literal search of phrases on or off</action></para></listitem>
+</varlistentry>
+</variablelist>
+</para>
+
+</sect2>
+
+<sect2>
+<title>The Go Menu</title>
+<para>
+<variablelist>
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Alt;<keycap>&Left;</keycap></keycombo>
+</shortcut>
+<guimenu>Go</guimenu>
+<guimenuitem>Back</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Shows previously selected phrase</action></para></listitem>
+</varlistentry>
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Alt;<keycap>&Right;</keycap></keycombo>
+</shortcut>
+<guimenu>Go</guimenu>
+<guimenuitem>Forward</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Shows recently selected phrase</action></para></listitem>
+</varlistentry>
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>&Home;</keycap></keycombo>
+</shortcut>
+<guimenu>Go</guimenu>
+<guimenuitem>Home</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Shows the first page of the dictionary</action></para></listitem>
+</varlistentry>
+</variablelist>
+</para>
+</sect2>
+
+<sect2>
+<title>The Settings Menu</title>
+<para>
+<variablelist>
+<varlistentry>
+<term><menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure KSlovar</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Let's you configure &kslovar;</action></para></listitem>
+</varlistentry>
+<varlistentry>
+<term><menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Edit conversion table</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Let's you edit conversion table</action></para></listitem>
+</varlistentry>
+<varlistentry>
+<term><menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Update languages</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Looks for the updates and downloads the new language files</action></para></listitem>
+</varlistentry>
+</variablelist>
+</para>
 </sect2>
 
 <sect2>
@@ -241,151 +447,7 @@ or menu bars. -->
 </sect1>
 </chapter>
 
-<chapter id="developers">
-<title>Developer's Guide to &kslovar;</title>
-
-<!-- (OPTIONAL) A Programming/Scripting reference chapter should be
-used for apps that use plugins or that provide their own scripting hooks
-and/or development libraries. -->
-
-<para>
-Programming &kslovar; plugins is a joy to behold. Just read through the next
-66 pages of API's to learn how!
-</para>
-
-<!-- Use refentries to describe APIs.  Refentries are fairly complicated and you
-should consult the docbook reference for further details. The example below was
-taken from that reference and shortened a bit for readability. -->
-
-<refentry id="re-1007-unmanagechildren-1">
-<refmeta>
-<refentrytitle>XtUnmanageChildren</refentrytitle>
-<refmiscinfo>Xt - Geometry Management</refmiscinfo>
-</refmeta>
-<refnamediv>
-<refname>XtUnmanageChildren
-</refname>
-<refpurpose>remove a list of children from a parent widget's managed
-list.
-<indexterm id="ix-1007-unmanagechildren-1"><primary>widgets</primary><secondary>removing</secondary></indexterm>
-<indexterm id="ix-1007-unmanagechildren-2"><primary>XtUnmanageChildren</primary></indexterm>
-</refpurpose>
-
-</refnamediv>
-<refsynopsisdiv>
-<refsynopsisdivinfo>
-<date>4 March 1996</date>
-</refsynopsisdivinfo>
-<synopsis>
-void XtUnmanageChildren(<replaceable class="parameter">children</replaceable>, <replaceable class="parameter">num_children</replaceable>)
-    WidgetList <replaceable class="parameter">children</replaceable>;
-    Cardinal <replaceable class="parameter">num_children</replaceable>;
-</synopsis>
-
-<refsect2 id="r2-1007-unmanagechildren-1">
-<title>Inputs</title>
-<variablelist>
-<varlistentry>
-<term><replaceable class="parameter">children</replaceable>
-</term>
-<listitem>
-<para>Specifies an array of child widgets. Each child must be of
-class RectObj or any subclass thereof.
-</para>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term><replaceable class="parameter">num_children</replaceable>
-</term>
-<listitem>
-<para>Specifies the number of elements in <replaceable class="parameter">children</replaceable>.
-</para>
-</listitem>
-</varlistentry>
-</variablelist>
-</refsect2></refsynopsisdiv>
-
-<refsect1 id="r1-1007-unmanagechildren-1">
-<title>Description
-</title>
-<para><function>XtUnmanageChildren()</function> unmaps the specified widgets
-and removes them from their parent's geometry management.
-The widgets will disappear from the screen, and (depending
-on its parent) may no longer have screen space allocated for
-them.
-</para>
-<para>Each of the widgets in the <replaceable class="parameter">children</replaceable> array must have
-the same parent.
-</para>
-<para>See the &ldquo;Algorithm&rdquo; section below for full details of the
-widget unmanagement procedure.
-</para>
-</refsect1>
-
-<refsect1 id="r1-1007-unmanagechildren-2">
-<title>Usage</title>
-<para>Unmanaging widgets is the usual method for temporarily
-making them invisible.  They can be re-managed with
-<function>XtManageChildren()</function>.
-</para>
-<para>You can unmap a widget, but leave it under geometry
-management by calling <function>XtUnmapWidget()</function>.  You can
-destroy a widget's window without destroying the widget by
-calling <function>XtUnrealizeWidget()</function>.  You can destroy a
-widget completely with <function>XtDestroyWidget()</function>.
-</para>
-<para>If you are only going to unmanage a single widget, it is
-more convenient to call <function>XtUnmanageChild()</function>.  It is
-often more convenient to call <function>XtUnmanageChild()</function>
-several times than it is to declare and initialize an array
-of widgets to pass to <function>XtUnmanageChildren()</function>.  Calling
-<function>XtUnmanageChildren()</function> is more efficient, however,
-because it only calls the parent's <function>change_managed()</function>
-method once.
-</para>
-</refsect1>
-
-<refsect1 id="r1-1007-unmanagechildren-3">
-<title>Algorithm
-</title>
-<para><function>XtUnmanageChildren()</function> performs the following:
-</para>
-<variablelist>
-<varlistentry>
-<term>-
-</term>
-<listitem>
-<para>Ignores the child if it already is unmanaged or is being
-destroyed.
-</para>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term>-
-</term>
-<listitem>
-<para>Otherwise, if the child is realized, it makes it nonvisible
-by unmapping it.
-</para>
-</listitem>
-</varlistentry>
-</variablelist>
-<para>
-</para>
-</refsect1>
-
-<refsect1 id="r1-1007-unmanagechildren-4">
-<title>Structures</title>
-<para>The <type>WidgetList</type> type is simply an array of widgets:
-</para>
-<screen id="sc-1007-unmanagechildren-1">typedef Widget *WidgetList;
-</screen>
-</refsect1>
-</refentry>
-
-</chapter>
-
-<chapter id="faq">
+<!--<chapter id="faq">
 <title>Questions and Answers</title>
 
 <!-- (OPTIONAL but recommended) This chapter should include all of the silly
@@ -396,7 +458,7 @@ than a page or so then it should probably be part of the
 cross-reference questions to the parts of your documentation that answer them.
 This is also a great place to provide pointers to other FAQ's if your users
 must do some complicated configuration on other programs in order for your
-application work. -->
+application work. --
 
 &reporting.bugs;
 &updating.documentation;
@@ -421,7 +483,7 @@ installed.</para>
 </answer>
 </qandaentry>
 </qandaset>
-</chapter>
+</chapter>-->
 
 <chapter id="credits">
 
@@ -441,9 +503,7 @@ Program copyright 2005 Gregor Kališnik <email>gregor@podnapisi.net</email>
 <para>
 Contributors:
 <itemizedlist>
-<listitem><para>Konqui the KDE Dragon <email>konqui@kde.org</email></para>
-</listitem>
-<listitem><para>Tux the Linux Penguin <email>tux@linux.org</email></para>
+<listitem><para>Grega Štajer <email>grega.stajer@email.si</email></para>
 </listitem>
 </itemizedlist>
 </para>
@@ -463,9 +523,6 @@ Documentation copyright 2005 Gregor Kališnik <email>gregor@podnapisi.net</email
      regardless of what license the application uses) -->
 
 &underGPL;        	 <!-- GPL License -->
-&underBSDLicense;        <!-- BSD License -->
-&underArtisticLicense;   <!-- BSD Artistic License -->
-&underX11License;        <!-- X11 License  -->
 
 </chapter>
 
@@ -477,9 +534,12 @@ Documentation copyright 2005 Gregor Kališnik <email>gregor@podnapisi.net</email
 
 <!-- This first entity contains boiler plate for applications that are
 part of KDE CVS.  You should remove it if you are releasing your
-application -->
+application --
 
-&install.intro.documentation;
+&install.intro.documentation;-->
+
+<para>You can acquire KSlovar on it's home page <ulink
+url="http://developers.berlios.de/projects/kslovar">http://developers.berlios.de/projects/kslovar</ulink>.</para>
 
 </sect1>
 
@@ -498,22 +558,14 @@ information here.
 -->
 
 <para>
-In order to successfully use &kslovar;, you need &kde; 1.1. Foobar.lib is
-required in order to support the advanced &kslovar; features. &kslovar; uses
-about 5 megs of memory to run, but this may vary depending on your
-platform and configuration.
-</para>
-
-<para>
-All required libraries as well as &kslovar; itself can be found
-on <ulink url="ftp://ftp.kslovar.org">The &kslovar; home page</ulink>.
+In order to successfully use &kslovar;, you need &kde;, libxml2 and libxslt.
 </para>
 
 <!-- For a list of updates, you may refer to the application web site
 or the ChangeLog file, or ... -->
 <para>
 You can find a list of changes at <ulink
-url="http://apps.kde.org/kslovar">http://apps.kde.org/kslovar</ulink>.
+url="http://developers.berlios.de/projects/kslovar">http://developers.berlios.de/projects/kslovar</ulink>.
 </para>
 </sect1>
 
@@ -531,8 +583,7 @@ url="http://apps.kde.org/kslovar">http://apps.kde.org/kslovar</ulink>.
 <sect1 id="configuration">
 <title>Configuration</title>
 
-<para>Don't forget to tell your system to start the <filename>dtd</filename>
-dicer-toaster daemon first, or &kslovar; won't work !</para>
+<para>All the configuration is in Settings->Configure KSlovar. It's recommended that you have a look at it.</para>
 
 </sect1>
 

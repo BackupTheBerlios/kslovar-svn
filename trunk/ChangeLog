@@ -1,0 +1,14 @@
+0.1.0 => 0.2.0
+
+Bugfixes:
+-Fixed duplicated languages after adding new language
+-Fixed in creating new dictionaries
+-Language is immediatly added to the list of languages in dictionary creation dialog
+
+Features:
+-Autoupdate languages
+-Full styles support
+-Fully supported search (with conversion table)
+-"Literal search" switch
+-Added Synonyms, Antonyms and Word families into dictionary format
+-Removed See also from dictionary format
