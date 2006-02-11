@@ -31,6 +31,7 @@
 
 #include <qregexp.h>
 #include <qlayout.h>
+#include <qfileinfo.h>
 
 #include <klistbox.h>
 #include <kstandarddirs.h>
@@ -38,6 +39,12 @@
 #include <khtml_part.h>
 #include <khtmlview.h>
 #include <kparts/browserextension.h>
+#include <kinputdialog.h>
+#include <kio/job.h>
+#include <kmessagebox.h>
+#include <kpushbutton.h>
+#include <klocale.h>
+#include <krun.h>
 
 KSAppearance::KSAppearance(QWidget *parent, const char *name)
   :KSAppearanceWdt(parent, name)
@@ -60,7 +67,10 @@ KSAppearance::KSAppearance(QWidget *parent, const char *name)
   defaultStyleLayout->addWidget(m_previewDefault->view());
 
 
-  connect(styleList, SIGNAL(selectionChanged(QListViewItem*)), this, SLOT(selectStyle(QListViewItem*)));
+  connect(styleList, SIGNAL(selectionChanged(QListViewItem*)), this, SLOT(slotSelectStyle(QListViewItem*)));
+  connect(copyButton, SIGNAL(clicked()), this, SLOT(slotCopyStyle()));
+  connect(removeButton, SIGNAL(clicked()), this, SLOT(slotDeleteStyle()));
+  connect(editButton, SIGNAL(clicked()), this, SLOT(slotEditStyle()));
 }
 
 void KSAppearance::populateStyleList()
@@ -95,7 +105,7 @@ void KSAppearance::populateStyleList()
   styleList->sort();
 }
 
-void KSAppearance::selectStyle(QListViewItem *selected)
+void KSAppearance::slotSelectStyle(QListViewItem *selected)
 {
   m_defaultStyleParser=new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+selected->text(0)+"/"+selected->text(0)+"-default.xsl")));
 
@@ -108,6 +118,46 @@ void KSAppearance::selectStyle(QListViewItem *selected)
   KSConfigDialog::instance()->manualUpdateButtons();
 }
 
+void KSAppearance::slotCopyStyle()
+{
+  QString newName = KInputDialog::getText(i18n("New style name"), i18n("Name of the new style: "));
+  if(newName.isEmpty())
+  {
+    KMessageBox::error(this, i18n("You haven't entered a name for the copy!"));
+    return;
+  }
+  KIO::copy(locate("appdata", "styles/"+styleList->selectedItem()->text(0)+"/"+styleList->selectedItem()->text(0)+"-default.xsl"), locateLocal("appdata", "styles/"+newName+"/"+newName+"-default.xsl"), false);
 
+  new KSListViewItem(styleList, newName);
+}
+
+void KSAppearance::slotDeleteStyle()
+{
+  QString selectedStyle = styleList->selectedItem()->text(0);
+  QString selectedStyleDir = locate("appdata", "styles/"+selectedStyle+"/");
+
+  if(!QFileInfo(selectedStyleDir+selectedStyle+"-default.xsl").isWritable()) //@TODO Dodat še drug tip slovarjev...
+  {
+    KMessageBox::error(this, i18n("Cannot delete selected style!"));
+    return;
+  }
+  KIO::del(selectedStyleDir, false, false);
+
+  delete styleList->selectedItem();
+}
+
+void KSAppearance::slotEditStyle()
+{
+  QString selectedStyle = styleList->selectedItem()->text(0);
+  QString selectedStyleDir = locate("appdata", "styles/"+selectedStyle+"/");
+
+  if(!QFileInfo(selectedStyleDir+selectedStyle+"-default.xsl").isWritable()) //@TODO Dodat še drug tip slovarjev...
+  {
+    KMessageBox::error(this, i18n("Cannot edit selected style!"));
+    return;
+  }
+
+  KRun::runURL(selectedStyleDir+selectedStyle+"-default.xsl", "text/plain");
+}
 
 //#include "ksappearance.moc"

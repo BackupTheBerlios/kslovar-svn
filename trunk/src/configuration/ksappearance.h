@@ -32,7 +32,10 @@ Q_OBJECT
     KSAppearance(QWidget *parent = 0, const char *name = 0);
 
   private slots:
-    void selectStyle(QListViewItem *selected);
+    void slotSelectStyle(QListViewItem *selected);
+    void slotCopyStyle();
+    void slotDeleteStyle();
+    void slotEditStyle();
 
   private:
     void populateStyleList();

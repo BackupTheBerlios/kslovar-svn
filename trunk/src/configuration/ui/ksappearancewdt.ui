@@ -72,24 +72,7 @@
                                     </widget>
                                     <widget class="KPushButton">
                                         <property name="name">
-                                            <cstring>addButton</cstring>
-                                        </property>
-                                        <property name="enabled">
-                                            <bool>false</bool>
-                                        </property>
-                                        <property name="text">
-                                            <string>&amp;Add</string>
-                                        </property>
-                                        <property name="accel">
-                                            <string>Alt+A</string>
-                                        </property>
-                                    </widget>
-                                    <widget class="KPushButton">
-                                        <property name="name">
                                             <cstring>copyButton</cstring>
-                                        </property>
-                                        <property name="enabled">
-                                            <bool>false</bool>
                                         </property>
                                         <property name="text">
                                             <string>&amp;Copy</string>
@@ -102,9 +85,6 @@
                                         <property name="name">
                                             <cstring>editButton</cstring>
                                         </property>
-                                        <property name="enabled">
-                                            <bool>false</bool>
-                                        </property>
                                         <property name="text">
                                             <string>&amp;Edit</string>
                                         </property>
@@ -115,9 +95,6 @@
                                     <widget class="KPushButton">
                                         <property name="name">
                                             <cstring>removeButton</cstring>
-                                        </property>
-                                        <property name="enabled">
-                                            <bool>false</bool>
                                         </property>
                                         <property name="text">
                                             <string>&amp;Remove</string>
@@ -333,7 +310,6 @@
 </images>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
-    <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
