@@ -33,6 +33,8 @@ class KSDictionary : public KDialogBase
   public:
     KSDictionary(QWidget *parent = 0, const char *caption="Create dictionary", QString nameDictionary=0, QString text=0, bool edit=false);
 
+    void populateLanguages();
+
     ~KSDictionary();
 
   private slots:
@@ -44,7 +46,6 @@ class KSDictionary : public KDialogBase
     void slotEditLang();
 
   private:
-    void populateLanguages();
     bool save();
 
     KSDictionaryWdt *m_mainWidget;

@@ -158,6 +158,11 @@ void KSDictionary::slotApply()
 
 bool KSDictionary::save()
 {
+  if(m_mainWidget->nameEdit->text().isEmpty() || m_mainWidget->mainEdit->text().isEmpty())
+  {
+    KMessageBox::error(this, i18n("Fill in all the fields."));
+    return false;
+  }
   m_mainWidget->mainEdit->setTextFormat(Qt::RichText);
   QString text="<h1>"+m_mainWidget->nameEdit->text()+"</h1>"+m_mainWidget->mainEdit->text();
   QString id=KSData::instance()->getLanguageId(m_mainWidget->languageSelect->currentText());
@@ -171,7 +176,7 @@ bool KSDictionary::save()
   }
   else
   {
-    QString path=KFileDialog::getSaveFileName("~", "*.ksd|KSlovar dictionary file", this);
+    QString path=KFileDialog::getSaveFileName("~/"+m_mainWidget->nameEdit->text(), "*.ksd|KSlovar dictionary file", this);
     if(path.isEmpty())
     {
       return false;

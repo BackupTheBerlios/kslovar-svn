@@ -68,7 +68,7 @@
 KSlovar *KSlovar::m_instance=0L;
 
 KSlovar::KSlovar()
-  : KMainWindow( 0, "KSlovar" )
+  : KMainWindow( 0, "KSlovar" ), m_dictionarydlg(0)
 {
   KSlovar::m_instance=this;
   m_configDialog=new KSConfigDialog(this, "settings", Configuration::self());
@@ -544,6 +544,11 @@ void KSlovar::loadLanguages()
       name=*count;
       KSData::instance()->addLanguage(name.remove(QRegExp("^.+/")), id.remove(QRegExp("/.+$")).toInt());
     }
+  }
+
+  if(m_dictionarydlg)
+  {
+    m_dictionarydlg->populateLanguages();
   }
 
   input.clear();

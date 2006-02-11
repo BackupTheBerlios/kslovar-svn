@@ -54,10 +54,22 @@ QString KSData::getDictionaryPath()
 
 void KSData::addLanguage(QString name, int id)
 {
+  bool obstaja = false;
   KSElement temp;
   temp.name=name;
   temp.id=id;
-  m_languages << temp;
+  for(QValueList<KSElement>::iterator count = m_languages.begin(); count != m_languages.end(); count++)
+  {
+    if((*count).name == temp.name)
+    {
+      obstaja = true;
+      break;
+    }
+  }
+  if(!obstaja)
+  {
+    m_languages << temp;
+  }
 }
 
 QStringList KSData::getLanguagesNames()
@@ -80,6 +92,11 @@ QString KSData::getLanguageId(QString name)
     }
   }
   return QString::null;
+}
+
+void KSData::clearLanguages()
+{
+  m_languages.clear();
 }
 
 void KSData::addPartOfSpeech(QString name, int id)
