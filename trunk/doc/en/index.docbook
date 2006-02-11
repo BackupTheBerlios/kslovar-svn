@@ -160,46 +160,46 @@ if your language is not present, then you can create it. Into First page field y
 information, press enter and save the dictionary.</para>
 </sect1>
 
-<sect2 id="kslovar-editing-dict">
+<sect1 id="kslovar-editing-dict">
 <title>Editing a dictionarey</title>
 <para>By clicking on Edit->Edit dictionary you can edit a dicionary. The dialog is the same as with creating a dictionary.</para>
-</sect2>
+</sect1>
 
-<sect3 id="kslovar-creating-lang">
+<sect1 id="kslovar-creating-lang">
 <title>Creating a new language</title>
 <para>If you click on the add button, there should be a dialog with the name and parts of speech fields empty. Fill in the information
 about your language and press ok.</para>
-</sect3>
+</sect1>
 
-<sect4 id="kslovar-editing-conversion">
+<sect1 id="kslovar-editing-conversion">
 <title>Editing the conversion table</title>
 <para>In Settings->Edit converion table you can add or remve conversion characters. This conversion table is used only in search.</para>
-</sect4>
+</sect1>
 
-<sect5 id="kslovar-creating-phrase">
+<sect1 id="kslovar-creating-phrase">
 <title>Creating a phrase</title>
 <para>After making a dictionary you can create a phrase by Edit->Add phrase or right clicking on the phrase list on the left and
 selecting Add phrase. After clicking the button, there should appear a dialog with 4 tabs. Fill in all the information about the phrase
 and select synonyms, antonyms and word families. After filling in the information, click on ok to save the phrase.</para>
-</sect5>
+</sect1>
 
-<sect6 id="kslovar-editing-phrase">
+<sect1 id="kslovar-editing-phrase">
 <title>Editing a phrase</title>
 <para>You can edit a phrase by right clicking on it and click on the Edit phrase button. Or by selecting a phrase and clicking on
 Edit->Edit phrase or just by double clicking on a phrase. The apeared dialog is the same as when creating a phrase.</para>
-</sect6>
+</sect1>
 
-<sect7 id="kslovar-removing-phrase">
+<sect1 id="kslovar-removing-phrase">
 <title>Removing a phrase</title>
 <para>You can remove a phrase by right clicking on a phrase and click Remove phrase or by selecting a phrase and clicking on
 Edit->Remove phrase.</para>
-</sect7>
+</sect1>
 </chapter>
 
 <chapter id="dictionaries">
 <title>Dictionaries and languages</title>
 <sect1 id="send-it">
-<title>Help apritiated<title>
+<title>Help apritiated</title>
 <para>If you made your own language or dictionary file. Please send it to me at my mail, gregor@podnapisi.net so I could put it
 on the page. Later in the development, the process of upload will be automated.</para>
 </sect1>
@@ -231,6 +231,7 @@ or menu bars. -->
 </menuchoice></term>
 <listitem><para><action>Creates a new dictionary</action></para></listitem>
 </varlistentry>
+
 <varlistentry>
 <term><menuchoice>
 <shortcut>
@@ -241,6 +242,7 @@ or menu bars. -->
 </menuchoice></term>
 <listitem><para><action>Opens a dictionary</action></para></listitem>
 </varlistentry>
+
 <varlistentry>
 <term><menuchoice>
 <shortcut>
@@ -251,7 +253,8 @@ or menu bars. -->
 </menuchoice></term>
 <listitem><para><action>Prints curently viewed text</action></para></listitem>
 </varlistentry>
-</variablelist>
+
+<varlistentry>
 <term><menuchoice>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>W</keycap></keycombo>
@@ -261,7 +264,8 @@ or menu bars. -->
 </menuchoice></term>
 <listitem><para><action>Closes currently opened dictionary</action></para></listitem>
 </varlistentry>
-</variablelist>
+
+<varlistentry>
 <term><menuchoice>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>Q</keycap></keycombo>
@@ -273,7 +277,6 @@ or menu bars. -->
 </varlistentry>
 </variablelist>
 </para>
-
 </sect2>
 
 <sect2>
@@ -290,6 +293,7 @@ or menu bars. -->
 </menuchoice></term>
 <listitem><para><action>Edits currently opened dictionary</action></para></listitem>
 </varlistentry>
+
 <varlistentry>
 <term><menuchoice>
 <shortcut>
@@ -300,6 +304,7 @@ or menu bars. -->
 </menuchoice></term>
 <listitem><para><action>Selects whole viewed text</action></para></listitem>
 </varlistentry>
+
 <varlistentry>
 <term><menuchoice>
 <shortcut>
@@ -310,7 +315,8 @@ or menu bars. -->
 </menuchoice></term>
 <listitem><para><action>Adds a new phrase</action></para></listitem>
 </varlistentry>
-</variablelist>
+
+<varlistentry>
 <term><menuchoice>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>T</keycap></keycombo>
@@ -320,17 +326,19 @@ or menu bars. -->
 </menuchoice></term>
 <listitem><para><action>Edits currently selected phrase</action></para></listitem>
 </varlistentry>
-</variablelist>
+
+<varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Delete;</keycombo>
+<keycombo action="simul"><keycap>Delete</keycap></keycombo>
 </shortcut>
 <guimenu>Edit</guimenu>
 <guimenuitem>Remove phrase</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Removes currently selected phrase</action></para></listitem>
 </varlistentry>
-</variablelist>
+
+<varlistentry>
 <term><menuchoice>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>F</keycap></keycombo>
@@ -340,17 +348,19 @@ or menu bars. -->
 </menuchoice></term>
 <listitem><para><action>Searches for a string in the selected phrase</action></para></listitem>
 </varlistentry>
-</variablelist>
+
+<varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&F3;</keycombo>
+<keycombo action="simul"><keycap>F3</keycap></keycombo>
 </shortcut>
 <guimenu>Edit</guimenu>
 <guimenuitem>Find next</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Searches for another instance of the string in the selected phrase</action></para></listitem>
 </varlistentry>
-</variablelist>
+
+<varlistentry>
 <term><menuchoice>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>L</keycap></keycombo>
@@ -372,7 +382,7 @@ or menu bars. -->
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Alt;<keycap>&Left;</keycap></keycombo>
+<keycombo action="simul">&Alt;<keycap>Left</keycap></keycombo>
 </shortcut>
 <guimenu>Go</guimenu>
 <guimenuitem>Back</guimenuitem>
@@ -382,7 +392,7 @@ or menu bars. -->
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Alt;<keycap>&Right;</keycap></keycombo>
+<keycombo action="simul">&Alt;<keycap>Right</keycap></keycombo>
 </shortcut>
 <guimenu>Go</guimenu>
 <guimenuitem>Forward</guimenuitem>
@@ -392,7 +402,7 @@ or menu bars. -->
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Ctrl;<keycap>&Home;</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>Home</keycap></keycombo>
 </shortcut>
 <guimenu>Go</guimenu>
 <guimenuitem>Home</guimenuitem>
@@ -450,7 +460,7 @@ or menu bars. -->
 <!--<chapter id="faq">
 <title>Questions and Answers</title>
 
-<!-- (OPTIONAL but recommended) This chapter should include all of the silly
+<!- (OPTIONAL but recommended) This chapter should include all of the silly
 (and not-so-silly) newbie questions that fill up your mailbox. This chapter
 should be reserved for BRIEF questions and answers! If one question uses more
 than a page or so then it should probably be part of the
@@ -458,7 +468,7 @@ than a page or so then it should probably be part of the
 cross-reference questions to the parts of your documentation that answer them.
 This is also a great place to provide pointers to other FAQ's if your users
 must do some complicated configuration on other programs in order for your
-application work. --
+application work. -
 
 &reporting.bugs;
 &updating.documentation;
@@ -534,7 +544,7 @@ Documentation copyright 2005 Gregor Kališnik <email>gregor@podnapisi.net</email
 
 <!-- This first entity contains boiler plate for applications that are
 part of KDE CVS.  You should remove it if you are releasing your
-application --
+application -
 
 &install.intro.documentation;-->
 
