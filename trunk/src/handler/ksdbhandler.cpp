@@ -86,11 +86,9 @@ bool KSDBHandler::query(const QString &sqlQuery)
   return true;
 }
 
-bool KSDBHandler::saveDictionary(const QString &text, const QString &lang, bool create)
+bool KSDBHandler::saveDictionary(const QString &text, const QString &lang, const QString &type, bool create)
 {
   QString rawQuery;
-  QString type;
-  type.setNum(0);
   if(create)
   {
     rawQuery="BEGIN TRANSACTION; CREATE TABLE head ( lang INTEGER , type INTEGER , version TEXT ); CREATE TABLE media ( id INTEGER PRIMARY KEY AUTOINCREMENT , mime TEXT , data BLOB ); CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , modified INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT UNIQUE , search TEXT );";

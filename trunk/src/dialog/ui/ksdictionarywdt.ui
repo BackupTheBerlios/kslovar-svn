@@ -116,7 +116,7 @@
         </widget>
         <widget class="QLayoutWidget" row="0" column="0">
             <property name="name">
-                <cstring>layout5</cstring>
+                <cstring>layout3</cstring>
             </property>
             <hbox>
                 <property name="name">
@@ -136,6 +136,29 @@
                         <widget class="KLineEdit" row="0" column="0">
                             <property name="name">
                                 <cstring>nameEdit</cstring>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+                <widget class="QGroupBox">
+                    <property name="name">
+                        <cstring>groupBox4</cstring>
+                    </property>
+                    <property name="title">
+                        <string>Type</string>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="KComboBox" row="0" column="0">
+                            <item>
+                                <property name="text">
+                                    <string>Select type</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>typeSelect</cstring>
                             </property>
                         </widget>
                     </grid>
@@ -206,6 +229,7 @@
     <includehint>knuminput.h</includehint>
     <includehint>knuminput.h</includehint>
     <includehint>klineedit.h</includehint>
+    <includehint>kcombobox.h</includehint>
     <includehint>kcombobox.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>

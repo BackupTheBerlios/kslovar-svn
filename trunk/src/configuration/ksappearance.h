@@ -41,9 +41,12 @@ Q_OBJECT
     void populateStyleList();
 
     QString m_exampleDefault;
+    QString m_exampleTransitional;
 
     KHTMLPart *m_previewDefault;
     KSXSLHandler *m_defaultStyleParser;
+    KHTMLPart *m_previewTransitional;
+    KSXSLHandler *m_transitionalStyleParser;
 };
 
 #endif

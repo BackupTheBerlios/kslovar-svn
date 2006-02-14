@@ -28,6 +28,8 @@ typedef struct
 {
   QString explanation;
   QString example;
+  QString explanation2;
+  QString example2;
 }KSExplanation;
 
 /**
@@ -40,7 +42,7 @@ class KSXMLHandler : public QObject
     KSXMLHandler(const QString &XML=QString::null);
 
     QString readString(const QString &search);
-    QValueList<KSExplanation> readExplanation();
+    QValueList<KSExplanation> readExplanation(bool transitional = false);
     QStringList readStringList(const QString &search);
 
     void createNode(const QString &name);

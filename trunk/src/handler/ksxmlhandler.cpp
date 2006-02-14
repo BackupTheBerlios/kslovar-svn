@@ -51,7 +51,7 @@ QString KSXMLHandler::readString(const QString &search)
   return QString::null;
 }
 
-QValueList<KSExplanation> KSXMLHandler::readExplanation()
+QValueList<KSExplanation> KSXMLHandler::readExplanation(bool transitional)
 {
   QValueList<KSExplanation> output;
   for(QDomNode count=m_xmlDocument.firstChild().firstChild();!count.isNull();count=count.nextSibling())
@@ -70,6 +70,19 @@ QValueList<KSExplanation> KSXMLHandler::readExplanation()
         {
           temp.example=listing.toElement().text();
           continue;
+        }
+        if(transitional)
+        {
+          if(listing.nodeName()=="explanation2")
+          {
+            temp.explanation=listing.toElement().text();
+            continue;
+          }
+          if(listing.nodeName()=="example2")
+          {
+            temp.example=listing.toElement().text();
+            continue;
+          }
         }
       }
       output << temp;

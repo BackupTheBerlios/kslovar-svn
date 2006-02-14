@@ -61,7 +61,14 @@ KSPhrase::KSPhrase(QWidget *parent, QString caption)
 
 void KSPhrase::slotAddExplanation()
 {
-  new KListViewItem(m_mainWidget->explanationList, i18n("Type an explanation."), i18n("Type an example."));
+  if(!KSData::instance()->getType())
+  {
+    new KListViewItem(m_mainWidget->explanationList, i18n("Type an explanation."), i18n("Type an example."));
+  }
+  else
+  {
+    new KListViewItem(m_mainWidget->explanationList, i18n("Type an explanation for the first language."), i18n("Type an example for the first language."), i18n("Type an explanation for the second language."), i18n("Type an example for the second language."));
+  }
   slotModified();
 }
 
@@ -197,6 +204,9 @@ void KSPhrase::save()
 
   m_XMLHandler=new KSXMLHandler();
   m_XMLHandler->addString("word", m_mainWidget->wordEdit->text());
+
+  if(!KSData::instance()->getType())
+  {
   m_XMLHandler->addString("type", QString::number(KSData::instance()->getPartOfSpeechId(m_mainWidget->typeBox->currentText())));
 
   for(QListViewItem *count=m_mainWidget->explanationList->firstChild();count;count=count->nextSibling())
@@ -239,6 +249,19 @@ void KSPhrase::save()
     saveFamily << temp;
   }
 
+  }
+  else
+  {
+    for(QListViewItem *count=m_mainWidget->explanationList->firstChild();count;count=count->nextSibling())
+    {
+      m_XMLHandler->createNode("explanations");
+      m_XMLHandler->addChildString("explanation", count->text(0));
+      m_XMLHandler->addChildString("example", count->text(1));
+      m_XMLHandler->addChildString("explanation2", count->text(2));
+      m_XMLHandler->addChildString("example2", count->text(3));
+    }
+  }
+
   QString xml=m_XMLHandler->parse();
   if(m_edit==true)
   {
@@ -258,6 +281,8 @@ void KSPhrase::save()
     KSlovar::KSInstance()->openFile(KSData::instance()->getDictionaryPath());
   }
 
+  if(!KSData::instance()->getType())
+  {
   for(QValueList<KSElement>::iterator count=saveSynonyms.begin();count!=saveSynonyms.end();count++)
   {
     m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number((*count).id)+"';"));
@@ -299,6 +324,7 @@ void KSPhrase::save()
     m_XMLHandler->removeString("word-family", m_mainWidget->wordEdit->text());
     KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(*count)));
   }
+  }
 
   delete m_XMLHandler;
   m_XMLHandler=0;
@@ -334,6 +360,9 @@ void KSPhrase::setWord(QString text, QString id)
 
   m_XMLHandler=new KSXMLHandler(text);
   m_mainWidget->wordEdit->setText(m_XMLHandler->readString("word"));
+
+  if(!KSData::instance()->getType())
+  {
   m_mainWidget->typeBox->setCurrentItem(m_XMLHandler->readString("type").toInt()-1);
 
   QValueList<KSExplanation> explanations=m_XMLHandler->readExplanation();
@@ -383,9 +412,18 @@ void KSPhrase::setWord(QString text, QString id)
   delete m_mainWidget->availableSynonymList->findItem(m_mainWidget->wordEdit->text(), 0);
   delete m_mainWidget->availableAntonymList->findItem(m_mainWidget->wordEdit->text(), 0);
   delete m_mainWidget->availableFamilyList->findItem(m_mainWidget->wordEdit->text(), 0);
+  }
+  else
+  {
+    QValueList<KSExplanation> explanations=m_XMLHandler->readExplanation(true);
+    for(QValueList<KSExplanation>::iterator count=explanations.begin();count!=explanations.end();count++)
+    {
+      new KListViewItem(m_mainWidget->explanationList, (*count).explanation, (*count).example, (*count).explanation2, (*count).example2);
+    }
+  }
+
   delete m_XMLHandler;
   m_XMLHandler=0;
-
 }
 
 void KSPhrase::populatePartsOfSpeech()
@@ -400,9 +438,6 @@ void KSPhrase::initialize()
   m_mainWidget=new KSPhraseWdt(this);
   m_mainWidget->spellButton->setIconSet(icons->loadIconSet("spellcheck", KIcon::Toolbar));
   m_mainWidget->explanationList->setItemsRenameable(true);
-  m_mainWidget->explanationList->addColumn(i18n("Explanation"));
-  m_mainWidget->explanationList->addColumn(i18n("Example"));
-  m_mainWidget->explanationList->setRenameable(1);
 
   m_mainWidget->rightSynonymButton->setIconSet(icons->loadIconSet("forward", KIcon::Toolbar));
   m_mainWidget->leftSynonymButton->setIconSet(icons->loadIconSet("back", KIcon::Toolbar));
@@ -429,6 +464,45 @@ void KSPhrase::initialize()
   m_mainWidget->selectedFamilyList->addColumn("name");
 
   m_mainWidget->typeBox->insertStringList(KSData::instance()->getPartOfSpeech());
+
+  if(KSData::instance()->getType())
+  {
+    //Change the explanation list
+    m_mainWidget->explanationList->addColumn(i18n("Explanation one"));
+    m_mainWidget->explanationList->addColumn(i18n("Example one"));
+    m_mainWidget->explanationList->setRenameable(1);
+    m_mainWidget->explanationList->addColumn(i18n("Explanation two"));
+    m_mainWidget->explanationList->setRenameable(2);
+    m_mainWidget->explanationList->addColumn(i18n("Example two"));
+    m_mainWidget->explanationList->setRenameable(3);
+
+    //Disable synonyms
+    m_mainWidget->availableSynonymList->setDisabled(true);
+    m_mainWidget->selectedSynonymList->setDisabled(true);
+    m_mainWidget->rightSynonymButton->setDisabled(true);
+    m_mainWidget->leftSynonymButton->setDisabled(true);
+
+    //Disalbe anotnyms
+    m_mainWidget->availableAntonymList->setDisabled(true);
+    m_mainWidget->selectedAntonymList->setDisabled(true);
+    m_mainWidget->rightAntonymButton->setDisabled(true);
+    m_mainWidget->leftAntonymButton->setDisabled(true);
+
+    //Disable familys
+    m_mainWidget->availableFamilyList->setDisabled(true);
+    m_mainWidget->selectedFamilyList->setDisabled(true);
+    m_mainWidget->rightFamilyButton->setDisabled(true);
+    m_mainWidget->leftFamilyButton->setDisabled(true);
+
+    //Disable parts of speech
+    m_mainWidget->typeBox->setDisabled(true);
+  }
+  else
+  {
+    m_mainWidget->explanationList->addColumn(i18n("Explanation"));
+    m_mainWidget->explanationList->addColumn(i18n("Example"));
+    m_mainWidget->explanationList->setRenameable(1);
+  }
 }
 
 void KSPhrase::connectSlots()

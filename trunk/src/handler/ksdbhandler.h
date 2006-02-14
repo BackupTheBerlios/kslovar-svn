@@ -46,7 +46,7 @@ class KSDBHandler : public QObject
     /**
     * Desctructor that closes the connection
     */
-    bool saveDictionary(const QString &text, const QString &lang, bool create=true);
+    bool saveDictionary(const QString &text, const QString &lang, const QString &type, bool create=true);
     bool saveWord(const QString &word, const QString &text, bool add, const QString &id);
     static KSDBHandler *instance(const QString &path);
     bool processQuery(const QString &rawQuery);

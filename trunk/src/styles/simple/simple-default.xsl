@@ -8,7 +8,7 @@
         <p>
           <h2>{explanations-examples}</h2>
           <xsl:for-each select='explanations'>
-            <li><xsl:value-of select='explanation'/> <i><xsl:value-of select='example'/></i></li>
+            <li><xsl:value-of select='explanation'/>, <i><xsl:value-of select='example'/></i></li>
           </xsl:for-each>
         </p>
         <p>

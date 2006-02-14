@@ -157,7 +157,7 @@ patent issues. -->
 <title>Creating a dictionary with &kslovar;</title>
 <para>First click New dictionary button in File. Into the name field you type in the name of the dictionary. Then select a language,
 if your language is not present, then you can create it. Into First page field you describe your new dictionary. After filling the
-information, press enter and save the dictionary.</para>
+information, press enter and save the dictionary. You can create a transitional or default dictionarie. By selecting its type.</para>
 </sect1>
 
 <sect1 id="kslovar-editing-dict">

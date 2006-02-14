@@ -56,6 +56,9 @@ class KSData : public QObject
     void setLanguage(int id);
     int getLanguage();
 
+    void setType(int id);
+    int getType();
+
     void addLanguage(QString name, int id);
     QStringList getLanguagesNames();
     QString getLanguageId(QString name);
@@ -86,6 +89,7 @@ class KSData : public QObject
 
     QString m_dictionaryPath;
     int m_languageId;
+    int m_typeId;
     QValueList<KSElement> m_languages;
     QValueList<KSElement> m_partOfSpeech;
     QValueList<KSPhrases> m_phrases;

@@ -54,6 +54,10 @@ KSDictionary::KSDictionary(QWidget *parent, const char *caption, QString nameDic
 
   populateLanguages();
 
+  m_mainWidget->typeSelect->clear();
+  m_mainWidget->typeSelect->insertItem(i18n("Default"));
+  m_mainWidget->typeSelect->insertItem(i18n("Transitional"));
+
   m_mainWidget->boldButton->setIconSet(icons->loadIconSet("text_bold", KIcon::Toolbar));
   m_mainWidget->italicButton->setIconSet(icons->loadIconSet("text_italic", KIcon::Toolbar));
   m_mainWidget->underlineButton->setIconSet(icons->loadIconSet("text_under", KIcon::Toolbar));
@@ -167,9 +171,20 @@ bool KSDictionary::save()
   QString text="<h1>"+m_mainWidget->nameEdit->text()+"</h1>"+m_mainWidget->mainEdit->text();
   QString id=KSData::instance()->getLanguageId(m_mainWidget->languageSelect->currentText());
   QString lang=id;
+
+  QString type;
+  if(m_mainWidget->typeSelect->currentText() == i18n("Transitional"))
+  {
+    type.setNum(1);
+  }
+  else
+  {
+    type.setNum(0);
+  }
+
   if(m_edit)
   {
-    if(!KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveDictionary(text, lang, false))
+    if(!KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveDictionary(text, lang, type, false))
     {
       return false;
     }
@@ -194,7 +209,7 @@ bool KSDictionary::save()
         return false;
       }
     }
-    if(!KSDBHandler::instance(path)->saveDictionary(text, lang))
+    if(!KSDBHandler::instance(path)->saveDictionary(text, lang, type))
     {
       return false;
     }

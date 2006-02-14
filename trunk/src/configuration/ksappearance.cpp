@@ -54,9 +54,10 @@ KSAppearance::KSAppearance(QWidget *parent, const char *name)
   populateStyleList();
 
   m_exampleDefault="<?xml version='1.0' encoding='UTF-8'?><phrase><word>Example</word><type>noun</type><explanations><explanation>An example style for the default dictionary.</explanation><example>You could use this style!</example></explanations><explanations><explanation>Example of another explanation.</explanation><example>The second example is strange.</example></explanations><other><synonym id='1'>Explanation</synonym><antonym id='3'>Something?</antonym></other><other><synonym id='2'>Type</synonym></other></phrase>";
+  m_exampleTransitional = "<?xml version='1.0' encoding='UTF-8'?><!DOCTYPE default><phrase><word>Test</word><explanations><explanation>Type an explanation.</explanation><example>Type an example.</example><explanation2>Type an explanation.</explanation2><example2>Type an example.</example2></explanations></phrase>";
 
   m_defaultStyleParser=new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-default.xsl")));
-
+  m_transitionalStyleParser = new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-transitional.xsl")));
 
   QVBoxLayout *defaultStyleLayout=new QVBoxLayout(defaultStyle);
   m_previewDefault=new KHTMLPart(defaultStyle);
@@ -65,6 +66,14 @@ KSAppearance::KSAppearance(QWidget *parent, const char *name)
   m_previewDefault->write(m_defaultStyleParser->parse(m_exampleDefault));
   m_previewDefault->end();
   defaultStyleLayout->addWidget(m_previewDefault->view());
+
+  QVBoxLayout *transitionalStyleLayout=new QVBoxLayout(transitionalStyle);
+  m_previewTransitional=new KHTMLPart(transitionalStyle);
+  m_previewTransitional->setEncoding("utf-8");
+  m_previewTransitional->begin();
+  m_previewTransitional->write(m_transitionalStyleParser->parse(m_exampleTransitional));
+  m_previewTransitional->end();
+  transitionalStyleLayout->addWidget(m_previewTransitional->view());
 
 
   connect(styleList, SIGNAL(selectionChanged(QListViewItem*)), this, SLOT(slotSelectStyle(QListViewItem*)));
@@ -107,11 +116,16 @@ void KSAppearance::populateStyleList()
 
 void KSAppearance::slotSelectStyle(QListViewItem *selected)
 {
-  m_defaultStyleParser=new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+selected->text(0)+"/"+selected->text(0)+"-default.xsl")));
+  m_defaultStyleParser = new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+selected->text(0)+"/"+selected->text(0)+"-default.xsl")));
+  m_transitionalStyleParser = new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+selected->text(0)+"/"+selected->text(0)+"-transitional.xsl")));
 
   m_previewDefault->begin();
   m_previewDefault->write(m_defaultStyleParser->parse(m_exampleDefault));
   m_previewDefault->end();
+
+  m_previewTransitional->begin();
+  m_previewTransitional->write(m_transitionalStyleParser->parse(m_exampleTransitional));
+  m_previewTransitional->end();
 
   KSData::instance()->setStyle(selected->text(0));
   Configuration::setDictionaryStyle(selected->text(0));
@@ -127,6 +141,7 @@ void KSAppearance::slotCopyStyle()
     return;
   }
   KIO::copy(locate("appdata", "styles/"+styleList->selectedItem()->text(0)+"/"+styleList->selectedItem()->text(0)+"-default.xsl"), locateLocal("appdata", "styles/"+newName+"/"+newName+"-default.xsl"), false);
+  KIO::copy(locate("appdata", "styles/"+styleList->selectedItem()->text(0)+"/"+styleList->selectedItem()->text(0)+"-transitional.xsl"), locateLocal("appdata", "styles/"+newName+"/"+newName+"-transitional.xsl"), false);
 
   new KSListViewItem(styleList, newName);
 }
@@ -136,7 +151,7 @@ void KSAppearance::slotDeleteStyle()
   QString selectedStyle = styleList->selectedItem()->text(0);
   QString selectedStyleDir = locate("appdata", "styles/"+selectedStyle+"/");
 
-  if(!QFileInfo(selectedStyleDir+selectedStyle+"-default.xsl").isWritable()) //@TODO Dodat še drug tip slovarjev...
+  if(!QFileInfo(selectedStyleDir+selectedStyle+"-default.xsl").isWritable() || !QFileInfo(selectedStyleDir+selectedStyle+"-transitional.xsl").isWritable()) //@TODO Dodat še drug tip slovarjev...
   {
     KMessageBox::error(this, i18n("Cannot delete selected style!"));
     return;
@@ -151,13 +166,14 @@ void KSAppearance::slotEditStyle()
   QString selectedStyle = styleList->selectedItem()->text(0);
   QString selectedStyleDir = locate("appdata", "styles/"+selectedStyle+"/");
 
-  if(!QFileInfo(selectedStyleDir+selectedStyle+"-default.xsl").isWritable()) //@TODO Dodat še drug tip slovarjev...
+  if(!QFileInfo(selectedStyleDir+selectedStyle+"-default.xsl").isWritable() || !QFileInfo(selectedStyleDir+selectedStyle+"-transitional.xsl").isWritable()) //@TODO Dodat še drug tip slovarjev...
   {
     KMessageBox::error(this, i18n("Cannot edit selected style!"));
     return;
   }
 
   KRun::runURL(selectedStyleDir+selectedStyle+"-default.xsl", "text/plain");
+  KRun::runURL(selectedStyleDir+selectedStyle+"-transitional.xsl", "text/plain");
 }
 
 //#include "ksappearance.moc"

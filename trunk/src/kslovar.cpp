@@ -72,7 +72,7 @@ KSlovar::KSlovar()
 {
   KSlovar::m_instance=this;
   m_configDialog=new KSConfigDialog(this, "settings", Configuration::self());
-  XMLParser=new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-default.xsl")));
+  //XMLParser=new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-default.xsl")));
 
   if(Configuration::autoUpdateLanguage())
   {
@@ -116,7 +116,7 @@ KSlovar::KSlovar()
 
 void KSlovar::slotFileOpen()
 {
-  processFileOpen(KFileDialog::getOpenFileName("~", "*.ksd|KSlovar dictionary file", this));
+  processFileOpen(KFileDialog::getOpenFileName("/home", "*.ksd|KSlovar dictionary file", this));
 }
 
 void KSlovar::showDictionary()
@@ -526,6 +526,16 @@ void KSlovar::processFileOpen(QString fileName)
     m_backHistory.clear();
     KSData::instance()->setDictionaryPath(fileName);
     loadPartOfSpeech(KSDBHandler::instance(fileName)->processString("SELECT lang FROM head;").toInt());
+    int type = KSDBHandler::instance(fileName)->processString("SELECT type FROM head;").toInt();
+    KSData::instance()->setType(type);
+    if(!type)
+    {
+      XMLParser=new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-default.xsl")));
+    }
+    else
+    {
+      XMLParser=new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-transitional.xsl")));
+    }
 
     m_search->setListView(m_list);
     m_search->updateSearch();

@@ -200,6 +200,16 @@ bool KSData::literalSearch()
   return m_literalSearch;
 }
 
+void KSData::setType(int id)
+{
+  m_typeId = id;
+}
+
+int KSData::getType()
+{
+  return m_typeId;
+}
+
 KSData::~KSData()
 {
   if(m_instance==this)
