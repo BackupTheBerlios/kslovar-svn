@@ -26,8 +26,13 @@
 
 #include <kdebug.h>
 
-KSListViewSearchLine::KSListViewSearchLine(QWidget *parent, KSListView *listView, const char *name)
+/*KSListViewSearchLine::KSListViewSearchLine(QWidget *parent, KSListView *listView, const char *name)
   : KListViewSearchLine(parent, static_cast<KListView*> (listView), name)
+{
+}*/
+
+KSListViewSearchLine::KSListViewSearchLine(QWidget *parent, const char *name)
+  : KListViewSearchLine(parent, name)
 {
 }
 

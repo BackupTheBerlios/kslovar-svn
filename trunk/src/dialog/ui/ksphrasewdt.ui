@@ -291,35 +291,6 @@
                             </spacer>
                         </vbox>
                     </widget>
-                    <widget class="QLayoutWidget" row="0" column="0">
-                        <property name="name">
-                            <cstring>layout6</cstring>
-                        </property>
-                        <vbox>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="QLabel">
-                                <property name="name">
-                                    <cstring>availableLabel</cstring>
-                                </property>
-                                <property name="maximumSize">
-                                    <size>
-                                        <width>32767</width>
-                                        <height>20</height>
-                                    </size>
-                                </property>
-                                <property name="text">
-                                    <string>Available words</string>
-                                </property>
-                            </widget>
-                            <widget class="KSListView">
-                                <property name="name">
-                                    <cstring>availableSynonymList</cstring>
-                                </property>
-                            </widget>
-                        </vbox>
-                    </widget>
                     <widget class="QLayoutWidget" row="0" column="2">
                         <property name="name">
                             <cstring>layout7</cstring>
@@ -345,6 +316,46 @@
                             <widget class="KSListView">
                                 <property name="name">
                                     <cstring>selectedSynonymList</cstring>
+                                </property>
+                            </widget>
+                        </vbox>
+                    </widget>
+                    <widget class="QLayoutWidget" row="0" column="0">
+                        <property name="name">
+                            <cstring>layout11</cstring>
+                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLabel">
+                                <property name="name">
+                                    <cstring>availableLabel</cstring>
+                                </property>
+                                <property name="maximumSize">
+                                    <size>
+                                        <width>32767</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                                <property name="text">
+                                    <string>Available words</string>
+                                </property>
+                            </widget>
+                            <widget class="KSListViewSearchLine">
+                                <property name="name">
+                                    <cstring>synonymSearch</cstring>
+                                </property>
+                                <property name="maximumSize">
+                                    <size>
+                                        <width>32767</width>
+                                        <height>32</height>
+                                    </size>
+                                </property>
+                            </widget>
+                            <widget class="KSListView">
+                                <property name="name">
+                                    <cstring>availableSynonymList</cstring>
                                 </property>
                             </widget>
                         </vbox>
@@ -452,35 +463,6 @@
                             </spacer>
                         </vbox>
                     </widget>
-                    <widget class="QLayoutWidget" row="0" column="0">
-                        <property name="name">
-                            <cstring>layout4</cstring>
-                        </property>
-                        <vbox>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="QLabel">
-                                <property name="name">
-                                    <cstring>textLabel1</cstring>
-                                </property>
-                                <property name="maximumSize">
-                                    <size>
-                                        <width>32767</width>
-                                        <height>20</height>
-                                    </size>
-                                </property>
-                                <property name="text">
-                                    <string>Available words</string>
-                                </property>
-                            </widget>
-                            <widget class="KSListView">
-                                <property name="name">
-                                    <cstring>availableAntonymList</cstring>
-                                </property>
-                            </widget>
-                        </vbox>
-                    </widget>
                     <widget class="QLayoutWidget" row="0" column="2">
                         <property name="name">
                             <cstring>layout5</cstring>
@@ -506,6 +488,46 @@
                             <widget class="KSListView">
                                 <property name="name">
                                     <cstring>selectedAntonymList</cstring>
+                                </property>
+                            </widget>
+                        </vbox>
+                    </widget>
+                    <widget class="QLayoutWidget" row="0" column="0">
+                        <property name="name">
+                            <cstring>layout12</cstring>
+                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLabel">
+                                <property name="name">
+                                    <cstring>textLabel1</cstring>
+                                </property>
+                                <property name="maximumSize">
+                                    <size>
+                                        <width>32767</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                                <property name="text">
+                                    <string>Available words</string>
+                                </property>
+                            </widget>
+                            <widget class="KSListViewSearchLine">
+                                <property name="name">
+                                    <cstring>antonymSearch</cstring>
+                                </property>
+                                <property name="maximumSize">
+                                    <size>
+                                        <width>32767</width>
+                                        <height>32</height>
+                                    </size>
+                                </property>
+                            </widget>
+                            <widget class="KSListView">
+                                <property name="name">
+                                    <cstring>availableAntonymList</cstring>
                                 </property>
                             </widget>
                         </vbox>
@@ -638,7 +660,7 @@
                     </widget>
                     <widget class="QLayoutWidget" row="0" column="0">
                         <property name="name">
-                            <cstring>layout15</cstring>
+                            <cstring>layout13</cstring>
                         </property>
                         <vbox>
                             <property name="name">
@@ -656,6 +678,17 @@
                                 </property>
                                 <property name="text">
                                     <string>Available words</string>
+                                </property>
+                            </widget>
+                            <widget class="KSListViewSearchLine">
+                                <property name="name">
+                                    <cstring>familySearch</cstring>
+                                </property>
+                                <property name="maximumSize">
+                                    <size>
+                                        <width>32767</width>
+                                        <height>32</height>
+                                    </size>
                                 </property>
                             </widget>
                             <widget class="KSListView">
@@ -687,6 +720,22 @@
         </sizepolicy>
         <pixmap>image0</pixmap>
     </customwidget>
+    <customwidget>
+        <class>KSListViewSearchLine</class>
+        <header location="global">../../misc/widget/kslistviewsearchline.h</header>
+        <sizehint>
+            <width>-1</width>
+            <height>-1</height>
+        </sizehint>
+        <container>0</container>
+        <sizepolicy>
+            <hordata>5</hordata>
+            <verdata>5</verdata>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+        <pixmap>image0</pixmap>
+    </customwidget>
 </customwidgets>
 <images>
     <image name="image0">
@@ -704,12 +753,15 @@
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kslistview.h</includehint>
+    <includehint>kslistviewsearchline.h</includehint>
     <includehint>kslistview.h</includehint>
     <includehint>kslistview.h</includehint>
+    <includehint>kslistviewsearchline.h</includehint>
     <includehint>kslistview.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kslistview.h</includehint>
+    <includehint>kslistviewsearchline.h</includehint>
     <includehint>kslistview.h</includehint>
 </includehints>
 </UI>

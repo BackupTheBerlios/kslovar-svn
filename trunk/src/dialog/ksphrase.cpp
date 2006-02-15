@@ -29,6 +29,7 @@
 
 #include "../misc/widget/kslistview.h"
 #include "../misc/widget/kslistviewitem.h"
+#include "../misc/widget/kslistviewsearchline.h"
 
 #include "../misc/ksdata.h"
 
@@ -502,6 +503,11 @@ void KSPhrase::initialize()
     m_mainWidget->explanationList->addColumn(i18n("Explanation"));
     m_mainWidget->explanationList->addColumn(i18n("Example"));
     m_mainWidget->explanationList->setRenameable(1);
+
+    //Connect search lines
+    m_mainWidget->synonymSearch->setListView(m_mainWidget->availableSynonymList);
+    m_mainWidget->antonymSearch->setListView(m_mainWidget->availableAntonymList);
+    m_mainWidget->familySearch->setListView(m_mainWidget->availableFamilyList);
   }
 }
 

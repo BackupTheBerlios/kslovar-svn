@@ -32,7 +32,8 @@ class KSListViewSearchLine : public KListViewSearchLine
 {
   Q_OBJECT
   public:
-    KSListViewSearchLine(QWidget *parent = 0, KSListView *listView=0, const char *name = 0);
+    //KSListViewSearchLine(QWidget *parent = 0, KSListView *listView=0, const char *name = 0);
+    KSListViewSearchLine(QWidget *parent = 0, const char *name = 0);
 
     ~KSListViewSearchLine();
 

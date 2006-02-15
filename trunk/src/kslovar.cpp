@@ -116,7 +116,7 @@ KSlovar::KSlovar()
 
 void KSlovar::slotFileOpen()
 {
-  processFileOpen(KFileDialog::getOpenFileName("/home", "*.ksd|KSlovar dictionary file", this));
+  processFileOpen(KFileDialog::getOpenFileName(":dictionary", "*.ksd|KSlovar dictionary file", this));
 }
 
 void KSlovar::showDictionary()
