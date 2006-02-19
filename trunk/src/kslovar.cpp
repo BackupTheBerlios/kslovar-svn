@@ -78,7 +78,10 @@ KSlovar::KSlovar()
   {
     slotDownloadLanguage();
   }
-  loadLanguages();
+  else
+  {
+    loadLanguages();
+  }
 
   m_welcomeMessage=i18n("<h1>Welcome to KSlovar</h1> This needs to be changed :).");
 
