@@ -24,7 +24,7 @@
 #include "dialog/ksdictionary.h"
 #include "dialog/ksphrase.h"
 #include "dialog/ksconversion.h"
-
+#include "dialog/ksupgrademanager.h"
 
 #include "configuration/ksappearance.h"
 #include "configuration/ui/ksbehaviourwdt.h"
@@ -612,7 +612,7 @@ KSlovar *KSlovar::KSInstance()
 }
 
 void KSlovar::slotDownloadLanguage()
-{
+{/*
   QString localVersion = "000", remoteVersion = "000";
   QString versionFile = locateLocal("appdata", "version");
   QString languageFile = locateLocal("appdata", "languages.ksl", false);
@@ -640,7 +640,9 @@ void KSlovar::slotDownloadLanguage()
   {
     KIO::NetAccess::download("ftp://ftp.berlios.de/pub/kslovar/languages.ksl", languageFile, this);
     loadLanguages();
-  }
+}*/
+  KSUpgradeManager *upgradeManager = new KSUpgradeManager(this, i18n("Upgrade"));
+  upgradeManager->show();
 }
 
 void KSlovar::slotToggleLiteral()

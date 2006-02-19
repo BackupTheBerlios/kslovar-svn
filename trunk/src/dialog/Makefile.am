@@ -3,8 +3,9 @@ METASOURCES = AUTO
 noinst_LTLIBRARIES = libdialog.la
 
 libdialog_la_SOURCES = ksphrase.cpp ksdictionary.cpp kslanguage.cpp \
-	ksconversion.cpp
-noinst_HEADERS = ksphrase.h ksdictionary.h kslanguage.h ksconversion.h
+		ksconversion.cpp ksupgrademanager.cpp
+noinst_HEADERS = ksphrase.h ksdictionary.h kslanguage.h ksconversion.h \
+	ksupgrademanager.h
 
 SUBDIRS= ui
 
