@@ -39,7 +39,7 @@
                             <cstring>groupBox3</cstring>
                         </property>
                         <property name="title">
-                            <string>Auto update</string>
+                            <string>Upgrade manager</string>
                         </property>
                         <grid>
                             <property name="name">
@@ -50,7 +50,7 @@
                                     <cstring>kcfg_AutoUpdateLanguage</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>&amp;Update languages database at startup</string>
+                                    <string>Run &amp;upgrade manager at start</string>
                                 </property>
                                 <property name="accel">
                                     <string>Alt+U</string>

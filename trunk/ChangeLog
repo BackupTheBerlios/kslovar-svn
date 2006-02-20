@@ -16,6 +16,7 @@ Features:
 -Added search into synonyms, antonyms and word family tabs in add phrase dialog.
 -Added Upgrade manager
 -Added languages checker. (informs you, if there is no languages file...)
+-Added first time wizard
 
 Eye candy:
 -Stylish splash screen ;)

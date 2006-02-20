@@ -1,10 +1,11 @@
 INCLUDES = $(all_includes)
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libconfiguration.la
-libconfiguration_la_SOURCES = configuration.kcfgc ksappearance.cpp ksconfigdialog.cpp
+libconfiguration_la_SOURCES = configuration.kcfgc ksappearance.cpp \
+	ksconfigdialog.cpp kswizard.cpp
 
 kde_kcfg_DATA = kslovar.kcfg
-noinst_HEADERS = ksconfigdialog.h ksappearance.h
+noinst_HEADERS = ksconfigdialog.h ksappearance.h kswizard.h
 
 SUBDIRS= ui
 

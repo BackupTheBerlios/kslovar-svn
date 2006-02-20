@@ -122,6 +122,7 @@ private slots:
   void slotConversionTable();
   void slotDownloadLanguage();
   void slotToggleLiteral();
+  void slotFirstRunWizard();
 
 private:
   /**
@@ -172,6 +173,7 @@ private:
   KAction *m_config;
   KAction *m_conversion;
   KAction *m_update;
+  KAction *m_wizard;
 
   KSXSLHandler *XMLParser;
 

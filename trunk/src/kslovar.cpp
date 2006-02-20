@@ -29,6 +29,7 @@
 #include "configuration/ksappearance.h"
 #include "configuration/ui/ksbehaviourwdt.h"
 #include "configuration/ksconfigdialog.h"
+#include "configuration/kswizard.h"
 
 #include "handler/ksdbhandler.h"
 #include "handler/ksxslhandler.h"
@@ -75,13 +76,20 @@ KSlovar::KSlovar()
   m_configDialog=new KSConfigDialog(this, "settings", Configuration::self());
   //XMLParser=new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-default.xsl")));
 
-  if(Configuration::autoUpdateLanguage())
+  if(!QFile::exists(locateLocal("config", "kslovarrc", false)))
   {
-    slotDownloadLanguage();
+    slotFirstRunWizard();
   }
   else
   {
-    loadLanguages();
+    if(Configuration::autoUpdateLanguage())
+    {
+      slotDownloadLanguage();
+    }
+    else
+    {
+      loadLanguages();
+    }
   }
 
   m_welcomeMessage=i18n("<h1>Welcome to KSlovar</h1> This needs to be changed :).");
@@ -314,6 +322,7 @@ void KSlovar::registerButtons()
   m_config = KStdAction::preferences(this, SLOT(slotConfigure()), actionCollection());
   m_conversion = new KAction(i18n("Edit &conversion table"), "conversion", this, SLOT(slotConversionTable()), actionCollection(), "editConversion");
   m_update = new KAction(i18n("Update &languages"), "ktalkd", KShortcut(KKey("")), this, SLOT(slotDownloadLanguage()), actionCollection(), "updateLanguages");
+  m_wizard = new KAction(i18n("Run &First-time wizard"), "wizard", KShortcut(KKey("")), this, SLOT(slotFirstRunWizard()), actionCollection(), "firstRunWizard");
 }
 
 void KSlovar::addMenu()
@@ -348,8 +357,9 @@ void KSlovar::addMenu()
   m_config->plug(setmenu);
   m_conversion->plug(setmenu);
   m_update->plug(setmenu);
+  m_wizard->plug(setmenu);
 
-  KPopupMenu *help = helpMenu( );
+  KPopupMenu *help = helpMenu();
 
   KMenuBar * menu = menuBar();
   menu->insertItem( i18n( "&File" ), filemenu );
@@ -667,6 +677,12 @@ void KSlovar::slotDownloadLanguage()
 void KSlovar::slotToggleLiteral()
 {
   KSData::instance()->setLiteralSearch(m_literalSearch->isChecked());
+}
+
+void KSlovar::slotFirstRunWizard()
+{
+  KSWizard *firstRun = new KSWizard(this, "firstRunWizard");
+  firstRun->show();
 }
 
 KSlovar::~KSlovar()
