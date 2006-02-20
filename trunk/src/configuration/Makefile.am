@@ -7,7 +7,7 @@ libconfiguration_la_SOURCES = configuration.kcfgc ksappearance.cpp \
 kde_kcfg_DATA = kslovar.kcfg
 noinst_HEADERS = ksconfigdialog.h ksappearance.h kswizard.h
 
-SUBDIRS= ui
+SUBDIRS = ui
 
 
 libconfiguration_la_LDFLAGS = $(all_libraries)

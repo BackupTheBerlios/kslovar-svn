@@ -20,7 +20,7 @@
 #ifndef KSWIZARD_H
 #define KSWIZARD_H
 
-#include "configuration/ui/kswizardwzt.h"
+#include "ui/kswizardwzt.h"
 
 namespace KIO
 {

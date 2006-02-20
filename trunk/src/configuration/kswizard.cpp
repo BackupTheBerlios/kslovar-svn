@@ -40,6 +40,7 @@
 KSWizard::KSWizard(QWidget *parent, const char *name)
     :KSWizardWzt(parent, name)
 {
+  locateLocal("appdata", "");
   m_downloadProgress->setShown(false);
   m_downloadLabel->setShown(false);
   setFinishEnabled(finish, true);

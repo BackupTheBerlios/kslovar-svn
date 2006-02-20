@@ -1,5 +1,5 @@
 # set the include path for X, qt and KDE
-INCLUDES = $(all_includes)
+INCLUDES = -I$(top_srcdir)/src/configuration $(all_includes)
 
 # these are the headers for your project
 noinst_HEADERS = kslovar.h

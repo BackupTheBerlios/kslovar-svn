@@ -20,7 +20,7 @@
 #ifndef APPERANCESRC_H
 #define APPERANCESRC_H
 
-#include "configuration/ui/ksappearancewdt.h"
+#include "ui/ksappearancewdt.h"
 
 class QListViewItem;
 class KHTMLPart;

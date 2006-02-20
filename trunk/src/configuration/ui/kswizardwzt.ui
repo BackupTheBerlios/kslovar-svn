@@ -60,7 +60,7 @@
                     </sizepolicy>
                 </property>
                 <property name="text">
-                    <string>For KSlovar to work properly, you need langagues.ksl file! You can download it, or the Wizard could make you a template, so you could make your own languages.ksl.&lt;br&gt;
+                    <string>For KSlovar to work properly, you need langagues.ksl file! You can download it, or the Wizard could make you a template, so you could make your own languages.ksl. Languages.ksl is used for defining which parts of speech a certain language has.&lt;br&gt;
 &lt;br&gt;
 Languages.ksl file is located in ~/.kde/share/apps/kslovar</string>
                 </property>
@@ -146,7 +146,7 @@ Languages.ksl file is located in ~/.kde/share/apps/kslovar</string>
                                     <cstring>m_remoteLanguages</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Download lang&amp;uages.ksl from the Internet *RECOMMENDED*</string>
+                                    <string>Download lang&amp;uages.ksl from the Internet</string>
                                 </property>
                                 <property name="accel">
                                     <string>Alt+U</string>
@@ -160,7 +160,7 @@ Languages.ksl file is located in ~/.kde/share/apps/kslovar</string>
                                     <cstring>kActiveLabel4</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Download already made languages.ksl file.</string>
+                                    <string>Download already made languages.ksl file. &lt;b&gt;*RECOMMENDED*&lt;/b&gt;</string>
                                 </property>
                             </widget>
                         </vbox>
