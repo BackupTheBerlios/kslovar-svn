@@ -14,6 +14,8 @@ Features:
 -Removed See also from dictionary format
 -Added a new type of dictionaries. Transitional dictionaries!
 -Added search into synonyms, antonyms and word family tabs in add phrase dialog.
+-Added Upgrade manager
+-Added languages checker. (informs you, if there is no languages file...)
 
 Eye candy:
 -Stylish splash screen ;)

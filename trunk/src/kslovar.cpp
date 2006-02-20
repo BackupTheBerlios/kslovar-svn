@@ -43,6 +43,7 @@
 #include <qvbox.h>
 #include <qhbox.h>
 #include <qpopupmenu.h>
+#include <qfile.h>
 
 #include <kpopupmenu.h>
 #include <kmenubar.h>
@@ -547,7 +548,22 @@ void KSlovar::processFileOpen(QString fileName)
 
 void KSlovar::loadLanguages()
 {
-  QStringList input=KSDBHandler::instance(QString::fromUtf8(locateLocal("appdata", "languages.ksl")))->processList("SELECT id, name FROM language;", 2);
+  if(!QFile::exists(locateLocal("appdata", "languages.ksl", false))) //Check if Languages.ksl exists. If not, run the upgrade manager to download it.
+  {
+    if(QFile::exists(locateLocal("appdata", "languages.ksl", false)+"~")) //Check if Languages.ksl exists. If not, run the upgrade manager to download it.
+    {
+      KIO::move(KURL(locateLocal("appdata", "languages.ksl", false)+"~"), KURL(locateLocal("appdata", "languages.ksl", false)), false)->setInteractive(false);
+      KIO::del(KURL(locateLocal("appdata", "version", false)), false, false)->setInteractive(false);
+      KMessageBox::information(this, i18n("Could not find languages.ksl. But found it's backup and using it."));
+    }
+    else
+    {
+      KIO::del(KURL(locateLocal("appdata", "version", false)), false, false)->setInteractive(false);
+      KMessageBox::error(this, i18n("Could not find languages.ksl. Run Upgrade manager to download it.\n\nIf you do not have any internet connection, you can download it from http://kslovar.berlios.de/languages.ksl and put it into ~/.kde/share/apps/kslovar/."));
+      return;
+    }
+  }
+  QStringList input=KSDBHandler::instance(QString::fromUtf8(locateLocal("appdata", "languages.ksl", false)))->processList("SELECT id, name FROM language;", 2);
   if(!input.isEmpty())
   {
     QString id, name;
@@ -565,7 +581,7 @@ void KSlovar::loadLanguages()
   }
 
   input.clear();
-  input=KSDBHandler::instance(QString::fromUtf8(locateLocal("appdata", "languages.ksl")))->processList("SELECT fromc, toc FROM conversion_table;", 2);
+  input=KSDBHandler::instance(QString::fromUtf8(locateLocal("appdata", "languages.ksl", false)))->processList("SELECT fromc, toc FROM conversion_table;", 2);
   if(!input.isEmpty())
   {
     QChar from, to;
@@ -582,7 +598,7 @@ void KSlovar::loadPartOfSpeech(int id)
 {
   KSData::instance()->clearPartOfSpeech();
   KSData::instance()->setLanguage(id);
-  QStringList input=KSDBHandler::instance(QString::fromUtf8(locate("appdata", "languages.ksl")))->processList("SELECT id, name FROM type WHERE id_lang='"+QString::number(id)+"';", 2);
+  QStringList input=KSDBHandler::instance(QString::fromUtf8(locate("appdata", "languages.ksl", false)))->processList("SELECT id, name FROM type WHERE id_lang='"+QString::number(id)+"';", 2);
   if(!input.isEmpty())
   {
     QString id, name;
