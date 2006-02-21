@@ -536,7 +536,7 @@ void KSlovar::processFileOpen(QString fileName)
     m_close->setEnabled(true);
     m_addPhrase->setEnabled(true);
 
-    slotHome();
+
     m_backHistory.clear();
     KSData::instance()->setDictionaryPath(fileName);
     loadPartOfSpeech(KSDBHandler::instance(fileName)->processString("SELECT lang FROM head;").toInt());
@@ -553,6 +553,7 @@ void KSlovar::processFileOpen(QString fileName)
 
     m_search->setListView(m_list);
     m_search->updateSearch();
+    slotHome();
   }
 }
 
@@ -608,7 +609,7 @@ void KSlovar::loadPartOfSpeech(int id)
 {
   KSData::instance()->clearPartOfSpeech();
   KSData::instance()->setLanguage(id);
-  QStringList input=KSDBHandler::instance(QString::fromUtf8(locate("appdata", "languages.ksl", false)))->processList("SELECT id, name FROM type WHERE id_lang='"+QString::number(id)+"';", 2);
+  QStringList input=KSDBHandler::instance(QString::fromUtf8(locateLocal("appdata", "languages.ksl", false)))->processList("SELECT id, name FROM type WHERE id_lang='"+QString::number(id)+"';", 2);
   if(!input.isEmpty())
   {
     QString id, name;

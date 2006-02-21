@@ -4,6 +4,7 @@ Bugfixes:
 -Fixed duplicated languages after adding new language
 -Fixed in creating new dictionaries
 -Language is immediatly added to the list of languages in dictionary creation dialog
+-Fixed sqlite crash on amd64
 
 Features:
 -Autoupdate languages

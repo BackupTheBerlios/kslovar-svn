@@ -57,6 +57,7 @@ KSDictionary::KSDictionary(QWidget *parent, const char *caption, QString nameDic
   m_mainWidget->typeSelect->clear();
   m_mainWidget->typeSelect->insertItem(i18n("Default"));
   m_mainWidget->typeSelect->insertItem(i18n("Transitional"));
+  m_mainWidget->typeSelect->setCurrentItem(KSData::instance()->getType());
 
   m_mainWidget->boldButton->setIconSet(icons->loadIconSet("text_bold", KIcon::Toolbar));
   m_mainWidget->italicButton->setIconSet(icons->loadIconSet("text_italic", KIcon::Toolbar));
