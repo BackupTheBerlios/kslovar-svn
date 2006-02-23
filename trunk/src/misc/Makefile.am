@@ -2,8 +2,8 @@ INCLUDES = $(all_includes)
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libmisc.la
 
-libmisc_la_SOURCES = ksdata.cpp
-noinst_HEADERS = ksdata.h
+libmisc_la_SOURCES = ksdata.cpp ksquery.cpp
+noinst_HEADERS = ksdata.h ksquery.h
 
 
 SUBDIRS= widget

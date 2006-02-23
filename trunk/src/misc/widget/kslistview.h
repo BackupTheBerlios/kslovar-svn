@@ -22,12 +22,18 @@
 
 #include <klistview.h>
 
+class QCustomEvent;
+
 /**
 @author Gregor Kališnik
 */
 class KSListView : public KListView
 {
   Q_OBJECT
+
+  signals:
+    void recievedPackage(bool found, bool completed);
+
   public:
   KSListView(QWidget *parent=0, const char *name=0);
 
@@ -36,6 +42,7 @@ class KSListView : public KListView
   protected:
 
     virtual bool eventFilter(QObject *o, QEvent *e);
+    virtual void customEvent(QCustomEvent *package);
 
   private slots:
     void slotUpdateConfiguration();

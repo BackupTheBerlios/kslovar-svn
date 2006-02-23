@@ -19,13 +19,19 @@
  ***************************************************************************/
 #include "kslistview.h"
 
+#include "kslistviewitem.h"
+
 #include "../../configuration/configuration.h"
 #include "../../configuration/ksconfigdialog.h"
 
 #include "../../kslovar.h"
 
+#include "../../handler/ksoutputhandler.h"
+
 #include <qtimer.h>
 #include <qheader.h>
+
+#include <klocale.h>
 
 KSListView::KSListView(QWidget *parent, const char *name) : KListView(parent, name), mouseConfig(Configuration::mouseNavigation())
 {
@@ -66,6 +72,36 @@ void KSListView::slotUpdateConfiguration()
   else
   {
     setVScrollBarMode(AlwaysOn);
+  }
+}
+
+void KSListView::customEvent(QCustomEvent *package)
+{
+  if(package->type() == LIST)
+  {
+    if(!this->isEnabled())
+    {
+      this->clear();
+      this->setDisabled(false);
+    }
+
+    emit recievedPackage(true, false);
+    KSOutputHandler *input = static_cast<KSOutputHandler*> (package);
+    new KSListViewItem(this, input->getName(), input->getId(), input->getSearch());
+  }
+  if(package->type() == CLEAR)
+  {
+    emit recievedPackage(false, false);
+    this->clear();
+    new KSListViewItem(this, i18n("Search in progress..."));
+    this->setDisabled(true);
+  }
+  if(package->type() == NORESULT)
+  {
+    emit recievedPackage(false, true);
+    this->clear();
+    new KSListViewItem(this, i18n("No words found."));
+    this->setDisabled(true);
   }
 }
 

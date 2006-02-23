@@ -38,6 +38,10 @@ typedef struct
   QString search;
 }KSPhrases;
 
+class KSListView;
+class KSListViewItem;
+class KSDBHandler;
+
 
 /**
 	@author Gregor Kališnik <gregor@podnapisi.net>
@@ -53,8 +57,13 @@ class KSData : public QObject
     void setDictionaryPath(QString path);
     QString getDictionaryPath();
 
+    void setDictionary(KSDBHandler *dictionaryHandler);
+    KSDBHandler *getDictionary();
+
     void setLanguage(int id);
     int getLanguage();
+    void setLanguageHandler(KSDBHandler *languageHandler);
+    KSDBHandler *getLanguageHandler();
 
     void setType(int id);
     int getType();
@@ -69,9 +78,12 @@ class KSData : public QObject
     int getPartOfSpeechId(QString name);
     void clearPartOfSpeech();
 
-    void addPhrase(int id, QString name, QString search);
+    void addPhrase(int id, const QString &name, const QString &search);
     QValueList<KSPhrases> getPhrases();
     void clearPhrases();
+
+    void setMainList(KSListView *list);
+    KSListView *getMainList();
 
     void addConversion(const QChar &from, const QChar &to);
     QMap<QChar, QChar> getConvertTable();
@@ -88,11 +100,14 @@ class KSData : public QObject
     static KSData *m_instance;
 
     QString m_dictionaryPath;
+    KSDBHandler *m_dictionaryHandler;
     int m_languageId;
+    KSDBHandler *m_languageHandler;
     int m_typeId;
     QValueList<KSElement> m_languages;
     QValueList<KSElement> m_partOfSpeech;
     QValueList<KSPhrases> m_phrases;
+    KSListView *m_mainList;
     QString m_selectedStyle;
     QMap<QChar, QChar> m_convertTable;
     bool m_literalSearch;

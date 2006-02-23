@@ -24,6 +24,8 @@
 #include "../misc/widget/kslistview.h"
 #include "../misc/widget/kslistviewitem.h"
 
+#include "../misc/ksdata.h"
+
 #include "../handler/ksdbhandler.h"
 
 #include "../kslovar.h"
@@ -56,7 +58,7 @@ KSConversion::KSConversion(QWidget *parent, const char *name)
 
 void KSConversion::slotAddConversion()
 {
-  if(!KSDBHandler::instance(locate("appdata", "languages.ksl"))->processQuery("INSERT INTO conversion_table (fromc, toc) VALUES ('"+i18n("From character")+"', '"+i18n("To character")+"');"))
+  if(!KSData::instance()->getLanguageHandler()->processQuery("INSERT INTO conversion_table (fromc, toc) VALUES ('"+i18n("From character")+"', '"+i18n("To character")+"');"))
   {
     KMessageBox::error(this, i18n("Error saving conversion!"));
     return;
@@ -66,7 +68,7 @@ void KSConversion::slotAddConversion()
 
 void KSConversion::slotDeleteConversion()
 {
-  if(!KSDBHandler::instance(locate("appdata", "languages.ksl"))->processQuery("DELETE FROM conversion_table WHERE fromc='"+m_mainWidget->conversionList->selectedItem()->text(0)+"';"))
+  if(!KSData::instance()->getLanguageHandler()->processQuery("DELETE FROM conversion_table WHERE fromc='"+m_mainWidget->conversionList->selectedItem()->text(0)+"';"))
   {
     KMessageBox::error(this, i18n("Error removing conversion!"));
     return;
@@ -79,14 +81,14 @@ void KSConversion::slotSave(QListViewItem*, const QString &text, int col)
   QListViewItem *item = m_mainWidget->conversionList->selectedItem();
   if(!col)
   {
-    if(!KSDBHandler::instance(locate("appdata", "languages.ksl"))->processQuery("UPDATE conversion_table SET fromc='"+text+"' WHERE toc='"+item->text(1)+"';"))
+    if(!KSData::instance()->getLanguageHandler()->processQuery("UPDATE conversion_table SET fromc='"+text+"' WHERE toc='"+item->text(1)+"';"))
     {
       KMessageBox::error(this, i18n("Error saving conversion!"));
     }
   }
   else
   {
-    if(!KSDBHandler::instance(locate("appdata", "languages.ksl"))->processQuery("UPDATE conversion_table SET toc='"+text+"' WHERE fromc='"+item->text(0)+"';"))
+    if(!KSData::instance()->getLanguageHandler()->processQuery("UPDATE conversion_table SET toc='"+text+"' WHERE fromc='"+item->text(0)+"';"))
     {
       KMessageBox::error(this, i18n("Error saving conversion!"));
     }
@@ -95,7 +97,7 @@ void KSConversion::slotSave(QListViewItem*, const QString &text, int col)
 
 void KSConversion::populateConversionList()
 {
-  QStringList conversionTable = KSDBHandler::instance(locate("appdata", "languages.ksl"))->processList("SELECT fromc, toc FROM conversion_table;", 2);
+  QStringList conversionTable = KSData::instance()->getLanguageHandler()->processList("SELECT fromc, toc FROM conversion_table;", 2);
   for(QStringList::iterator count = conversionTable.begin(); count != conversionTable.end(); count++)
   {
     QString fromc = *count;

@@ -14,10 +14,17 @@ Features:
 -Added Synonyms, Antonyms and Word families into dictionary format
 -Removed See also from dictionary format
 -Added a new type of dictionaries. Transitional dictionaries!
--Added search into synonyms, antonyms and word family tabs in add phrase dialog.
+-Added search into synonyms, antonyms and word family tabs in add phrase dialog. (*curently disabled*)
 -Added Upgrade manager
 -Added languages checker. (informs you, if there is no languages file...)
 -Added first time wizard
 
 Eye candy:
 -Stylish splash screen ;)
+
+Major internal changes
+-Rewritten KSDBHandler to become a threaded class (*not completed*) (for better handling BIG dictionaries)
+-Added KSQuery for sending Database requests to the new KSDBHandler
+-Added KSOutputHandler to recieve data from the new KSDBHandler
+-Added KSSearchLine for better integration with the new KSDBHandler
+-Removed phrases from KSData (takes WAY too much memory)

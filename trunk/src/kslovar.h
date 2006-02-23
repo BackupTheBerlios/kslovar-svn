@@ -29,14 +29,11 @@
 #include <kmainwindow.h>
 #include <kurl.h>
 #include <kparts/browserextension.h>
-//#include <klistview.h>
 
 class KListBox;
 class KHTMLPart;
 class QSplitter;
 class KSDBHandler;
-class KProgressDialog;
-class KProgress;
 class KSDictionary;
 class KAction;
 class KToggleAction;
@@ -44,11 +41,13 @@ class KSPhrase;
 class KListView;
 class QListViewItem;
 class KSListView;
-class KListViewSearchLine;
+// class KSListViewSearchLine;
+class KSSearchLine;
 class KSListViewItem;
 class KSConfigDialog;
 class QPopupmenu;
 class KStatusBar;
+class QEvent;
 
 
 class KSXSLHandler;
@@ -79,6 +78,10 @@ public:
      * Default Destructor
      */
     virtual ~KSlovar();
+
+  protected:
+    bool eventFilter(QObject *object, QEvent *event);
+    void customEvent(QCustomEvent *package);
 
 private slots:
   /**
@@ -123,6 +126,7 @@ private slots:
   void slotDownloadLanguage();
   void slotToggleLiteral();
   void slotFirstRunWizard();
+  void slotCountPackages(bool found, bool completed);
 
 private:
   /**
@@ -138,12 +142,11 @@ private:
   QValueList<int>::iterator m_itForward;
 
 
-  KListViewSearchLine *m_search;
+//   KSListViewSearchLine *m_search;
+  KSSearchLine *m_search;
   KSListView *m_list;
   KHTMLPart *m_browser;
   QSplitter *m_split;
-  KProgressDialog *m_progress;
-  KProgress *m_progressBar;
   KSDictionary *m_dictionarydlg;
   KSPhrase *m_phrasedlg;
   QString m_welcomeMessage;
@@ -151,6 +154,8 @@ private:
   bool m_history;
   KSConfigDialog *m_configDialog;
   QPopupMenu *m_listPopup;
+  KStatusBar *m_statusBar;
+  unsigned int m_recievedPackages;
 
   static KSlovar *m_instance;
 

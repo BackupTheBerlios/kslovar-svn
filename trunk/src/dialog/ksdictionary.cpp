@@ -185,7 +185,7 @@ bool KSDictionary::save()
 
   if(m_edit)
   {
-    if(!KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveDictionary(text, lang, type, false))
+    if(!KSData::instance()->getDictionary()->saveDictionary(text, lang, type, false))
     {
       return false;
     }
@@ -210,11 +210,12 @@ bool KSDictionary::save()
         return false;
       }
     }
-    if(!KSDBHandler::instance(path)->saveDictionary(text, lang, type))
+    KSDBHandler *temp = new KSDBHandler(path);
+    if(!temp->saveDictionary(text, lang, type))
     {
       return false;
     }
-    KSData::instance()->setDictionaryPath(path);
+    delete temp;
     m_edit=true;
     KSlovar::KSInstance()->openFile(path);
   }

@@ -17,35 +17,44 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KSLISTVIEWITEM_H
-#define KSLISTVIEWITEM_H
+#include "ksquery.h"
 
-#include <klistview.h>
-
-class KSListView;
-
-/**
-@author Gregor Kališnik
- */
-class KSListViewItem : public KListViewItem
+KSQuery::KSQuery(int command, const QString &query, QObject *reciever)
+  : m_command(command), m_query(query), m_reciever(reciever)
 {
-  public:
-    KSListViewItem(KListView *parent = 0, const QString &label1=0, const QString &id=0, const QString &search=0);
-    KSListViewItem(KSListView *parent = 0, const QString &label1=0, const QString &id=0, const QString &search=0);
-    KSListViewItem(const QString &label1=0, const QString &id=0, const QString &search=0);
-    KSListViewItem(KListView *parent = 0, QListViewItem *after=0, const QString &label1=0, const QString &id=0);
+}
 
-    ~KSListViewItem();
+void KSQuery::setCommand(int command)
+{
+  m_command = command;
+}
 
-  public:
-    QString getId();
-    QString getSearch();
-    void setId(int id);
+int KSQuery::getCommand()
+{
+  return m_command;
+}
 
-  private:
-    QString m_id;
-    QString m_search;
+void KSQuery::setQuery(const QString &query)
+{
+  m_query = query;
+}
 
-};
+QString KSQuery::getQuery()
+{
+  return m_query;
+}
 
-#endif
+void KSQuery::setReciever(QObject *reciever)
+{
+  m_reciever = reciever;
+}
+
+QObject *KSQuery::getReciever()
+{
+  return m_reciever;
+}
+
+KSQuery::~KSQuery()
+{
+}
+

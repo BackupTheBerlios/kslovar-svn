@@ -342,17 +342,6 @@
                                     <string>Available words</string>
                                 </property>
                             </widget>
-                            <widget class="KSListViewSearchLine">
-                                <property name="name">
-                                    <cstring>synonymSearch</cstring>
-                                </property>
-                                <property name="maximumSize">
-                                    <size>
-                                        <width>32767</width>
-                                        <height>32</height>
-                                    </size>
-                                </property>
-                            </widget>
                             <widget class="KSListView">
                                 <property name="name">
                                     <cstring>availableSynonymList</cstring>
@@ -514,17 +503,6 @@
                                     <string>Available words</string>
                                 </property>
                             </widget>
-                            <widget class="KSListViewSearchLine">
-                                <property name="name">
-                                    <cstring>antonymSearch</cstring>
-                                </property>
-                                <property name="maximumSize">
-                                    <size>
-                                        <width>32767</width>
-                                        <height>32</height>
-                                    </size>
-                                </property>
-                            </widget>
                             <widget class="KSListView">
                                 <property name="name">
                                     <cstring>availableAntonymList</cstring>
@@ -680,17 +658,6 @@
                                     <string>Available words</string>
                                 </property>
                             </widget>
-                            <widget class="KSListViewSearchLine">
-                                <property name="name">
-                                    <cstring>familySearch</cstring>
-                                </property>
-                                <property name="maximumSize">
-                                    <size>
-                                        <width>32767</width>
-                                        <height>32</height>
-                                    </size>
-                                </property>
-                            </widget>
                             <widget class="KSListView">
                                 <property name="name">
                                     <cstring>availableFamilyList</cstring>
@@ -707,22 +674,6 @@
     <customwidget>
         <class>KSListView</class>
         <header location="global">../../misc/widget/kslistview.h</header>
-        <sizehint>
-            <width>-1</width>
-            <height>-1</height>
-        </sizehint>
-        <container>0</container>
-        <sizepolicy>
-            <hordata>5</hordata>
-            <verdata>5</verdata>
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-        </sizepolicy>
-        <pixmap>image0</pixmap>
-    </customwidget>
-    <customwidget>
-        <class>KSListViewSearchLine</class>
-        <header location="global">../../misc/widget/kslistviewsearchline.h</header>
         <sizehint>
             <width>-1</width>
             <height>-1</height>
@@ -753,15 +704,12 @@
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kslistview.h</includehint>
-    <includehint>kslistviewsearchline.h</includehint>
     <includehint>kslistview.h</includehint>
     <includehint>kslistview.h</includehint>
-    <includehint>kslistviewsearchline.h</includehint>
     <includehint>kslistview.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kslistview.h</includehint>
-    <includehint>kslistviewsearchline.h</includehint>
     <includehint>kslistview.h</includehint>
 </includehints>
 </UI>

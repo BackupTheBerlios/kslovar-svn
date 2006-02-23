@@ -23,6 +23,7 @@
 
 #include "../misc/widget/kslistview.h"
 #include "../misc/widget/kslistviewitem.h"
+#include "../misc/ksdata.h"
 
 #include "../handler/ksdbhandler.h"
 
@@ -59,7 +60,7 @@ KSLanguage::KSLanguage(QWidget *parent, const char *caption, QString language, i
   }
   else
   {
-    QStringList test=KSDBHandler::instance(m_path)->processList("SELECT id FROM language;");
+    QStringList test=KSData::instance()->getLanguageHandler()->processList("SELECT id FROM language;");
     m_id=test.last().toInt()+1;
     m_edit=false;
   }
@@ -75,7 +76,7 @@ KSLanguage::KSLanguage(QWidget *parent, const char *caption, QString language, i
 
 void KSLanguage::populateTypeList()
 {
-  QStringList types=KSDBHandler::instance(m_path)->processList("SELECT id, name FROM type WHERE id_lang='"+QString::number(m_id+1)+"';", 2);
+  QStringList types=KSData::instance()->getLanguageHandler()->processList("SELECT id, name FROM type WHERE id_lang='"+QString::number(m_id+1)+"';", 2);
   if(!types.isEmpty())
   {
     for(QStringList::iterator count=types.begin(); count!=types.end(); count++)
@@ -139,14 +140,14 @@ bool KSLanguage::save()
 {
   if(m_edit)
   {
-    if(!KSDBHandler::instance(m_path)->processQuery("UPDATE language SET name='"+m_mainWidget->nameEdit->text()+"' WHERE id='"+QString::number(m_id)+"'; DELETE FROM type WHERE langid='"+QString::number(m_id)+"';"))
+    if(!KSData::instance()->getLanguageHandler()->processQuery("UPDATE language SET name='"+m_mainWidget->nameEdit->text()+"' WHERE id='"+QString::number(m_id)+"'; DELETE FROM type WHERE langid='"+QString::number(m_id)+"';"))
     {
       return false;
     }
     for(QListViewItem *count=m_mainWidget->typeList->firstChild();count;count=count->nextSibling())
     {
       KSListViewItem *temp=static_cast<KSListViewItem*> (count);
-      if(!KSDBHandler::instance(m_path)->processQuery("INSERT INTO type ( name , id_lang ) VALUES ( '"+temp->text(0)+"' , '"+QString::number(m_id)+"' );"))
+      if(!KSData::instance()->getLanguageHandler()->processQuery("INSERT INTO type ( name , id_lang ) VALUES ( '"+temp->text(0)+"' , '"+QString::number(m_id)+"' );"))
       {
         return false;
       }
@@ -154,14 +155,14 @@ bool KSLanguage::save()
   }
   else
   {
-    if(!KSDBHandler::instance(m_path)->processQuery("INSERT INTO language ( name ) VALUES ( '"+m_mainWidget->nameEdit->text()+"' );"))
+    if(!KSData::instance()->getLanguageHandler()->processQuery("INSERT INTO language ( name ) VALUES ( '"+m_mainWidget->nameEdit->text()+"' );"))
     {
       return false;
     }
     for(QListViewItem *count=m_mainWidget->typeList->firstChild();count;count=count->nextSibling())
     {
       KSListViewItem *temp=static_cast<KSListViewItem*> (count);
-      if(!KSDBHandler::instance(m_path)->processQuery("INSERT INTO type ( name , id_lang ) VALUES ( '"+temp->text(0)+"' , '"+QString::number(m_id)+"' );"))
+      if(!KSData::instance()->getLanguageHandler()->processQuery("INSERT INTO type ( name , id_lang ) VALUES ( '"+temp->text(0)+"' , '"+QString::number(m_id)+"' );"))
       {
         return false;
       }

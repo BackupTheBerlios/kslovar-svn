@@ -20,10 +20,15 @@
 
 #ifndef KSDBHANDLER_H
 #define KSDBHANDLER_H
+
+#include <qthread.h>
+#include <qvaluelist.h>
 #include <qobject.h>
 
-class KProgressDialog;
-class KProgress;
+class KSListView;
+class QMutex;
+class KSQuery;
+class QStringList;
 typedef struct sqlite3;
 typedef struct sqlite3_stmt sqlite3_stmt;
 
@@ -33,9 +38,8 @@ typedef struct sqlite3_stmt sqlite3_stmt;
 * @author Gregor Kališnik <gregor@podnapisi.net>
 */
 
-class KSDBHandler : public QObject
+class KSDBHandler : public QThread
 {
-  Q_OBJECT
   public:
 
     /**
@@ -48,22 +52,36 @@ class KSDBHandler : public QObject
     */
     bool saveDictionary(const QString &text, const QString &lang, const QString &type, bool create=true);
     bool saveWord(const QString &word, const QString &text, bool add, const QString &id);
-    static KSDBHandler *instance(const QString &path);
+//     static KSDBHandler *instance(const QString &path);
     bool processQuery(const QString &rawQuery);
     QString processString(const QString &rawQuery, int columns=1);
     QStringList processList(const QString &rawQuery, int columns=1);
     int getId();
     int getId(const QString& name);
+//     bool processIndex();
+    void search(const QString &criteria);
 
     static QString convertString(const QString &input);
 
+    void addQueue(KSQuery query);
+    void terminate(bool terminate = true);
+    void skip();
+
     ~KSDBHandler();
+
+  protected:
+    virtual void run();
 
   private:
     sqlite3 *m_db;
     sqlite3_stmt *m_rawOutput;
     static QString m_currentPath;
     static KSDBHandler *m_instance;
+
+    QValueList<KSQuery> m_commandQueue;
+    QMutex locker;
+    QObject *m_reciever;
+    bool m_terminate;
 
     /**
     * Query excetution method

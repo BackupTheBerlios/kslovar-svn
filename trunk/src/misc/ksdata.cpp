@@ -21,6 +21,10 @@
 
 #include "../configuration/configuration.h"
 
+// #include "../handler/ksdbhandler.h"
+
+// #include "../misc/widget/kslistview.h"
+// #include "../misc/widget/kslistviewitem.h"
 
 #include <kstaticdeleter.h>
 
@@ -28,7 +32,7 @@ KSData *KSData::m_instance=0l;
 static KStaticDeleter<KSData> staticKSDataDeleter;
 
 KSData::KSData()
-  : QObject(), m_selectedStyle(Configuration::dictionaryStyle()), m_literalSearch(false)
+  : QObject(), m_selectedStyle(Configuration::dictionaryStyle()), m_literalSearch(false), m_dictionaryHandler(0), m_languageHandler(0), m_mainList(0)
 {
 }
 
@@ -36,7 +40,6 @@ KSData *KSData::instance()
 {
   if(!KSData::m_instance)
   {
-    //KSData::m_instance=new KSData();
     staticKSDataDeleter.setObject(m_instance, new KSData());
   }
   return KSData::m_instance;
@@ -50,6 +53,16 @@ void KSData::setDictionaryPath(QString path)
 QString KSData::getDictionaryPath()
 {
   return m_dictionaryPath;
+}
+
+void KSData::setDictionary(KSDBHandler *dictionaryHandler)
+{
+  m_dictionaryHandler = dictionaryHandler;
+}
+
+KSDBHandler *KSData::getDictionary()
+{
+  return m_dictionaryHandler;
 }
 
 void KSData::addLanguage(QString name, int id)
@@ -146,12 +159,22 @@ int KSData::getLanguage()
   return m_languageId;
 }
 
+void KSData::setLanguageHandler(KSDBHandler *languageHandler)
+{
+  m_languageHandler = languageHandler;
+}
+
+KSDBHandler *KSData::getLanguageHandler()
+{
+  return m_languageHandler;
+}
+
 void KSData::clearPartOfSpeech()
 {
   m_partOfSpeech.clear();
 }
 
-void KSData::addPhrase(int id, QString name, QString search)
+void KSData::addPhrase(int id, const QString &name, const QString &search)
 {
   KSPhrases temp;
   temp.id=id;
@@ -168,6 +191,16 @@ QValueList<KSPhrases> KSData::getPhrases()
 void KSData::clearPhrases()
 {
   m_phrases.clear();
+}
+
+void KSData::setMainList(KSListView *list)
+{
+  m_mainList = list;
+}
+
+KSListView *KSData::getMainList()
+{
+  return m_mainList;
 }
 
 void KSData::setStyle(QString selectedStyle)

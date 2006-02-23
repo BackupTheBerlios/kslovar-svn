@@ -17,34 +17,36 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KSLISTVIEWITEM_H
-#define KSLISTVIEWITEM_H
+#ifndef KSOUTPUTHANDLER_H
+#define KSOUTPUTHANDLER_H
 
-#include <klistview.h>
+#include <qevent.h>
 
-class KSListView;
+#define LIST 1000
+#define CLEAR 1001
+#define NORESULT 1002
+#define TEXT 1003
 
 /**
-@author Gregor Kališnik
- */
-class KSListViewItem : public KListViewItem
+	@author Gregor Kališnik <gregor@podnapisi.net>
+*/
+class KSOutputHandler : public QCustomEvent
 {
-  public:
-    KSListViewItem(KListView *parent = 0, const QString &label1=0, const QString &id=0, const QString &search=0);
-    KSListViewItem(KSListView *parent = 0, const QString &label1=0, const QString &id=0, const QString &search=0);
-    KSListViewItem(const QString &label1=0, const QString &id=0, const QString &search=0);
-    KSListViewItem(KListView *parent = 0, QListViewItem *after=0, const QString &label1=0, const QString &id=0);
+public:
+    KSOutputHandler(const QString &name, const QString &id, const QString &search);
+    KSOutputHandler(const QString &text);
 
-    ~KSListViewItem();
-
-  public:
+    QString getName();
     QString getId();
     QString getSearch();
-    void setId(int id);
+
+    QString getText();
+
+    ~KSOutputHandler();
 
   private:
-    QString m_id;
-    QString m_search;
+    QString m_name, m_id, m_search;
+    QString m_text;
 
 };
 

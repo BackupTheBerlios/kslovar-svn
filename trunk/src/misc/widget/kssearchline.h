@@ -17,34 +17,35 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KSLISTVIEWITEM_H
-#define KSLISTVIEWITEM_H
+#ifndef KSSEARCHLINE_H
+#define KSSEARCHLINE_H
 
-#include <klistview.h>
+#include <klineedit.h>
 
 class KSListView;
 
 /**
-@author Gregor Kališnik
- */
-class KSListViewItem : public KListViewItem
+	@author Gregor Kališnik <gregor@podnapisi.net>
+*/
+class KSSearchLine : public KLineEdit
 {
-  public:
-    KSListViewItem(KListView *parent = 0, const QString &label1=0, const QString &id=0, const QString &search=0);
-    KSListViewItem(KSListView *parent = 0, const QString &label1=0, const QString &id=0, const QString &search=0);
-    KSListViewItem(const QString &label1=0, const QString &id=0, const QString &search=0);
-    KSListViewItem(KListView *parent = 0, QListViewItem *after=0, const QString &label1=0, const QString &id=0);
+Q_OBJECT
+public:
+    KSSearchLine(QWidget *parent = 0, const char *name = 0, KSListView *list = 0);
 
-    ~KSListViewItem();
+    void setList(KSListView *list);
+    void processSearch();
 
-  public:
-    QString getId();
-    QString getSearch();
-    void setId(int id);
+    ~KSSearchLine();
+
+  private slots:
+    void slotQueueSearch(const QString &criteria);
+    void slotBeginSearch();
 
   private:
-    QString m_id;
-    QString m_search;
+    KSListView *m_outputList;
+    int m_searchQueue;
+    QString m_latestCriteria;
 
 };
 

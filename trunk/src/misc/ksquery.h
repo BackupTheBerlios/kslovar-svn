@@ -17,34 +17,38 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KSLISTVIEWITEM_H
-#define KSLISTVIEWITEM_H
+#ifndef KSQUERY_H
+#define KSQUERY_H
 
-#include <klistview.h>
 
-class KSListView;
+#define SEARCH 0
+#define STRING 1
+
+#include <qstring.h>
+
+class QObject;
 
 /**
-@author Gregor Kališnik
- */
-class KSListViewItem : public KListViewItem
+	@author Gregor Kališnik <gregor@podnapisi.net>
+*/
+class KSQuery
 {
-  public:
-    KSListViewItem(KListView *parent = 0, const QString &label1=0, const QString &id=0, const QString &search=0);
-    KSListViewItem(KSListView *parent = 0, const QString &label1=0, const QString &id=0, const QString &search=0);
-    KSListViewItem(const QString &label1=0, const QString &id=0, const QString &search=0);
-    KSListViewItem(KListView *parent = 0, QListViewItem *after=0, const QString &label1=0, const QString &id=0);
+public:
+    KSQuery(int command = 0, const QString &query = 0, QObject *reciever = 0);
 
-    ~KSListViewItem();
+    void setCommand(int command);
+    int getCommand();
+    void setQuery(const QString &query);
+    QString getQuery();
+    void setReciever(QObject *reciever);
+    QObject *getReciever();
 
-  public:
-    QString getId();
-    QString getSearch();
-    void setId(int id);
+    ~KSQuery();
 
   private:
-    QString m_id;
-    QString m_search;
+    int m_command;
+    QString m_query;
+    QObject *m_reciever;
 
 };
 

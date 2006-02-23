@@ -23,12 +23,22 @@
 
 #include <kdebug.h>
 
-KSListViewItem::KSListViewItem(KListView *parent, QString label1, QString id, QString search)
+KSListViewItem::KSListViewItem(KListView *parent, const QString &label1, const QString &id, const QString &search)
   : KListViewItem(parent, label1), m_id(id), m_search(search)
 {
 }
 
-KSListViewItem::KSListViewItem(KListView *parent, QListViewItem *after, QString label1, QString id)
+KSListViewItem::KSListViewItem(KSListView *parent, const QString &label1, const QString &id, const QString &search)
+  : KListViewItem(parent, label1), m_id(id), m_search(search)
+{
+}
+
+KSListViewItem::KSListViewItem(const QString &label1, const QString &id, const QString &search)
+  : KListViewItem((KListView*) 0, label1), m_id(id), m_search(search)
+{
+}
+
+KSListViewItem::KSListViewItem(KListView *parent, QListViewItem *after, const QString &label1, const QString &id)
   : KListViewItem(parent, after, label1), m_id(id)
 {
 }

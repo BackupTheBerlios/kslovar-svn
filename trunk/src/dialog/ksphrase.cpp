@@ -266,7 +266,7 @@ void KSPhrase::save()
   QString xml=m_XMLHandler->parse();
   if(m_edit==true)
   {
-    if(!KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(m_mainWidget->wordEdit->text(), xml, false, m_id))
+    if(!KSData::instance()->getDictionary()->saveWord(m_mainWidget->wordEdit->text(), xml, false, m_id))
     {
       KMessageBox::error(this, i18n("Cannot edit phrase!"));
     }
@@ -274,11 +274,11 @@ void KSPhrase::save()
   }
   else
   {
-    if(!KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(m_mainWidget->wordEdit->text(), xml, true, 0L))
+    if(!KSData::instance()->getDictionary()->saveWord(m_mainWidget->wordEdit->text(), xml, true, 0L))
     {
       KMessageBox::error(this, i18n("Cannot add new phrase!"));
     }
-    m_id=QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId());
+    m_id=QString::number(KSData::instance()->getDictionary()->getId());
     KSlovar::KSInstance()->openFile(KSData::instance()->getDictionaryPath());
   }
 
@@ -286,44 +286,44 @@ void KSPhrase::save()
   {
   for(QValueList<KSElement>::iterator count=saveSynonyms.begin();count!=saveSynonyms.end();count++)
   {
-    m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number((*count).id)+"';"));
+    m_XMLHandler=new KSXMLHandler(KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+QString::number((*count).id)+"';"));
     m_XMLHandler->appendString("synonym", m_mainWidget->wordEdit->text(), "id", m_id);
-    KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord((*count).name, m_XMLHandler->parse(), false, QString::number((*count).id));
+    KSData::instance()->getDictionary()->saveWord((*count).name, m_XMLHandler->parse(), false, QString::number((*count).id));
   }
 
   for(QValueList<KSElement>::iterator count=saveAntonyms.begin();count!=saveAntonyms.end();count++)
   {
-    m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number((*count).id)+"';"));
+    m_XMLHandler=new KSXMLHandler(KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+QString::number((*count).id)+"';"));
     m_XMLHandler->appendString("antonym", m_mainWidget->wordEdit->text(), "id", m_id);
-    KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord((*count).name, m_XMLHandler->parse(), false, QString::number((*count).id));
+    KSData::instance()->getDictionary()->saveWord((*count).name, m_XMLHandler->parse(), false, QString::number((*count).id));
   }
 
   for(QStringList::iterator count=m_deletedSynonyms.begin();count!=m_deletedSynonyms.end();count++)
   {
-    m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(*count))+"';"));
+    m_XMLHandler=new KSXMLHandler(KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSData::instance()->getDictionary()->getId(*count))+"';"));
     m_XMLHandler->removeString("synonym", m_mainWidget->wordEdit->text());
-    KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId()));
+    KSData::instance()->getDictionary()->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSData::instance()->getDictionary()->getId()));
   }
 
   for(QStringList::iterator count=m_deletedAntonyms.begin();count!=m_deletedAntonyms.end();count++)
   {
-    m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(*count))+"';"));
+    m_XMLHandler=new KSXMLHandler(KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSData::instance()->getDictionary()->getId(*count))+"';"));
     m_XMLHandler->removeString("antonym", m_mainWidget->wordEdit->text());
-    KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(*count)));
+    KSData::instance()->getDictionary()->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSData::instance()->getDictionary()->getId(*count)));
   }
 
   for(QValueList<KSElement>::iterator count=saveFamily.begin();count!=saveFamily.end();count++)
   {
-    m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number((*count).id)+"';"));
+    m_XMLHandler=new KSXMLHandler(KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+QString::number((*count).id)+"';"));
     m_XMLHandler->appendString("word-family", m_mainWidget->wordEdit->text(), "id", m_id);
-    KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord((*count).name, m_XMLHandler->parse(), false, QString::number((*count).id));
+    KSData::instance()->getDictionary()->saveWord((*count).name, m_XMLHandler->parse(), false, QString::number((*count).id));
   }
 
   for(QStringList::iterator count=m_deletedFamily.begin();count!=m_deletedFamily.end();count++)
   {
-    m_XMLHandler=new KSXMLHandler(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(*count))+"';"));
+    m_XMLHandler=new KSXMLHandler(KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSData::instance()->getDictionary()->getId(*count))+"';"));
     m_XMLHandler->removeString("word-family", m_mainWidget->wordEdit->text());
-    KSDBHandler::instance(KSData::instance()->getDictionaryPath())->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSDBHandler::instance(KSData::instance()->getDictionaryPath())->getId(*count)));
+    KSData::instance()->getDictionary()->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSData::instance()->getDictionary()->getId(*count)));
   }
   }
 
@@ -505,9 +505,9 @@ void KSPhrase::initialize()
     m_mainWidget->explanationList->setRenameable(1);
 
     //Connect search lines
-    m_mainWidget->synonymSearch->setListView(m_mainWidget->availableSynonymList);
+    /*m_mainWidget->synonymSearch->setListView(m_mainWidget->availableSynonymList);
     m_mainWidget->antonymSearch->setListView(m_mainWidget->availableAntonymList);
-    m_mainWidget->familySearch->setListView(m_mainWidget->availableFamilyList);
+    m_mainWidget->familySearch->setListView(m_mainWidget->availableFamilyList);*/
   }
 }
 

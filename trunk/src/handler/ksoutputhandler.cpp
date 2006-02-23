@@ -17,35 +17,39 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KSLISTVIEWITEM_H
-#define KSLISTVIEWITEM_H
+#include "ksoutputhandler.h"
 
-#include <klistview.h>
-
-class KSListView;
-
-/**
-@author Gregor Kališnik
- */
-class KSListViewItem : public KListViewItem
+KSOutputHandler::KSOutputHandler(const QString &name, const QString &id, const QString &search)
+  : QCustomEvent(LIST), m_name(name), m_id(id), m_search(search)
 {
-  public:
-    KSListViewItem(KListView *parent = 0, const QString &label1=0, const QString &id=0, const QString &search=0);
-    KSListViewItem(KSListView *parent = 0, const QString &label1=0, const QString &id=0, const QString &search=0);
-    KSListViewItem(const QString &label1=0, const QString &id=0, const QString &search=0);
-    KSListViewItem(KListView *parent = 0, QListViewItem *after=0, const QString &label1=0, const QString &id=0);
+}
 
-    ~KSListViewItem();
+KSOutputHandler::KSOutputHandler(const QString &text)
+  : QCustomEvent(TEXT), m_text(text)
+{
+}
 
-  public:
-    QString getId();
-    QString getSearch();
-    void setId(int id);
+QString KSOutputHandler::getName()
+{
+  return m_name;
+}
 
-  private:
-    QString m_id;
-    QString m_search;
+QString KSOutputHandler::getId()
+{
+  return m_id;
+}
 
-};
+QString KSOutputHandler::getSearch()
+{
+  return m_search;
+}
 
-#endif
+QString KSOutputHandler::getText()
+{
+  return m_text;
+}
+
+KSOutputHandler::~KSOutputHandler()
+{
+}
+

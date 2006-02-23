@@ -23,6 +23,8 @@
 
 #include "../kslovar.h"
 
+#include "../misc/ksdata.h"
+
 #include "../handler/ksdbhandler.h"
 
 #include <qradiobutton.h>
@@ -74,7 +76,7 @@ void KSWizard::slotFinish()
   {
     m_downloadProgress->setShown(false);
     m_downloadLabel->setShown(false);
-    if(!KSDBHandler::instance(locateLocal("appdata", "languages.ksl", false))->processQuery("BEGIN TRANSACTION; CREATE TABLE language ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT ); CREATE TABLE type ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT , id_lang INTEGER ); CREATE TABLE conversion_table ( id INTEGER PRIMARY KEY AUTOINCREMENT , fromc TEXT UNIQUE , toc TEXT ); COMMIT;"))
+    if(!KSData::instance()->getLanguageHandler()->processQuery("BEGIN TRANSACTION; CREATE TABLE language ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT ); CREATE TABLE type ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT , id_lang INTEGER ); CREATE TABLE conversion_table ( id INTEGER PRIMARY KEY AUTOINCREMENT , fromc TEXT UNIQUE , toc TEXT ); COMMIT;"))
     {
       KMessageBox::error(this, i18n("Could not create languages.ksl!"));
       return;
