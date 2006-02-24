@@ -39,6 +39,8 @@ class KSListView : public KListView
 
   ~KSListView();
 
+  void setEmptyText(const QString &text);
+
   void addFilter(int id);
   void delFilter(int id);
 
@@ -46,6 +48,7 @@ class KSListView : public KListView
 
     virtual bool eventFilter(QObject *o, QEvent *e);
     virtual void customEvent(QCustomEvent *package);
+    virtual void drawContentsOffset(QPainter *p, int ox, int oy, int cx, int cy, int cw, int ch);
 
   private slots:
     void slotUpdateConfiguration();
@@ -54,6 +57,7 @@ class KSListView : public KListView
     double m_value;
     bool mouseConfig;
     QValueList<int> m_filter;
+    QString m_emptyText;
 };
 
 #endif

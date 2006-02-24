@@ -360,13 +360,23 @@ void KSDBHandler::run()
 
 void KSDBHandler::terminate(bool terminate)
 {
-  m_terminate = terminate;
+  while(locker.tryLock())
+  {
+    usleep(5);
+  }
+  m_terminate = true;
+  locker.unlock();
 }
 
 void KSDBHandler::skip()
 {
+  while(locker.tryLock())
+  {
+    usleep(5);
+  }
   sqlite3_interrupt(m_db);
   m_skip = true;
+  locker.unlock();
 }
 
 bool KSDBHandler::isSkiped()

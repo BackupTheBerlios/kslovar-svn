@@ -101,7 +101,7 @@ void KSPhrase::slotAddSynonym()
 void KSPhrase::slotRemoveSynonym()
 {
   m_deletedSynonyms << m_mainWidget->selectedSynonymList->currentItem()->text(0);
-  KSListViewItem *temp=static_cast<KSListViewItem*> (m_mainWidget->selectedSynonymList->currentItem());
+  //KSListViewItem *temp=static_cast<KSListViewItem*> (m_mainWidget->selectedSynonymList->currentItem());
 
   m_mainWidget->availableSynonymList->delFilter(static_cast <KSListViewItem*> (m_mainWidget->selectedSynonymList->currentItem())->getId().toInt());
   m_mainWidget->availableAntonymList->delFilter(static_cast <KSListViewItem*> (m_mainWidget->selectedSynonymList->currentItem())->getId().toInt());
@@ -132,7 +132,7 @@ void KSPhrase::slotAddAntonym()
 void KSPhrase::slotRemoveAntonym()
 {
   m_deletedAntonyms << m_mainWidget->selectedAntonymList->currentItem()->text(0);
-  KSListViewItem *temp=static_cast<KSListViewItem*> (m_mainWidget->selectedAntonymList->currentItem());
+  //KSListViewItem *temp=static_cast<KSListViewItem*> (m_mainWidget->selectedAntonymList->currentItem());
 
   m_mainWidget->availableSynonymList->delFilter(static_cast <KSListViewItem*> (m_mainWidget->selectedAntonymList->currentItem())->getId().toInt());
   m_mainWidget->availableAntonymList->delFilter(static_cast <KSListViewItem*> (m_mainWidget->selectedAntonymList->currentItem())->getId().toInt());
@@ -424,6 +424,7 @@ void KSPhrase::initialize()
   m_mainWidget=new KSPhraseWdt(this);
   m_mainWidget->spellButton->setIconSet(icons->loadIconSet("spellcheck", KIcon::Toolbar));
   m_mainWidget->explanationList->setItemsRenameable(true);
+  m_mainWidget->explanationList->setEmptyText(i18n("Click the Add button to start adding explanations and examples"));
 
   m_mainWidget->rightSynonymButton->setIconSet(icons->loadIconSet("forward", KIcon::Toolbar));
   m_mainWidget->leftSynonymButton->setIconSet(icons->loadIconSet("back", KIcon::Toolbar));
@@ -477,13 +478,14 @@ void KSPhrase::initialize()
 
     //Connect search lines
     m_mainWidget->synonymSearch->setList(m_mainWidget->availableSynonymList);
-    m_mainWidget->synonymSearch->setType(SYNONYM);
     m_mainWidget->antonymSearch->setList(m_mainWidget->availableAntonymList);
-    m_mainWidget->antonymSearch->setType(ANTONYM);
     m_mainWidget->familySearch->setList(m_mainWidget->availableFamilyList);
-    m_mainWidget->familySearch->setType(FAMILY);
 
-    new KSListViewItem(m_mainWidget->availableSynonymList, i18n("Begin search by typing a"));
+    m_mainWidget->availableSynonymList->setEmptyText(i18n("Begin search by typing a\nword into the search bar."));
+    m_mainWidget->availableAntonymList->setEmptyText(i18n("Begin search by typing a\nword into the search bar."));
+    m_mainWidget->availableFamilyList->setEmptyText(i18n("Begin search by typing a\nword into the search bar."));
+
+    /*new KSListViewItem(m_mainWidget->availableSynonymList, i18n("Begin search by typing a"));
     new KSListViewItem(m_mainWidget->availableSynonymList, i18n("word into the search bar."));
 
     new KSListViewItem(m_mainWidget->availableAntonymList, i18n("Begin search by typing a"));
@@ -494,7 +496,7 @@ void KSPhrase::initialize()
 
     m_mainWidget->availableSynonymList->setDisabled(true);
     m_mainWidget->availableAntonymList->setDisabled(true);
-    m_mainWidget->availableFamilyList->setDisabled(true);
+    m_mainWidget->availableFamilyList->setDisabled(true);*/
   }
 }
 

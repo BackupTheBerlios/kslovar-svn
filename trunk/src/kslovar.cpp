@@ -443,9 +443,10 @@ void KSlovar::slotClose()
   m_browser->begin();
   m_browser->write(m_welcomeMessage);
   m_browser->end();
+  m_list->setEmptyText(i18n("There is no dictionary loaded!"));
   m_list->clear();
-  new KSListViewItem(m_list, i18n("There is no dictionary loaded!"));
-  m_list->setDisabled(true);
+  //new KSListViewItem(m_list, i18n("There is no dictionary loaded!"));
+  //m_list->setDisabled(true);
   m_search->setDisabled(true);
   m_search->setText("");
   statusBar()->changeItem(i18n("Ready"), 0);
@@ -603,9 +604,8 @@ void KSlovar::processFileOpen(QString fileName)
     //m_search->setList(m_list);
     //m_search->processSearch();
     m_search->setDisabled(false);
+    m_list->setEmptyText(i18n("Begin search by typing a\nword into the search bar."));
     m_list->clear();
-    new KSListViewItem(m_list, i18n("Begin search by typing a"));
-    new KSListViewItem(m_list, i18n("word into the search bar."));
     slotHome();
   }
 }

@@ -21,8 +21,6 @@
 
 #include "kslistview.h"
 
-#include <kdebug.h>
-
 KSListViewItem::KSListViewItem(KListView *parent, const QString &label1, const QString &id, const QString &search)
   : KListViewItem(parent, label1), m_id(id), m_search(search)
 {

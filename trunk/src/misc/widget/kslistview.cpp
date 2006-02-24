@@ -33,10 +33,12 @@
 
 #include <qtimer.h>
 #include <qheader.h>
+#include <qpainter.h>
 
 #include <klocale.h>
 
-KSListView::KSListView(QWidget *parent, const char *name) : KListView(parent, name), mouseConfig(Configuration::mouseNavigation())
+KSListView::KSListView(QWidget *parent, const char *name)
+  : KListView(parent, name), mouseConfig(Configuration::mouseNavigation())
 {
   header()->hide();
   connect( dynamic_cast<QObject*> (KSConfigDialog::instance()), SIGNAL(settingsChanged()), this, SLOT(slotUpdateConfiguration()) );
@@ -82,21 +84,23 @@ void KSListView::customEvent(QCustomEvent *package)
 {
   if(package->type() == LIST)
   {
-    if(!isEnabled())
+    /*if(!isEnabled())
+    {*/
+    m_emptyText = i18n("No words found");
+    if(KSData::instance()->getDictionary()->isSkiped())
     {
-      if(KSData::instance()->getDictionary()->isSkiped())
-      {
-        return;
-      }
-      this->clear();
-      this->setDisabled(false);
+      return;
     }
+      /*this->clear();
+    this->setDisabled(false);*/
+    //}
 
     KSOutputHandler *input = static_cast<KSOutputHandler*> (package);
     for(QValueList<int>::iterator count = m_filter.begin(); count != m_filter.end(); count++)
     {
       if(input->getId().toInt() == *count)
       {
+        triggerUpdate();
         return;
       }
     }
@@ -106,16 +110,18 @@ void KSListView::customEvent(QCustomEvent *package)
   if(package->type() == CLEAR)
   {
     emit recievedPackage(false, false);
+    m_emptyText = i18n("Search in progress...");
     this->clear();
-    new KSListViewItem(this, i18n("Search in progress..."));
-    this->setDisabled(true);
+    //new KSListViewItem(this, i18n("Search in progress..."));
+    //this->setDisabled(true);
   }
   if(package->type() == NORESULT)
   {
     emit recievedPackage(false, true);
+    m_emptyText = i18n("No words found");
     this->clear();
-    new KSListViewItem(this, i18n("No words found."));
-    this->setDisabled(true);
+    //new KSListViewItem(this, i18n("No words found."));
+    //this->setDisabled(true);
   }
 }
 
@@ -127,6 +133,32 @@ void KSListView::addFilter(int id)
 void KSListView::delFilter(int id)
 {
   m_filter.remove(id);
+}
+
+void KSListView::setEmptyText(const QString &text)
+{
+  m_emptyText = text;
+  //triggerUpdate();
+}
+
+void KSListView::drawContentsOffset(QPainter *p, int ox, int oy, int cx, int cy, int cw, int ch)
+{
+  KListView::drawContentsOffset(p, ox, oy, cx, cy, cw, ch);
+
+  if(childCount() == 0 && !m_emptyText.isEmpty())
+  {
+    p->setPen(Qt::darkGray);
+
+    QStringList lines = QStringList::split("\n", m_emptyText);
+    int ypos = 10 + p->fontMetrics().height();
+
+    QStringList::Iterator end(lines.end());
+    for(QStringList::Iterator str(lines.begin()); str != end; str++)
+    {
+      p->drawText((viewport()->width()/2)-(p->fontMetrics().width(*str)/2), ypos, *str);
+      ypos += p->fontMetrics().lineSpacing();
+    }
+  }
 }
 
 KSListView::~KSListView()
