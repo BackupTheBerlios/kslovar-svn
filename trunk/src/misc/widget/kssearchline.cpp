@@ -30,7 +30,7 @@
 #include <qtimer.h>
 
 KSSearchLine::KSSearchLine(QWidget *parent, const char *name, KSListView *list)
-  : KLineEdit(parent, name), m_outputList(list), m_searchQueue(0)
+  : KLineEdit(parent, name), m_outputList(list), m_searchQueue(0), m_type(NONE)
 {
   connect(this, SIGNAL(textChanged(const QString&)), this, SLOT(slotQueueSearch(const QString &)));
   //connect(this, SIGNAL(returnPressed(const QString&)), this, SLOT(slotBeginSearch(const QString &)));
@@ -69,6 +69,11 @@ void KSSearchLine::slotBeginSearch()
   {
     processSearch();
   }
+}
+
+void KSSearchLine::setType(unsigned short type)
+{
+  m_type = type;
 }
 
 KSSearchLine::~KSSearchLine()

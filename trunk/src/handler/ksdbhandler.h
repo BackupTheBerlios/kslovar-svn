@@ -52,13 +52,11 @@ class KSDBHandler : public QThread
     */
     bool saveDictionary(const QString &text, const QString &lang, const QString &type, bool create=true);
     bool saveWord(const QString &word, const QString &text, bool add, const QString &id);
-//     static KSDBHandler *instance(const QString &path);
     bool processQuery(const QString &rawQuery);
     QString processString(const QString &rawQuery, int columns=1);
     QStringList processList(const QString &rawQuery, int columns=1);
     int getId();
     int getId(const QString& name);
-//     bool processIndex();
     void search(const QString &criteria);
 
     static QString convertString(const QString &input);
@@ -66,6 +64,7 @@ class KSDBHandler : public QThread
     void addQueue(KSQuery query);
     void terminate(bool terminate = true);
     void skip();
+    bool isSkiped();
 
     ~KSDBHandler();
 
@@ -82,6 +81,7 @@ class KSDBHandler : public QThread
     QMutex locker;
     QObject *m_reciever;
     bool m_terminate;
+    bool m_skip;
 
     /**
     * Query excetution method

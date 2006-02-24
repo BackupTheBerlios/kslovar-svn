@@ -72,7 +72,6 @@ class KSPhrase : public KDialogBase
     QStringList m_deletedAntonyms;
     QStringList m_deletedFamily;
 
-    void populateAvailableList();
     void populatePartsOfSpeech();
     void initialize();
     void connectSlots();

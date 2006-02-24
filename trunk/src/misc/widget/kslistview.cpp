@@ -24,8 +24,11 @@
 #include "../../configuration/configuration.h"
 #include "../../configuration/ksconfigdialog.h"
 
+#include "../ksdata.h"
+
 #include "../../kslovar.h"
 
+#include "../../handler/ksdbhandler.h"
 #include "../../handler/ksoutputhandler.h"
 
 #include <qtimer.h>
@@ -79,14 +82,25 @@ void KSListView::customEvent(QCustomEvent *package)
 {
   if(package->type() == LIST)
   {
-    if(!this->isEnabled())
+    if(!isEnabled())
     {
+      if(KSData::instance()->getDictionary()->isSkiped())
+      {
+        return;
+      }
       this->clear();
       this->setDisabled(false);
     }
 
-    emit recievedPackage(true, false);
     KSOutputHandler *input = static_cast<KSOutputHandler*> (package);
+    for(QValueList<int>::iterator count = m_filter.begin(); count != m_filter.end(); count++)
+    {
+      if(input->getId().toInt() == *count)
+      {
+        return;
+      }
+    }
+    emit recievedPackage(true, false);
     new KSListViewItem(this, input->getName(), input->getId(), input->getSearch());
   }
   if(package->type() == CLEAR)
@@ -103,6 +117,16 @@ void KSListView::customEvent(QCustomEvent *package)
     new KSListViewItem(this, i18n("No words found."));
     this->setDisabled(true);
   }
+}
+
+void KSListView::addFilter(int id)
+{
+  m_filter.append(id);
+}
+
+void KSListView::delFilter(int id)
+{
+  m_filter.remove(id);
 }
 
 KSListView::~KSListView()

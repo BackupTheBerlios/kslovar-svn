@@ -44,6 +44,7 @@ class KSXMLHandler : public QObject
     QString readString(const QString &search);
     QValueList<KSExplanation> readExplanation(bool transitional = false);
     QStringList readStringList(const QString &search);
+    QMap<QString, QString> readQMapList(const QString &search);
 
     void createNode(const QString &name);
     void addString(const QString &name, const QString &value, const QString &attributeName=QString::null, const QString &attributeValue=QString::null);

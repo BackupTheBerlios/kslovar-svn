@@ -39,6 +39,9 @@ class KSListView : public KListView
 
   ~KSListView();
 
+  void addFilter(int id);
+  void delFilter(int id);
+
   protected:
 
     virtual bool eventFilter(QObject *o, QEvent *e);
@@ -50,6 +53,7 @@ class KSListView : public KListView
   private:
     double m_value;
     bool mouseConfig;
+    QValueList<int> m_filter;
 };
 
 #endif

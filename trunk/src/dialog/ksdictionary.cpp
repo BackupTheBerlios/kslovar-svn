@@ -189,6 +189,8 @@ bool KSDictionary::save()
     {
       return false;
     }
+    KSData::instance()->setType(type.toInt());
+    KSData::instance()->setLanguage(lang.toInt());
   }
   else
   {

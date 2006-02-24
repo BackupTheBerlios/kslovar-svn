@@ -166,26 +166,44 @@ void KSlovar::slotShowList(QListViewItem *selected)
   m_editPhrase->setEnabled(true);
   m_removePhrase->setEnabled(true);
 
-  if(m_history==false)
+  if(m_history == false)
   {
     addHistory();
   }
 
-  m_selectedPhrase=static_cast<KSListViewItem*> (selected)->getId();
+  m_selectedPhrase = static_cast<KSListViewItem*> (selected)->getId();
   showDictionary();
 }
 
 void KSlovar::slotShowBrowser(const KURL &url, const KParts::URLArgs &)
 {
+  bool selected = false;
+  QString id = url.host();
   QListViewItem *current=m_list->firstChild();
   while(current)
   {
-    if(static_cast<KSListViewItem*> (current)->getId()==url.host())
+    if(static_cast<KSListViewItem*> (current)->getId() == id)
     {
       m_list->setSelected(current, true);
+      selected = true;
       break;
     }
     current=current->nextSibling();
+  }
+  if(!selected)
+  {
+    m_list->clearSelection();
+
+    m_editPhrase->setEnabled(true);
+    m_removePhrase->setEnabled(true);
+
+    if(m_history == false)
+    {
+      addHistory();
+    }
+
+    m_selectedPhrase = id;
+    showDictionary();
   }
 }
 
@@ -341,7 +359,7 @@ void KSlovar::registerButtons()
 void KSlovar::addMenu()
 {
   KPopupMenu * filemenu = new KPopupMenu;
-//   m_newDictionary->plug(filemenu);
+  m_newDictionary->plug(filemenu);
   m_openDictionary->plug(filemenu);
   filemenu->insertSeparator();
   m_print->plug(filemenu);
@@ -350,12 +368,12 @@ void KSlovar::addMenu()
   m_quit->plug(filemenu);
 
   KPopupMenu *editmenu=new KPopupMenu;
-//   m_editDictionary->plug(editmenu);
+  m_editDictionary->plug(editmenu);
   m_selectAll->plug(editmenu);
   editmenu->insertSeparator();
-//   m_addPhrase->plug(editmenu);
-//   m_editPhrase->plug(editmenu);
-//   m_removePhrase->plug(editmenu);
+  m_addPhrase->plug(editmenu);
+  m_editPhrase->plug(editmenu);
+  m_removePhrase->plug(editmenu);
   editmenu->insertSeparator();
   m_find->plug(editmenu);
   m_findNext->plug(editmenu);
@@ -430,6 +448,7 @@ void KSlovar::slotClose()
   m_list->setDisabled(true);
   m_search->setDisabled(true);
   m_search->setText("");
+  statusBar()->changeItem(i18n("Ready"), 0);
 }
 
 void KSlovar::slotQuit()

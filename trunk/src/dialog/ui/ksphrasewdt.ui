@@ -36,7 +36,7 @@
             </property>
             <widget class="QWidget">
                 <property name="name">
-                    <cstring>General</cstring>
+                    <cstring>general</cstring>
                 </property>
                 <attribute name="title">
                     <string>&amp;General</string>
@@ -198,7 +198,7 @@
             </widget>
             <widget class="QWidget">
                 <property name="name">
-                    <cstring>General</cstring>
+                    <cstring>synonym</cstring>
                 </property>
                 <attribute name="title">
                     <string>S&amp;ynonym</string>
@@ -342,6 +342,11 @@
                                     <string>Available words</string>
                                 </property>
                             </widget>
+                            <widget class="KSSearchLine">
+                                <property name="name">
+                                    <cstring>synonymSearch</cstring>
+                                </property>
+                            </widget>
                             <widget class="KSListView">
                                 <property name="name">
                                     <cstring>availableSynonymList</cstring>
@@ -353,7 +358,7 @@
             </widget>
             <widget class="QWidget">
                 <property name="name">
-                    <cstring>TabPage</cstring>
+                    <cstring>antonym</cstring>
                 </property>
                 <attribute name="title">
                     <string>Ant&amp;onym</string>
@@ -503,6 +508,11 @@
                                     <string>Available words</string>
                                 </property>
                             </widget>
+                            <widget class="KSSearchLine">
+                                <property name="name">
+                                    <cstring>antonymSearch</cstring>
+                                </property>
+                            </widget>
                             <widget class="KSListView">
                                 <property name="name">
                                     <cstring>availableAntonymList</cstring>
@@ -514,10 +524,10 @@
             </widget>
             <widget class="QWidget">
                 <property name="name">
-                    <cstring>TabPage</cstring>
+                    <cstring>wordFamily</cstring>
                 </property>
                 <attribute name="title">
-                    <string>Word f&amp;amily</string>
+                    <string>Word fa&amp;mily</string>
                 </attribute>
                 <grid>
                     <property name="name">
@@ -658,6 +668,11 @@
                                     <string>Available words</string>
                                 </property>
                             </widget>
+                            <widget class="KSSearchLine">
+                                <property name="name">
+                                    <cstring>familySearch</cstring>
+                                </property>
+                            </widget>
                             <widget class="KSListView">
                                 <property name="name">
                                     <cstring>availableFamilyList</cstring>
@@ -674,6 +689,22 @@
     <customwidget>
         <class>KSListView</class>
         <header location="global">../../misc/widget/kslistview.h</header>
+        <sizehint>
+            <width>-1</width>
+            <height>-1</height>
+        </sizehint>
+        <container>0</container>
+        <sizepolicy>
+            <hordata>5</hordata>
+            <verdata>5</verdata>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+        <pixmap>image0</pixmap>
+    </customwidget>
+    <customwidget>
+        <class>KSSearchLine</class>
+        <header location="global">../../misc/widget/kssearchline.h</header>
         <sizehint>
             <width>-1</width>
             <height>-1</height>
@@ -704,12 +735,15 @@
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kslistview.h</includehint>
+    <includehint>kssearchline.h</includehint>
     <includehint>kslistview.h</includehint>
     <includehint>kslistview.h</includehint>
+    <includehint>kssearchline.h</includehint>
     <includehint>kslistview.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kslistview.h</includehint>
+    <includehint>kssearchline.h</includehint>
     <includehint>kslistview.h</includehint>
 </includehints>
 </UI>

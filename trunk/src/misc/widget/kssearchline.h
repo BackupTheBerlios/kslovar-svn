@@ -22,6 +22,11 @@
 
 #include <klineedit.h>
 
+#define NONE 0
+#define SYNONYM 1
+#define ANTONYM 2
+#define FAMILY 3
+
 class KSListView;
 
 /**
@@ -36,6 +41,8 @@ public:
     void setList(KSListView *list);
     void processSearch();
 
+    void setType(unsigned short type);
+
     ~KSSearchLine();
 
   private slots:
@@ -46,6 +53,7 @@ public:
     KSListView *m_outputList;
     int m_searchQueue;
     QString m_latestCriteria;
+    unsigned short m_type;
 
 };
 

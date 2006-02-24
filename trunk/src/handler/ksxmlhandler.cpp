@@ -22,6 +22,7 @@
 //#include <qdom.h>
 #include <qvaluelist.h>
 #include <qstringlist.h>
+#include <qmap.h>
 
 KSXMLHandler::KSXMLHandler(const QString &XML)
   : QObject()
@@ -99,6 +100,19 @@ QStringList KSXMLHandler::readStringList(const QString &search)
     if(count.nodeName()==search)
     {
       output << count.toElement().text();
+    }
+  }
+  return output;
+}
+
+QMap<QString, QString> KSXMLHandler::readQMapList(const QString &search)
+{
+  QMap<QString, QString> output;
+  for(QDomNode count=m_xmlDocument.firstChild().firstChild();!count.isNull();count=count.nextSibling())
+  {
+    if(count.nodeName()==search)
+    {
+      output[count.toElement().attribute("id")] = count.toElement().text();
     }
   }
   return output;

@@ -46,7 +46,7 @@ QString KSDBHandler::m_currentPath=0L;
 static KStaticDeleter<KSDBHandler> staticKSDBHandlerDeleter;
 
 KSDBHandler::KSDBHandler(const QString &databasePath)
-  : QThread(), m_terminate(false)
+  : QThread(), m_terminate(false), m_skip(false)
 {
   m_currentPath=databasePath;
   sqlite3_open(databasePath.utf8(), &m_db);
@@ -112,7 +112,7 @@ bool KSDBHandler::saveDictionary(const QString &text, const QString &lang, const
   }
   else
   {
-    rawQuery="UPDATE dictionary SET text='"+text+"' WHERE id='0'; UPDATE head SET lang='"+lang+"';";
+    rawQuery="UPDATE dictionary SET text='"+text+"' WHERE id='0'; UPDATE head SET lang='"+lang+"', type='"+type+"';";
   }
 
   if(!query(rawQuery))
@@ -262,35 +262,6 @@ QString KSDBHandler::convertString(const QString &input)
   return converting;
 }
 
-/*bool KSDBHandler::processIndex()
-{
-  QString temp, rawQuery = "SELECT name, id, search FROM phrases;";
-  sqlite3_stmt *rawOutput;
-  int statusCode;
-
-  if(!query(rawQuery, &rawOutput))
-  {
-    return false;
-  }
-
-  while(true)
-  {
-    statusCode = sqlite3_step(rawOutput);
-    if ( statusCode == SQLITE_DONE || statusCode == SQLITE_ERROR )
-    {
-      break;
-    }
-    QString id = QString::fromUtf8((const char*) sqlite3_column_text(rawOutput, 1));
-    QString name = QString::fromUtf8((const char*) sqlite3_column_text(rawOutput, 0));
-    QString search = QString::fromUtf8((const char*) sqlite3_column_text(rawOutput, 2));
-    KSData::instance()->addPhrase(id.toInt(), name, search);
-    new KSListViewItem(KSData::instance()->getMainList(), name, id, search);
-  }
-  sqlite3_reset(rawOutput);
-
-  return true;
-}*/
-
 void KSDBHandler::search(const QString &criteria)
 {
   bool result = false;
@@ -300,7 +271,7 @@ void KSDBHandler::search(const QString &criteria)
   {
     literal = "name";
   }
-  QString temp, rawQuery = "SELECT name, id, search FROM phrases WHERE "+literal+" LIKE '"+criteria+"%';";
+  QString temp, rawQuery = "SELECT name, id, search FROM phrases WHERE "+literal+" LIKE '"+criteria+"%' ORDER BY name ASC LIMIT 200;";
   sqlite3_stmt *rawOutput;
   int statusCode;
 
@@ -372,6 +343,7 @@ void KSDBHandler::run()
     {
       case(SEARCH):
       {
+        m_skip = false;
         search(current.getQuery());
         break;
       }
@@ -382,6 +354,7 @@ void KSDBHandler::run()
       }
     }
   }
+  query("REINDEX phrases; REINDEX dictionary;");
   sqlite3_close(m_db);
 }
 
@@ -393,6 +366,12 @@ void KSDBHandler::terminate(bool terminate)
 void KSDBHandler::skip()
 {
   sqlite3_interrupt(m_db);
+  m_skip = true;
+}
+
+bool KSDBHandler::isSkiped()
+{
+  return m_skip;
 }
 
 KSDBHandler::~KSDBHandler()

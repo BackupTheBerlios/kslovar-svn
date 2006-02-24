@@ -140,7 +140,7 @@ bool KSLanguage::save()
 {
   if(m_edit)
   {
-    if(!KSData::instance()->getLanguageHandler()->processQuery("UPDATE language SET name='"+m_mainWidget->nameEdit->text()+"' WHERE id='"+QString::number(m_id)+"'; DELETE FROM type WHERE langid='"+QString::number(m_id)+"';"))
+    if(!KSData::instance()->getLanguageHandler()->processQuery("UPDATE language SET name='"+m_mainWidget->nameEdit->text()+"' WHERE id='"+QString::number(m_id)+"'; DELETE FROM type WHERE id_lang='"+QString::number(m_id)+"';"))
     {
       return false;
     }

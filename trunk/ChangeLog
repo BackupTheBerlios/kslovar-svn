@@ -14,7 +14,7 @@ Features:
 -Added Synonyms, Antonyms and Word families into dictionary format
 -Removed See also from dictionary format
 -Added a new type of dictionaries. Transitional dictionaries!
--Added search into synonyms, antonyms and word family tabs in add phrase dialog. (*curently disabled*)
+-Added search into synonyms, antonyms and word family tabs in add phrase dialog.
 -Added Upgrade manager
 -Added languages checker. (informs you, if there is no languages file...)
 -Added first time wizard
