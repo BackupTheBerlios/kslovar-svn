@@ -138,6 +138,8 @@ QCString KSXSLHandler::openXSL(QString path)
   }
   //TODO: an if to divide betwen dictionaries. (or switch)
   temp.replace("{explanations-examples}", i18n("Explanations and examples"));
+  temp.replace("{explanations}", i18n("Explanations"));
+  temp.replace("{examples}", i18n("Examples"));
   temp.replace("{synonym}", i18n("Synonym"));
   temp.replace("{antonym}", i18n("Antonym"));
   temp.replace("{word-family}", i18n("Word family"));

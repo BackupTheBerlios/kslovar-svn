@@ -62,7 +62,7 @@ class KSDBHandler : public QThread
     static QString convertString(const QString &input);
 
     void addQueue(KSQuery query);
-    void terminate(bool terminate = true);
+    void terminate();
     void skip();
     bool isSkiped();
 

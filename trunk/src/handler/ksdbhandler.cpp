@@ -27,6 +27,8 @@
 
 #include "../misc/widget/kslistviewitem.h"
 
+#include "../configuration/configuration.h"
+
 #include "../kslovar.h"
 
 #include "ksoutputhandler.h"
@@ -271,7 +273,7 @@ void KSDBHandler::search(const QString &criteria)
   {
     literal = "name";
   }
-  QString temp, rawQuery = "SELECT name, id, search FROM phrases WHERE "+literal+" LIKE '"+criteria+"%' ORDER BY name ASC LIMIT 200;";
+  QString temp, rawQuery = "SELECT name, id, search FROM phrases WHERE "+literal+" LIKE '"+criteria+"%' ORDER BY name ASC LIMIT "+QString::number(Configuration::searchLimit())+";";
   sqlite3_stmt *rawOutput;
   int statusCode;
 
@@ -358,7 +360,7 @@ void KSDBHandler::run()
   sqlite3_close(m_db);
 }
 
-void KSDBHandler::terminate(bool terminate)
+void KSDBHandler::terminate()
 {
   while(locker.tryLock())
   {

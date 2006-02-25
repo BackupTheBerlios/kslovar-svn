@@ -21,6 +21,7 @@ Features:
 
 Eye candy:
 -Stylish splash screen ;)
+-Added neat messages in KSListView and status bar
 
 Major internal changes
 -Rewritten KSDBHandler to become a threaded class (*not completed*) (for better handling BIG dictionaries)

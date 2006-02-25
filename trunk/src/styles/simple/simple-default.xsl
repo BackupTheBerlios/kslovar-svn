@@ -6,7 +6,7 @@
       <body>
         <h1><xsl:value-of select='word'/>, <xsl:value-of select='type'/></h1>
         <p>
-          <h2>{explanations-examples}</h2>
+          <h2>{explanations-examples}</h2> <!--You can use also {explanations} and {examples} -->
           <xsl:for-each select='explanations'>
             <li><xsl:value-of select='explanation'/>, <i><xsl:value-of select='example'/></i></li>
           </xsl:for-each>

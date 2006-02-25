@@ -46,4 +46,4 @@ EXTRA_DIST = $(mime_DATA)
 
 
 
-SUBDIRS = handler sqlite configuration misc dialog styles
+SUBDIRS = configuration handler sqlite misc dialog styles
