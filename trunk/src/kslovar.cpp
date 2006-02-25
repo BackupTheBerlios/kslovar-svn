@@ -337,6 +337,7 @@ void KSlovar::registerButtons()
   m_find = KStdAction::find(this, SLOT(slotFind()), actionCollection());
   m_findNext = KStdAction::findNext(this, SLOT(slotFindNext()), actionCollection());
   m_literalSearch = new KToggleAction(i18n("&Literal search"), "filter", KShortcut(KKey("CTRL+l")), this, SLOT(slotToggleLiteral()), actionCollection(), "literalSearch");
+  m_backSearch = new KToggleAction(i18n("Ba&ck search"), "previous", KShortcut(KKey("CTRL+b")), this, SLOT(slotToggleBack()), actionCollection(), "backSearch");
 
   m_print=KStdAction::print(this, SLOT(slotPrint()), actionCollection());
   m_selectAll=KStdAction::selectAll(this, SLOT(slotSelectAll()), actionCollection());
@@ -378,6 +379,7 @@ void KSlovar::addMenu()
   m_find->plug(editmenu);
   m_findNext->plug(editmenu);
   m_literalSearch->plug(editmenu);
+  m_backSearch->plug(editmenu);
 
   KPopupMenu *gomenu=new KPopupMenu;
   m_back->plug(gomenu);
@@ -404,6 +406,7 @@ void KSlovar::addToolbar()
 {
   KToolBar *toolbar = new KToolBar(this);
   m_literalSearch->plug(toolbar);
+  m_backSearch->plug(toolbar);
   m_back->plug(toolbar);
   m_forward->plug(toolbar);
   m_home->plug(toolbar);
@@ -707,6 +710,11 @@ void KSlovar::slotDownloadLanguage()
 void KSlovar::slotToggleLiteral()
 {
   KSData::instance()->setLiteralSearch(m_literalSearch->isChecked());
+}
+
+void KSlovar::slotToggleBack()
+{
+  KSData::instance()->setBackSearch(m_backSearch->isChecked());
 }
 
 void KSlovar::slotFirstRunWizard()

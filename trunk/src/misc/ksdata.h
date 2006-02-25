@@ -94,6 +94,9 @@ class KSData : public QObject
     void setLiteralSearch(bool searchType);
     bool literalSearch();
 
+    void setBackSearch(bool searchType);
+    bool backSearch();
+
     ~KSData();
 
   private:
@@ -111,6 +114,7 @@ class KSData : public QObject
     QString m_selectedStyle;
     QMap<QChar, QChar> m_convertTable;
     bool m_literalSearch;
+    bool m_backSearch;
 
 };
 

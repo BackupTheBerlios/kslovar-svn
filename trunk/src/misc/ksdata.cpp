@@ -21,18 +21,13 @@
 
 #include "../configuration/configuration.h"
 
-// #include "../handler/ksdbhandler.h"
-
-// #include "../misc/widget/kslistview.h"
-// #include "../misc/widget/kslistviewitem.h"
-
 #include <kstaticdeleter.h>
 
 KSData *KSData::m_instance=0l;
 static KStaticDeleter<KSData> staticKSDataDeleter;
 
 KSData::KSData()
-  : QObject(), m_selectedStyle(Configuration::dictionaryStyle()), m_literalSearch(false), m_dictionaryHandler(0), m_languageHandler(0), m_mainList(0)
+  : QObject(), m_selectedStyle(Configuration::dictionaryStyle()), m_literalSearch(false), m_backSearch(false), m_dictionaryHandler(0), m_languageHandler(0), m_mainList(0)
 {
 }
 
@@ -231,6 +226,16 @@ void KSData::setLiteralSearch(bool searchType)
 bool KSData::literalSearch()
 {
   return m_literalSearch;
+}
+
+void KSData::setBackSearch(bool searchType)
+{
+  m_backSearch = searchType;
+}
+
+bool KSData::backSearch()
+{
+  return m_backSearch;
 }
 
 void KSData::setType(int id)

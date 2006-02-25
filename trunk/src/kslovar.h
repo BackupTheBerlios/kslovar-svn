@@ -125,6 +125,7 @@ private slots:
   void slotConversionTable();
   void slotDownloadLanguage();
   void slotToggleLiteral();
+  void slotToggleBack();
   void slotFirstRunWizard();
   void slotCountPackages(bool found, bool completed);
 
@@ -170,6 +171,7 @@ private:
   KAction *m_find;
   KAction *m_findNext;
   KToggleAction *m_literalSearch;
+  KToggleAction *m_backSearch;
   KAction *m_print;
   KAction *m_selectAll;
   KAction *m_addPhrase;

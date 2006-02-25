@@ -269,11 +269,16 @@ void KSDBHandler::search(const QString &criteria)
   bool result = false;
   QApplication::postEvent(m_reciever, new QCustomEvent(CLEAR));
   QString literal = "search";
+  QString searchType = criteria+"%";
   if(KSData::instance()->literalSearch())
   {
     literal = "name";
   }
-  QString temp, rawQuery = "SELECT name, id, search FROM phrases WHERE "+literal+" LIKE '"+criteria+"%' ORDER BY name ASC LIMIT "+QString::number(Configuration::searchLimit())+";";
+  if(KSData::instance()->backSearch())
+  {
+    searchType = "%"+criteria;
+  }
+  QString temp, rawQuery = "SELECT name, id, search FROM phrases WHERE "+literal+" LIKE '"+searchType+"' ORDER BY name ASC LIMIT "+QString::number(Configuration::searchLimit())+";";
   sqlite3_stmt *rawOutput;
   int statusCode;
 
