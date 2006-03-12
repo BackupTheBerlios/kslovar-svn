@@ -97,7 +97,7 @@ KSlovar::KSlovar()
     }
   }
 
-  m_welcomeMessage=i18n("<h1>Welcome to KSlovar</h1> This needs to be changed :).");
+  m_welcomeMessage=i18n("<h1>Welcome to KSlovar</h1> <p>This is an editor and viewer that is capable of creating, editing and showing diferent kinds of dictionaries.</p><p>If you encounter any bugs, please send a bug report to gregor@podnapisi.net.</p>");
 
 
   registerButtons();
