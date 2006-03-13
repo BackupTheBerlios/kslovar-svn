@@ -4,7 +4,12 @@
   <xsl:template match='phrase'>
     <html>
       <body>
-        <h1><xsl:value-of select='word'/></h1>
+        <table width='100%' border='0'>
+          <tr>
+            <td><h1><xsl:value-of select='word'/></h1></td>
+            <td align='right'><img src='{images-dir}/kslovar.png' /></td><!--{styles-dir} goes one level up (/home/user/.kde/share/apps/kslovar/styles/stylename) -->
+          </tr>
+        </table>
         <p>
           <h2>{explanations-examples}</h2>
           <xsl:for-each select='explanations'>
