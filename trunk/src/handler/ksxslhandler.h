@@ -29,15 +29,15 @@ class QCString;
 */
 class KSXSLHandler{
 public:
-    KSXSLHandler(QString document);
+    KSXSLHandler(const QString &document);
 
-    void setXSL(QString document);
+    void setXSL(const QString &document, QString style = "null");
     QString parse(QString xmlString);
 
     ~KSXSLHandler();
 
   private:
-    QCString openXSL(QString path);
+    QCString openXSL(QString path, QString style);
 
 };
 

@@ -20,6 +20,7 @@
 #include "ksxslhandler.h"
 
 #include "../misc/ksdata.h"
+#include "../configuration/configuration.h"
 
 #include <libxml/globals.h>
 #include <libxml/parser.h>
@@ -31,6 +32,7 @@
 #include <qfile.h>
 #include <qstring.h>
 #include <qstringlist.h>
+#include <qregexp.h>
 
 #include <kdebug.h>
 #include <kapplication.h>
@@ -40,17 +42,17 @@
 xsltStylesheetPtr styleSheet;
 xmlDocPtr xslDoc;
 
-KSXSLHandler::KSXSLHandler(QString document)
+KSXSLHandler::KSXSLHandler(const QString &document)
 {
   setXSL(document);
 }
 
-void KSXSLHandler::setXSL(QString document)
+void KSXSLHandler::setXSL(const QString &document, QString style)
 {
   styleSheet=0;
   xslDoc=0;
 
-  QCString rawDocument=openXSL(document);
+  QCString rawDocument=openXSL(document, style);
   xslDoc=xmlParseMemory(rawDocument, rawDocument.length());
   if(xslDoc)
   {
@@ -123,7 +125,7 @@ QString KSXSLHandler::parse(QString xmlString)
   return result;
 }
 
-QCString KSXSLHandler::openXSL(QString path)
+QCString KSXSLHandler::openXSL(QString path, QString style)
 {
   QString temp;
   QFile input(path);
@@ -136,13 +138,21 @@ QCString KSXSLHandler::openXSL(QString path)
     }
     input.close();
   }
-  //TODO: an if to divide betwen dictionaries. (or switch)
+
+  if(style == "null")
+  {
+    style = Configuration::dictionaryStyle();
+  }
+
+  //TODO: an if to divide betwen dictionaries. (or switch) ???
   temp.replace("{explanations-examples}", i18n("Explanations and examples"));
   temp.replace("{explanations}", i18n("Explanations"));
   temp.replace("{examples}", i18n("Examples"));
   temp.replace("{synonym}", i18n("Synonym"));
   temp.replace("{antonym}", i18n("Antonym"));
   temp.replace("{word-family}", i18n("Word family"));
+  temp.replace("{styles-dir}", path.remove(QRegExp("/"+style+"-.+")));
+  temp.replace("{images-dir}", path+"/images");
   return temp.utf8();
 }
 

@@ -4,7 +4,7 @@
   <xsl:template match='phrase'>
     <html>
       <body>
-        <h1><xsl:value-of select='word'/>, <xsl:value-of select='type'/></h1>
+        <h1><xsl:value-of select='word'/></h1>
         <p>
           <h2>{explanations-examples}</h2>
           <xsl:for-each select='explanations'>

@@ -1,4 +1,4 @@
-
+SUBDIRS = images
 
 simpledir = $(kde_datadir)/kslovar/styles/simple
 EXTRA_DIST = $(simple_DATA)

@@ -53,11 +53,10 @@ KSAppearance::KSAppearance(QWidget *parent, const char *name)
   styleList->setFullWidth(true);
   populateStyleList();
 
-  m_exampleDefault="<?xml version='1.0' encoding='UTF-8'?><phrase><word>Example</word><type>noun</type><explanations><explanation>An example style for the default dictionary.</explanation><example>You could use this style!</example></explanations><explanations><explanation>Example of another explanation.</explanation><example>The second example is strange.</example></explanations><other><synonym id='1'>Explanation</synonym><antonym id='3'>Something?</antonym></other><other><synonym id='2'>Type</synonym></other></phrase>";
+  m_exampleDefault = "<?xml version='1.0' encoding='UTF-8'?><phrase><word>Example</word><type>noun</type><explanations><explanation>An example style for the default dictionary.</explanation><example>You could use this style!</example></explanations><explanations><explanation>Example of another explanation.</explanation><example>The second example is strange.</example></explanations><other><synonym id='1'>Explanation</synonym><antonym id='3'>Something?</antonym></other><other><synonym id='2'>Type</synonym></other></phrase>";
   m_exampleTransitional = "<?xml version='1.0' encoding='UTF-8'?><!DOCTYPE default><phrase><word>Test</word><explanations><explanation>Type an explanation.</explanation><example>Type an example.</example><explanation2>Type an explanation.</explanation2><example2>Type an example.</example2></explanations></phrase>";
 
-  m_defaultStyleParser=new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-default.xsl")));
-  m_transitionalStyleParser = new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-transitional.xsl")));
+  m_defaultStyleParser = new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-default.xsl")));
 
   QVBoxLayout *defaultStyleLayout=new QVBoxLayout(defaultStyle);
   m_previewDefault=new KHTMLPart(defaultStyle);
@@ -66,6 +65,8 @@ KSAppearance::KSAppearance(QWidget *parent, const char *name)
   m_previewDefault->write(m_defaultStyleParser->parse(m_exampleDefault));
   m_previewDefault->end();
   defaultStyleLayout->addWidget(m_previewDefault->view());
+
+  m_transitionalStyleParser = new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-transitional.xsl")));
 
   QVBoxLayout *transitionalStyleLayout=new QVBoxLayout(transitionalStyle);
   m_previewTransitional=new KHTMLPart(transitionalStyle);
@@ -76,7 +77,7 @@ KSAppearance::KSAppearance(QWidget *parent, const char *name)
   transitionalStyleLayout->addWidget(m_previewTransitional->view());
 
 
-  connect(styleList, SIGNAL(selectionChanged(QListViewItem*)), this, SLOT(slotSelectStyle(QListViewItem*)));
+  connect(styleList, SIGNAL(currentChanged(QListViewItem*)), this, SLOT(slotSelectStyle(QListViewItem*)));
   connect(copyButton, SIGNAL(clicked()), this, SLOT(slotCopyStyle()));
   connect(removeButton, SIGNAL(clicked()), this, SLOT(slotDeleteStyle()));
   connect(editButton, SIGNAL(clicked()), this, SLOT(slotEditStyle()));
@@ -116,12 +117,13 @@ void KSAppearance::populateStyleList()
 
 void KSAppearance::slotSelectStyle(QListViewItem *selected)
 {
-  m_defaultStyleParser = new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+selected->text(0)+"/"+selected->text(0)+"-default.xsl")));
-  m_transitionalStyleParser = new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+selected->text(0)+"/"+selected->text(0)+"-transitional.xsl")));
+  m_defaultStyleParser->setXSL(QString::fromUtf8(locate("appdata", "styles/"+selected->text(0)+"/"+selected->text(0)+"-default.xsl")), selected->text(0));
 
   m_previewDefault->begin();
   m_previewDefault->write(m_defaultStyleParser->parse(m_exampleDefault));
   m_previewDefault->end();
+
+  m_transitionalStyleParser->setXSL(QString::fromUtf8(locate("appdata", "styles/"+selected->text(0)+"/"+selected->text(0)+"-transitional.xsl")), selected->text(0));
 
   m_previewTransitional->begin();
   m_previewTransitional->write(m_transitionalStyleParser->parse(m_exampleTransitional));
