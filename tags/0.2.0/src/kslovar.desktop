@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=KSlovar
+GenericName=Dictionary viewer and editor
+GenericName[sl]=Pregledovalnik in urejevalnik slovarjev
+Exec=kslovar
+Icon=kslovar
+Type=Application
+DocPath=kslovar/index.html
+Comment=Dictionary for KDE
+Comment[sl]=Slovar za KDE
+Categories=Qt;KDE;Education;Languages

@@ -17,53 +17,45 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "kslistviewsearchline.h"
-
-#include "kslistview.h"
 #include "kslistviewitem.h"
 
-#include "../ksdata.h"
+#include "kslistview.h"
 
-#include <kdebug.h>
-
-/*KSListViewSearchLine::KSListViewSearchLine(QWidget *parent, KSListView *listView, const char *name)
-  : KListViewSearchLine(parent, static_cast<KListView*> (listView), name)
-{
-}*/
-
-KSListViewSearchLine::KSListViewSearchLine(QWidget *parent, const char *name)
-  : KListViewSearchLine(parent, name)
+KSListViewItem::KSListViewItem(KListView *parent, const QString &label1, const QString &id, const QString &search)
+  : KListViewItem(parent, label1), m_id(id), m_search(search)
 {
 }
 
-bool KSListViewSearchLine::itemMatches(const QListViewItem *item, const QString &s) const
-{
-  if(s.isEmpty())
-  {
-    return true;
-  }
-
-  if(!KSData::instance()->literalSearch())
-  {
-    if(static_cast<KSListViewItem*> (const_cast<QListViewItem*> (item))->getSearch().find(s, 0, 0) >= 0)
-    {
-      return true;
-    }
-  }
-  else
-  {
-    if(static_cast<KSListViewItem*> (const_cast<QListViewItem*> (item))->text(0).find(s, 0, 0) >= 0)
-    {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-KSListViewSearchLine::~KSListViewSearchLine()
+KSListViewItem::KSListViewItem(KSListView *parent, const QString &label1, const QString &id, const QString &search)
+  : KListViewItem(parent, label1), m_id(id), m_search(search)
 {
 }
 
+KSListViewItem::KSListViewItem(const QString &label1, const QString &id, const QString &search)
+  : KListViewItem((KListView*) 0, label1), m_id(id), m_search(search)
+{
+}
 
-#include "kslistviewsearchline.moc"
+KSListViewItem::KSListViewItem(KListView *parent, QListViewItem *after, const QString &label1, const QString &id)
+  : KListViewItem(parent, after, label1), m_id(id)
+{
+}
+
+QString KSListViewItem::getId()
+{
+  return m_id;
+}
+
+QString KSListViewItem::getSearch()
+{
+  return m_search;
+}
+
+void KSListViewItem::setId(int id)
+{
+  m_id.setNum(id);
+}
+
+KSListViewItem::~KSListViewItem()
+{
+}
