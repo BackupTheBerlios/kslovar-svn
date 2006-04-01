@@ -102,11 +102,11 @@ KSlovar::KSlovar()
   addMenu();
   addToolbar();
 
-  QHBox * horiz = new QHBox( this );
+  QHBox * horiz = new QHBox(this);
 
-  m_split = new QSplitter( horiz );
+  m_split = new QSplitter(horiz);
 
-  QVBox * vert = new QVBox( m_split );
+  QVBox * vert = new QVBox(m_split);
   vert->setMaximumWidth(200);
   vert->setMinimumWidth(200);
 
@@ -119,7 +119,7 @@ KSlovar::KSlovar()
 
   KSData::instance()->setMainList(m_list);
 
-  m_browser=new KHTMLPart( m_split );
+  m_browser=new KHTMLPart(m_split);
   m_browser->setEncoding("utf-8", true);
   m_browser->view()->viewport()->installEventFilter(this); //For searching with middle click
   slotClose();
@@ -131,7 +131,7 @@ KSlovar::KSlovar()
   connect(m_list, SIGNAL(contextMenu(KListView*, QListViewItem*, const QPoint&)), this, SLOT(showPopup( KListView*, QListViewItem*, const QPoint& )));
   connect(m_list, SIGNAL(recievedPackage(bool, bool)), this, SLOT(slotCountPackages(bool, bool)));
 
-  setCentralWidget( horiz );
+  setCentralWidget(horiz);
 }
 
 void KSlovar::slotFileOpen()

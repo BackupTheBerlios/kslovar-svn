@@ -44,35 +44,12 @@ KSListView::KSListView(QWidget *parent, const char *name)
  m_continuousLineTimerWait(10), m_continuousPageTimerWait(30),
  m_continuousLineTimerInterval(40), m_continuousPageTimerInterval(400),
  m_pressedButton(QStyle::SC_None), m_smoothLineStep(0), m_smoothPageStep(0),
- m_mousePressed(false)//, mouseConfig(Configuration::mouseNavigation())
+ m_mousePressed(false)
 {
   header()->hide();
   connect( dynamic_cast<QObject*> (KSConfigDialog::instance()), SIGNAL(settingsChanged()), this, SLOT(slotUpdateConfiguration()) );
-  /*verticalScrollBar()->installEventFilter(this);
-  if(!Configuration::scrollBar())
-  {
-    setVScrollBarMode(AlwaysOff);
-  }*/
   slotUpdateConfiguration();
 }
-
-/*bool KSListView::eventFilter(QObject *o, QEvent *e)
-{
-  if(o==viewport())
-{
-    if(mouseConfig)
-{
-      QMouseEvent *event = static_cast<QMouseEvent*>(e);
-      if(e->type() == QEvent::MouseMove)
-{
-        const double offset = static_cast<double>(visibleHeight())/50.0 + 5.0;
-        m_value = ( event->y() - offset ) * ( static_cast<double>(verticalScrollBar()->maxValue()) / ( static_cast<double>(visibleHeight()) - offset * 2 ) );
-        verticalScrollBar()->setValue(static_cast<int> (m_value));
-}
-}
-}
-  return KListView::eventFilter(o, e);
-}*/
 
 bool KSListView::eventFilter(QObject *o, QEvent *e)
 {
@@ -244,19 +221,6 @@ bool KSListView::eventFilter(QObject *o, QEvent *e)
   return KListView::eventFilter(o, e);
 }
 
-/*void KSListView::slotUpdateConfiguration()
-{
-  mouseConfig=Configuration::mouseNavigation();
-  if(!Configuration::scrollBar())
-{
-    setVScrollBarMode(AlwaysOff);
-}
-  else
-{
-    setVScrollBarMode(AlwaysOn);
-}
-}*/
-
 void KSListView::slotUpdateConfiguration()
 {
   m_mouseConfig = Configuration::mouseNavigation();
@@ -266,7 +230,7 @@ void KSListView::slotUpdateConfiguration()
   }
   else
   {
-    setVScrollBarMode(AlwaysOn);
+    setVScrollBarMode(Auto);
   }
   if (Configuration::smoothScroll())
   {
@@ -399,16 +363,11 @@ void KSListView::customEvent(QCustomEvent *package)
 {
   if(package->type() == LIST)
   {
-    /*if(!isEnabled())
-    {*/
     m_emptyText = i18n("No words found");
     if(KSData::instance()->getDictionary()->isSkiped())
     {
       return;
     }
-      /*this->clear();
-    this->setDisabled(false);*/
-    //}
 
     KSOutputHandler *input = static_cast<KSOutputHandler*> (package);
     for(QValueList<int>::iterator count = m_filter.begin(); count != m_filter.end(); count++)
@@ -427,16 +386,12 @@ void KSListView::customEvent(QCustomEvent *package)
     emit recievedPackage(false, false);
     m_emptyText = i18n("Search in progress...");
     this->clear();
-    //new KSListViewItem(this, i18n("Search in progress..."));
-    //this->setDisabled(true);
   }
   if(package->type() == NORESULT)
   {
     emit recievedPackage(false, true);
     m_emptyText = i18n("No words found");
     this->clear();
-    //new KSListViewItem(this, i18n("No words found."));
-    //this->setDisabled(true);
   }
 }
 
@@ -453,7 +408,6 @@ void KSListView::delFilter(int id)
 void KSListView::setEmptyText(const QString &text)
 {
   m_emptyText = text;
-  //triggerUpdate();
 }
 
 void KSListView::drawContentsOffset(QPainter *p, int ox, int oy, int cx, int cy, int cw, int ch)
