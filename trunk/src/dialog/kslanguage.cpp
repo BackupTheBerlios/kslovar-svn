@@ -21,13 +21,13 @@
 
 #include "ui/kslanguagewdt.h"
 
-#include "../misc/widget/kslistview.h"
-#include "../misc/widget/kslistviewitem.h"
-#include "../misc/ksdata.h"
+#include "misc/widget/kslistview.h"
+#include "misc/widget/kslistviewitem.h"
+#include "misc/ksdata.h"
 
-#include "../handler/ksdbhandler.h"
+#include "handler/ksdbhandler.h"
 
-#include "../kslovar.h"
+#include "kslovar.h"
 
 #include <qregexp.h>
 #include <qlistview.h>

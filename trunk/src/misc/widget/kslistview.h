@@ -21,6 +21,8 @@
 #define KSLISTVIEW_H
 
 #include <klistview.h>
+///@TODO need to remove this include!
+#include <qstyle.h>
 
 class QCustomEvent;
 
@@ -86,17 +88,44 @@ class KSListView : public KListView
      * See Qt's documentation for more info.
      */
     virtual void drawContentsOffset(QPainter *p, int ox, int oy, int cx, int cy, int cw, int ch);
+    /**
+     * Method for handling timer events.
+     * See Qt's documentation for more info.
+     */
+    void timerEvent(QTimerEvent *e);
 
   private slots:
     /**
      * Method for updatig the widget, when the configuration changes.
      */
     void slotUpdateConfiguration();
+    /**
+     * Slot that changes the position of the vertical scroll bar when moving with arrow keys (changing selection).
+     * @param item Pointer to the item, that was selected
+     */
+    void slotCurrentChanged(QListViewItem *item);
 
   private:
     double m_value;
-    bool mouseConfig;
+    double m_smoothValue;
+    double m_smoothTimer;
+    double m_smoothTimerInterval;
+    double m_YDrag;
+    int m_continuousLineTimer;
+    int m_continuousPageTimer;
+    int m_continuousPressCounter;
+    int m_continuousLineTimerWait;
+    int m_continuousPageTimerWait;
+    int m_continuousLineTimerInterval;
+    int m_continuousPageTimerInterval;
+    QStyle::SubControl m_pressedButton;
+    int m_smoothLineStep;
+    int m_smoothPageStep;
+    bool m_mousePressed;
+    bool m_mouseConfig;
+
     QValueList<int> m_filter;
+
     QString m_emptyText;
 };
 

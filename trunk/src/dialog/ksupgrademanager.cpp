@@ -21,9 +21,9 @@
 
 #include "ui/ksupgrademanagerwdt.h"
 
-#include "../misc/widget/kslistview.h"
+#include "misc/widget/kslistview.h"
 
-#include "../kslovar.h"
+#include "kslovar.h"
 
 #include <qfile.h>
 

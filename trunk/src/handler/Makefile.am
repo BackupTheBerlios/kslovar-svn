@@ -1,4 +1,5 @@
-INCLUDES = $(all_includes) $(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS)
+INCLUDES = -I$(top_srcdir)/src $(all_includes) $(LIBXML_CFLAGS) \
+	$(LIBXSLT_CFLAGS)
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libhandler.la
 

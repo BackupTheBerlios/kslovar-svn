@@ -21,11 +21,11 @@
 
 #include "configuration.h"
 
-#include "../kslovar.h"
+#include "kslovar.h"
 
-#include "../misc/ksdata.h"
+#include "misc/ksdata.h"
 
-#include "../handler/ksdbhandler.h"
+#include "handler/ksdbhandler.h"
 
 #include <qradiobutton.h>
 #include <qcheckbox.h>
@@ -42,6 +42,9 @@
 KSWizard::KSWizard(QWidget *parent, const char *name)
     :KSWizardWzt(parent, name)
 {
+  m_mouseNavigation->setChecked(Configuration::mouseNavigation());
+  m_scrollBar->setChecked(Configuration::scrollBar());
+  m_smoothScroll->setChecked(Configuration::smoothScroll());
   locateLocal("appdata", "");
   m_downloadProgress->setShown(false);
   m_downloadLabel->setShown(false);
@@ -58,6 +61,7 @@ void KSWizard::slotFinish()
 {
   Configuration::setMouseNavigation(m_mouseNavigation->isChecked());
   Configuration::setScrollBar(m_scrollBar->isChecked());
+  Configuration::setSmoothScroll(m_smoothScroll->isChecked());
   Configuration::setAutoUpdateLanguage(m_upgradeManager->isChecked());
   Configuration::writeConfig();
 

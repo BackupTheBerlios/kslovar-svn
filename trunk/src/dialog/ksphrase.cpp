@@ -22,16 +22,16 @@
 
 #include "ui/ksphrasewdt.h"
 
-#include "../kslovar.h"
+#include "kslovar.h"
 
-#include "../handler/ksdbhandler.h"
-#include "../handler/ksxmlhandler.h"
+#include "handler/ksdbhandler.h"
+#include "handler/ksxmlhandler.h"
 
-#include "../misc/widget/kslistview.h"
-#include "../misc/widget/kslistviewitem.h"
-#include "../misc/widget/kssearchline.h"
+#include "misc/widget/kslistview.h"
+#include "misc/widget/kslistviewitem.h"
+#include "misc/widget/kssearchline.h"
 
-#include "../misc/ksdata.h"
+#include "misc/ksdata.h"
 
 #include <qregexp.h>
 #include <qdom.h>

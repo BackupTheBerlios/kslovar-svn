@@ -22,10 +22,10 @@
 #include "kslistviewitem.h"
 #include "kslistview.h"
 
-#include "../ksdata.h"
-#include "../ksquery.h"
+#include "misc/ksdata.h"
+#include "misc/ksquery.h"
 
-#include "../../handler/ksdbhandler.h"
+#include "handler/ksdbhandler.h"
 
 #include <qtimer.h>
 

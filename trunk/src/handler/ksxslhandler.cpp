@@ -19,8 +19,8 @@
  ***************************************************************************/
 #include "ksxslhandler.h"
 
-#include "../misc/ksdata.h"
-#include "../configuration/configuration.h"
+#include "misc/ksdata.h"
+#include "configuration/configuration.h"
 
 #include <libxml/globals.h>
 #include <libxml/parser.h>

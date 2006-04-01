@@ -1,3 +1,18 @@
+0.2.0 => 0.3.0
+
+Bugfixes:
+
+Features:
+-Added smooth scrolling
+-Mouse navigation is not enabled by default
+-Vertical scroll bar is enabled by default
+
+Eye candy:
+
+Internal changes:
+-Includes are changed. (no more ../)
+
+
 0.1.0 => 0.2.0
 
 Bugfixes:

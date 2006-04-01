@@ -1,4 +1,4 @@
-INCLUDES = $(all_includes)
+INCLUDES = -I$(top_srcdir)/src $(all_includes)
 METASOURCES = AUTO
 noinst_LTLIBRARIES = libconfiguration.la
 libconfiguration_la_SOURCES = configuration.kcfgc ksappearance.cpp \

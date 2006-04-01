@@ -20,16 +20,16 @@
 
 #include "ksdbhandler.h"
 
-#include "../sqlite/sqlite3.h"
+#include "sqlite/sqlite3.h"
 
-#include "../misc/ksdata.h"
-#include "../misc/ksquery.h"
+#include "misc/ksdata.h"
+#include "misc/ksquery.h"
 
-#include "../misc/widget/kslistviewitem.h"
+#include "misc/widget/kslistviewitem.h"
 
-#include "../configuration/configuration.h"
+#include "configuration/configuration.h"
 
-#include "../kslovar.h"
+#include "kslovar.h"
 
 #include "ksoutputhandler.h"
 

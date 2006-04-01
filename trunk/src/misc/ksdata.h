@@ -24,7 +24,7 @@
 
 /**
  * @short Structure for easy handling elements.
- * For working with all the lemenets that have a name and id. For example... languages.
+ * For working with all the emenets that have a name and id. For example... languages.
  */
 typedef struct
 {

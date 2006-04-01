@@ -142,7 +142,7 @@
 <customwidgets>
     <customwidget>
         <class>KSListView</class>
-        <header location="global">../../misc/widget/kslistview.h</header>
+        <header location="global">misc/widget/kslistview.h</header>
         <sizehint>
             <width>-1</width>
             <height>-1</height>
@@ -164,7 +164,6 @@
 </images>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
-    <includehint>kslistview.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
 </includehints>

@@ -19,7 +19,7 @@
  ***************************************************************************/
 #include "ksdata.h"
 
-#include "../configuration/configuration.h"
+#include "configuration/configuration.h"
 
 #include <kstaticdeleter.h>
 
@@ -27,7 +27,7 @@ KSData *KSData::m_instance=0l;
 static KStaticDeleter<KSData> staticKSDataDeleter;
 
 KSData::KSData()
-  : QObject(), m_selectedStyle(Configuration::dictionaryStyle()), m_literalSearch(false), m_backSearch(false), m_dictionaryHandler(0), m_languageHandler(0), m_mainList(0)
+  : QObject(), m_dictionaryHandler(0), m_languageHandler(0), m_mainList(0), m_selectedStyle(Configuration::dictionaryStyle()), m_literalSearch(false), m_backSearch(false)
 {
 }
 

@@ -21,11 +21,11 @@
 
 #include "kslanguage.h"
 
-#include "../kslovar.h"
+#include "kslovar.h"
 
-#include "../handler/ksdbhandler.h"
+#include "handler/ksdbhandler.h"
 
-#include "../misc/ksdata.h"
+#include "misc/ksdata.h"
 
 #include "ui/ksdictionarywdt.h"
 
