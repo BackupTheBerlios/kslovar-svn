@@ -356,15 +356,15 @@ void KSPhrase::slotApply()
 void KSPhrase::setWord(QString text, const QString &id)
 {
   text.remove(QRegExp("<\\?.+\\?>"));
-  m_id=id;
-  m_edit=true;
+  m_id = id;
+  m_edit = true;
 
-  m_XMLHandler=new KSXMLHandler(text);
+  m_XMLHandler = new KSXMLHandler(text);
   m_mainWidget->wordEdit->setText(m_XMLHandler->readString("word"));
 
   if(!KSData::instance()->getType())
   {
-    m_mainWidget->typeBox->setCurrentItem(m_XMLHandler->readString("type").toInt()-1);
+    m_mainWidget->typeBox->setCurrentItem(KSData::instance()->getPartOfSpeechName(m_XMLHandler->readString("type").toInt()));
 
     QValueList<KSExplanation> explanations=m_XMLHandler->readExplanation();
     for(QValueList<KSExplanation>::iterator count=explanations.begin();count!=explanations.end();count++)

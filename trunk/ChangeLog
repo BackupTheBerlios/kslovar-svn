@@ -1,19 +1,23 @@
-0.2.0 => 0.3.0
-
-Bugfixes:
--Synonyms, Antonyms and Word families are added with the new phrase
--Edit languages works fine now (no more duplication, and parts of speech getting new IDs).
+0.2.1 => 0.3.0
 
 Features:
 -Added smooth scrolling
--Mouse navigation is not enabled by default
--Vertical scroll bar is enabled by default
 
 Eye candy:
 
 Internal changes:
 -Includes are changed. (no more ../)
 
+0.2.0 => 0.2.1
+
+Bugfixes:
+-Synonyms, Antonyms and Word families are added with the new phrase
+-Edit languages works fine now (no more duplication, and parts of speech
+don't get new ID).
+-Editing of dictionaries works fine (problems with languages).
+-Editing of phrases works fine (the right part of speech is selected).
+-Mouse navigation is not enabled by default
+-Vertical scroll bar is enabled by default
 
 0.1.0 => 0.2.0
 

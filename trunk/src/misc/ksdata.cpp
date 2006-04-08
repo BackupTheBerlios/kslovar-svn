@@ -23,7 +23,7 @@
 
 #include <kstaticdeleter.h>
 
-KSData *KSData::m_instance=0l;
+KSData *KSData::m_instance = 0;
 static KStaticDeleter<KSData> staticKSDataDeleter;
 
 KSData::KSData()
@@ -42,7 +42,7 @@ KSData *KSData::instance()
 
 void KSData::setDictionaryPath(const QString &path)
 {
-  m_dictionaryPath=path;
+  m_dictionaryPath = path;
 }
 
 QString KSData::getDictionaryPath()
@@ -64,8 +64,8 @@ void KSData::addLanguage(const QString &name, int id)
 {
   bool obstaja = false;
   KSElement temp;
-  temp.name=name;
-  temp.id=id;
+  temp.name = name;
+  temp.id = id;
   for(QValueList<KSElement>::iterator count = m_languages.begin(); count != m_languages.end(); count++)
   {
     if((*count).name == temp.name)
@@ -83,20 +83,32 @@ void KSData::addLanguage(const QString &name, int id)
 QStringList KSData::getLanguagesNames()
 {
   QStringList temp;
-  for(QValueList<KSElement>::iterator count=m_languages.begin();count!=m_languages.end();count++)
+  for(QValueList<KSElement>::iterator count = m_languages.begin(); count != m_languages.end(); count++)
   {
     temp << (*count).name;
   }
   return temp;
 }
 
-QString KSData::getLanguageId(const QString &name)
+int KSData::getLanguageId(const QString &name)
 {
-  for(QValueList<KSElement>::iterator count=m_languages.begin();count!=m_languages.end();count++)
+  for(QValueList<KSElement>::iterator count = m_languages.begin(); count != m_languages.end(); count++)
   {
-    if(name==(*count).name)
+    if(name == (*count).name)
     {
-      return QString::number((*count).id);
+      return (*count).id;
+    }
+  }
+  return -1;
+}
+
+QString KSData::getLanguageName(int id)
+{
+  for(QValueList<KSElement>::iterator count = m_languages.begin(); count != m_languages.end(); count++)
+  {
+    if(id == (*count).id)
+    {
+      return (*count).name;
     }
   }
   return QString::null;
@@ -169,25 +181,6 @@ void KSData::clearPartOfSpeech()
   m_partOfSpeech.clear();
 }
 
-/*void KSData::addPhrase(int id, const QString &name, const QString &search)
-{
-  KSPhrases temp;
-  temp.id=id;
-  temp.name=name;
-  temp.search=search;
-  m_phrases << temp;
-}
-
-QValueList<KSPhrases> KSData::getPhrases()
-{
-  return m_phrases;
-}
-
-void KSData::clearPhrases()
-{
-  m_phrases.clear();
-}*/
-
 void KSData::setMainList(KSListView *list)
 {
   m_mainList = list;
@@ -200,7 +193,7 @@ KSListView *KSData::getMainList()
 
 void KSData::setStyle(const QString &selectedStyle)
 {
-  m_selectedStyle=selectedStyle;
+  m_selectedStyle = selectedStyle;
 }
 
 QString KSData::getStyle()
@@ -210,7 +203,7 @@ QString KSData::getStyle()
 
 void KSData::addConversion(const QChar &from, const QChar &to)
 {
-  m_convertTable[from]=to;
+  m_convertTable[from] = to;
 }
 
 QMap<QChar, QChar> KSData::getConvertTable()
@@ -250,7 +243,7 @@ int KSData::getType()
 
 KSData::~KSData()
 {
-  if(m_instance==this)
+  if(m_instance == this)
   {
     staticKSDataDeleter.setObject(m_instance, 0, false);
   }

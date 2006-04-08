@@ -24,7 +24,7 @@
 
 /**
  * @short Structure for easy handling elements.
- * For working with all the lemenets that have a name and id. For example... languages.
+ * For working with all the emenets that have a name and id. For example... languages.
  */
 typedef struct
 {
@@ -144,8 +144,16 @@ class KSData : public QObject
      * @param name Name of the language.
      *
      * @return ID of the language.
+     * @return @c -1 There is no language with the specified name.
      */
-    QString getLanguageId(const QString &name);
+    int getLanguageId(const QString &name);
+    /**
+     * Gives a name of the language with the specified ID.
+     * @param id ID of the language.
+     *
+     * @return Name of the language.
+     */
+    QString getLanguageName(int id);
 
     /**
      * Adds a part of speech.
@@ -177,13 +185,6 @@ class KSData : public QObject
      * Deletes all parts of speech.
      */
     void clearPartOfSpeech();
-
-    /**
-     *
-     */
-    /*void addPhrase(int id, const QString &name, const QString &search);
-    QValueList<KSPhrases> getPhrases();
-    void clearPhrases();*/
 
     /**
      * Sets the main list (the one in KSlovar main Window).
@@ -263,7 +264,6 @@ class KSData : public QObject
     int m_typeId;
     QValueList<KSElement> m_languages;
     QValueList<KSElement> m_partOfSpeech;
-    //QValueList<KSPhrases> m_phrases;
     KSListView *m_mainList;
     QString m_selectedStyle;
     QMap<QChar, QChar> m_convertTable;

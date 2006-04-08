@@ -122,16 +122,17 @@ void KSDictionary::populateLanguages()
   QStringList languages=KSData::instance()->getLanguagesNames();
   if(!languages.isEmpty())
   {
-    for(QStringList::iterator count=languages.begin(); count!=languages.end(); count++)
+    for(QStringList::iterator count=languages.begin(); count != languages.end(); count++)
     {
       m_mainWidget->languageSelect->insertItem(*count);
     }
   }
+  m_mainWidget->languageSelect->setCurrentItem(KSData::instance()->getLanguage()-1);
 }
 
 void KSDictionary::slotEditLang()
 {
-  KSLanguage *widget=new KSLanguage(this, i18n("Edit language"), m_mainWidget->languageSelect->currentText(), m_mainWidget->languageSelect->currentItem());
+  KSLanguage *widget=new KSLanguage(this, i18n("Edit language"), m_mainWidget->languageSelect->currentText());
   widget->show();
 }
 
@@ -170,7 +171,7 @@ bool KSDictionary::save()
   }
   m_mainWidget->mainEdit->setTextFormat(Qt::RichText);
   QString text="<h1>"+m_mainWidget->nameEdit->text()+"</h1>"+m_mainWidget->mainEdit->text();
-  QString id=KSData::instance()->getLanguageId(m_mainWidget->languageSelect->currentText());
+  QString id=QString::number(KSData::instance()->getLanguageId(m_mainWidget->languageSelect->currentText()));
   QString lang=id;
 
   QString type;

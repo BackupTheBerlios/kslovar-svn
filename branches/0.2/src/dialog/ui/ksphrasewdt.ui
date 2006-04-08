@@ -728,22 +728,12 @@
 <includehints>
     <includehint>klineedit.h</includehint>
     <includehint>kcombobox.h</includehint>
-    <includehint>kslistview.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
-    <includehint>kslistview.h</includehint>
-    <includehint>kssearchline.h</includehint>
-    <includehint>kslistview.h</includehint>
-    <includehint>kslistview.h</includehint>
-    <includehint>kssearchline.h</includehint>
-    <includehint>kslistview.h</includehint>
     <includehint>kpushbutton.h</includehint>
     <includehint>kpushbutton.h</includehint>
-    <includehint>kslistview.h</includehint>
-    <includehint>kssearchline.h</includehint>
-    <includehint>kslistview.h</includehint>
 </includehints>
 </UI>

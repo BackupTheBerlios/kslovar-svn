@@ -97,14 +97,14 @@ bool KSDBHandler::query(const QString &sqlQuery)
     if(statusCode == SQLITE_BUSY)
     {
       kdDebug() << "[KSDBHandler]->Query SQLITE database is locked. Trying to unlock" << endl;
-      if(m_try <= 10)
+      if(m_try >= 50)
       {
         kdError() << "[KSDBHandler]->Query Unable to unlock database!" << endl;
         kdDebug() << "On Query: " << sqlQuery << endl;
         return false;
       }
       m_try++;
-      usleep(50);
+      usleep(100);
       return query(sqlQuery);
     }
     kdError() << "[KSDBHandler]->Query SQLITE err code: " << statusCode << endl
@@ -334,6 +334,7 @@ void KSDBHandler::addQueue(KSQuery query)
 
 void KSDBHandler::run()
 {
+  query("REINDEX phrases; REINDEX dictionary;");
   while(!m_terminate)
   {
     usleep(10);
