@@ -1,0 +1,44 @@
+0.2.0 => 0.2.1
+
+Bugfixes:
+-Synonyms, Antonyms and Word families are added with the new phrase
+-Edit languages works fine now (no more duplication, and parts of speech
+don't get new ID).
+-Editing of dictionaries works fine (problems with languages).
+-Editing of phrases works fine (the right part of speech is selected).
+-Mouse navigation is not enabled by default
+-Vertical scroll bar is enabled by default
+
+0.1.0 => 0.2.0
+
+Bugfixes:
+-Fixed duplicated languages after adding new language
+-Fixed in creating new dictionaries
+-Language is immediatly added to the list of languages in dictionary creation dialog
+-Fixed sqlite crash on amd64
+
+Features:
+-Autoupdate languages
+-Full styles support
+-Fully supported search (with conversion table)
+-"Literal search" switch
+-Added Synonyms, Antonyms and Word families into dictionary format
+-Removed See also from dictionary format
+-Added a new type of dictionaries. Transitional dictionaries!
+-Added search into synonyms, antonyms and word family tabs in add phrase dialog.
+-Added Upgrade manager
+-Added languages checker. (informs you, if there is no languages file...)
+-Added first time wizard
+-Added Back search function
+
+Eye candy:
+-Stylish splash screen ;)
+-Added neat messages in KSListView and status bar
+
+Major internal changes
+-Rewritten KSDBHandler to become a threaded class (*not completed*) (for better handling BIG dictionaries)
+-Added KSQuery for sending Database requests to the new KSDBHandler
+-Added KSOutputHandler to recieve data from the new KSDBHandler
+-Added KSSearchLine for better integration with the new KSDBHandler
+-Removed phrases from KSData (takes WAY too much memory)
+-Added Doxygen documentation
