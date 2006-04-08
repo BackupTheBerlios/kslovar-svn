@@ -55,14 +55,13 @@ KSLanguage::KSLanguage(QWidget *parent, const char *caption, const QString &lang
   if(!language.isEmpty())
   {
     m_mainWidget->nameEdit->setText(language);
-    populateTypeList();
     m_id = KSData::instance()->getLanguageHandler()->processString("SELECT id FROM language WHERE name='"+language+"';").toInt();
+    populateTypeList();
     m_edit = true;
   }
   else
   {
-    QStringList test=KSData::instance()->getLanguageHandler()->processList("SELECT id FROM language;");
-    m_id = test.last().toInt()+1;
+    m_id = KSData::instance()->getLanguageHandler()->processList("SELECT id FROM language;").last().toInt()+1;
     m_edit = false;
   }
 
@@ -77,7 +76,7 @@ KSLanguage::KSLanguage(QWidget *parent, const char *caption, const QString &lang
 
 void KSLanguage::populateTypeList()
 {
-  QStringList types = KSData::instance()->getLanguageHandler()->processList("SELECT id, name FROM type WHERE id_lang='"+QString::number(m_id+1)+"';", 2);
+  QStringList types = KSData::instance()->getLanguageHandler()->processList("SELECT id, name FROM type WHERE id_lang='"+QString::number(m_id)+"';", 2);
   if(!types.isEmpty())
   {
     for(QStringList::iterator count = types.begin(); count != types.end(); count++)
