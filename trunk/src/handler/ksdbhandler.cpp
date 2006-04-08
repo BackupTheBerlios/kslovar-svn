@@ -43,12 +43,10 @@
 #include <kstaticdeleter.h>
 #include <klistview.h>
 
-KSDBHandler *KSDBHandler::m_instance=0L;
 QString KSDBHandler::m_currentPath=0L;
-static KStaticDeleter<KSDBHandler> staticKSDBHandlerDeleter;
 
 KSDBHandler::KSDBHandler(const QString &databasePath)
-  : QThread(), m_terminate(false), m_skip(false)
+  : QThread(), m_terminate(false), m_skip(false), m_try(0)
 {
   m_currentPath=databasePath;
   sqlite3_open(databasePath.utf8(), &m_db);
@@ -62,21 +60,20 @@ bool KSDBHandler::query(const QString &sqlQuery, sqlite3_stmt ** output)
 
   if( sqlQuery.isEmpty() )
   {
-    kdError() << "[KSDBHandler]->Query Query is not assigned!";
+    kdError() << "[KSDBHandler]->Query Query is not assigned!" << endl;
     return false;
   }
-
 
   const char *tail;
 
   statusCode=sqlite3_prepare(m_db, sqlQuery.utf8(), sqlQuery.length(), output, &tail);
 
-
   //KSlovar::KSInstance()->showProgress(false);
   if(statusCode!=SQLITE_OK)
   {
     kdDebug() << "[KSDBHandler]->Query SQLITE err code: " << statusCode << endl
-        << "Error Description: " << QString::fromAscii(sqlite3_errmsg(m_db)) << endl;
+        << "Error Description: " << QString::fromAscii(sqlite3_errmsg(m_db)) << endl
+        << "On Query: " << sqlQuery << endl;
     return false;
   }
   return true;
@@ -95,10 +92,24 @@ bool KSDBHandler::query(const QString &sqlQuery)
 
   statusCode=sqlite3_exec(m_db, sqlQuery.utf8(), NULL, NULL, NULL);
 
-  if(statusCode!=SQLITE_OK)
+  if(statusCode != SQLITE_OK)
   {
-    kdDebug() << "[KSDBHandler]->Query SQLITE err code: " << statusCode << endl
-        << "Error Description: " << QString::fromAscii(sqlite3_errmsg(m_db)) << endl;
+    if(statusCode == SQLITE_BUSY)
+    {
+      kdDebug() << "[KSDBHandler]->Query SQLITE database is locked. Trying to unlock" << endl;
+      if(m_try <= 10)
+      {
+        kdError() << "[KSDBHandler]->Query Unable to unlock database! << endl;
+        kdDebug() << "On Query: " << sqlQuery << endl;
+        return false;
+      }
+      m_try++;
+      usleep(50);
+      return query(sqlQuery);
+    }
+    kdError() << "[KSDBHandler]->Query SQLITE err code: " << statusCode << endl
+        << "Error Description: " << QString::fromAscii(sqlite3_errmsg(m_db)) << endl
+        << "On Query: " << sqlQuery << endl;
     return false;
   }
   return true;
@@ -123,17 +134,6 @@ bool KSDBHandler::saveDictionary(const QString &text, const QString &lang, const
   }
   return true;
 }
-
-/*KSDBHandler *KSDBHandler::instance(const QString &path)
-{
-  kdDebug() << "Old DEPRECIATED usage of KSDBHandler detected! It's used for opening "+path << endl;
-  if((!KSDBHandler::m_instance) || (KSDBHandler::m_currentPath!=path))
-  {
-    staticKSDBHandlerDeleter.setObject(KSDBHandler::m_instance, new KSDBHandler(path));
-  }
-
-  return KSDBHandler::m_instance;
-}*/
 
 bool KSDBHandler::saveWord(const QString &word, const QString &text, bool add, const QString &id)
 {
@@ -404,9 +404,5 @@ KSDBHandler::~KSDBHandler()
   kdDebug() << "Deleting KSDBHandler that uses "+m_currentPath << endl;
   //query("REINDEX phrases; REINDEX dictionary;");
   sqlite3_close(m_db);
-  if(m_instance==this)
-  {
-    staticKSDBHandlerDeleter.setObject(m_instance, 0, false);
-  }
 }
 

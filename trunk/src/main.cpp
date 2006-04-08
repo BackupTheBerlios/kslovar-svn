@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "kslovar.h"
 
 #include <qpixmap.h>
@@ -33,7 +32,7 @@
 static const char description[] =
     I18N_NOOP("A KDE dictionary application that can read, add, modify and download various dictionaries.");
 
-static const char version[] = "0.3.0 17032006"; //Published 17.3.2006
+static const char version[] = "0.3.0 08042006"; //Published 8.4.2006
 
 static KCmdLineOptions options[] =
 {
@@ -44,7 +43,7 @@ static KCmdLineOptions options[] =
 int main(int argc, char **argv)
 {
     KAboutData about("kslovar", I18N_NOOP("KSlovar"), version, description,
-         KAboutData::License_GPL, "(C) 2005 Gregor Kališnik", 0, 0, "gregor@podnapisi.net");
+         KAboutData::License_GPL, "(C) 2005-2006 Gregor Kališnik", 0, 0, "gregor@podnapisi.net");
     about.addAuthor( "Gregor Kališnik", I18N_NOOP("Lead developer"), "gregor@podnapisi.net" );
     about.addCredit("Kopete development team", I18N_NOOP("Mouse navigation in lists"), "kopete-devel@kde.org", "http://kopete.kde.org");
     about.addCredit("Grega Štajer", I18N_NOOP("Creator of icons, logo and splash screen"), "grega.stajer@email.si", "http://blender.kicks-ass.net");

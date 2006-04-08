@@ -153,13 +153,13 @@ class KSDBHandler : public QThread
     sqlite3 *m_db;
     sqlite3_stmt *m_rawOutput;
     static QString m_currentPath;
-    static KSDBHandler *m_instance;
 
     QValueList<KSQuery> m_commandQueue;
     QMutex locker;
     QObject *m_reciever;
     bool m_terminate;
     bool m_skip;
+    int m_try;
 
     /**
      * Query excetution method, that returns results. (SELECT queries)
