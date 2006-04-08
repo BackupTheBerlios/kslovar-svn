@@ -99,7 +99,7 @@ bool KSDBHandler::query(const QString &sqlQuery)
       kdDebug() << "[KSDBHandler]->Query SQLITE database is locked. Trying to unlock" << endl;
       if(m_try <= 10)
       {
-        kdError() << "[KSDBHandler]->Query Unable to unlock database! << endl;
+        kdError() << "[KSDBHandler]->Query Unable to unlock database!" << endl;
         kdDebug() << "On Query: " << sqlQuery << endl;
         return false;
       }
@@ -108,8 +108,8 @@ bool KSDBHandler::query(const QString &sqlQuery)
       return query(sqlQuery);
     }
     kdError() << "[KSDBHandler]->Query SQLITE err code: " << statusCode << endl
-        << "Error Description: " << QString::fromAscii(sqlite3_errmsg(m_db)) << endl
-        << "On Query: " << sqlQuery << endl;
+        << "Error Description: " << QString::fromAscii(sqlite3_errmsg(m_db)) << endl;
+    kdDebug() << "On Query: " << sqlQuery << endl;
     return false;
   }
   return true;
