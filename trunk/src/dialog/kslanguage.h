@@ -40,7 +40,7 @@ class KSLanguage : public KDialogBase
      * @param langid ID of the language.
      * @param name Name of the class.
      */
-    KSLanguage(QWidget *parent=0, const char *caption=0, const QString &language=0, int langid=0l, const char *name=0);
+    KSLanguage(QWidget *parent=0, const char *caption=0, const QString &language=0, const char *name=0);
 
     /**
      * Just an empty destructor.

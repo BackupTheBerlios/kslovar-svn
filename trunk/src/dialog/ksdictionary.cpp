@@ -131,7 +131,7 @@ void KSDictionary::populateLanguages()
 
 void KSDictionary::slotEditLang()
 {
-  KSLanguage *widget=new KSLanguage(this, i18n("Edit language"), m_mainWidget->languageSelect->currentText(), m_mainWidget->languageSelect->currentItem());
+  KSLanguage *widget=new KSLanguage(this, i18n("Edit language"), m_mainWidget->languageSelect->currentText());
   widget->show();
 }
 

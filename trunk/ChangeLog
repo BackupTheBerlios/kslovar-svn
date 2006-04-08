@@ -1,12 +1,13 @@
 0.2.0 => 0.3.0
 
 Bugfixes:
+-Synonyms, Antonyms and Word families are added with the new phrase
+-Edit languages works fine now (no more duplication, and parts of speech getting new IDs).
 
 Features:
 -Added smooth scrolling
 -Mouse navigation is not enabled by default
 -Vertical scroll bar is enabled by default
--Synonyms, Antonyms and Word families are added with the new phrase
 
 Eye candy:
 

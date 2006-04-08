@@ -39,13 +39,13 @@
 #include <kstandarddirs.h>
 #include <kmessagebox.h>
 
-KSLanguage::KSLanguage(QWidget *parent, const char *caption, const QString &language, int langid, const char *name)
-  : KDialogBase(parent, name, true, caption), m_id(langid)
+KSLanguage::KSLanguage(QWidget *parent, const char *caption, const QString &language, const char *name)
+  : KDialogBase(parent, name, true, caption)
 {
-  m_path=locate("appdata", "languages.ksl");
+  m_path = locate("appdata", "languages.ksl");
   enableButtonApply(false);
 
-  m_mainWidget=new KSLanguageWdt(this);
+  m_mainWidget = new KSLanguageWdt(this);
 
   m_mainWidget->typeList->setItemsRenameable(true);
   m_mainWidget->typeList->setFullWidth(true);
@@ -56,13 +56,14 @@ KSLanguage::KSLanguage(QWidget *parent, const char *caption, const QString &lang
   {
     m_mainWidget->nameEdit->setText(language);
     populateTypeList();
-    m_edit=true;
+    m_id = KSData::instance()->getLanguageHandler()->processString("SELECT id FROM language WHERE name='"+language+"';").toInt();
+    m_edit = true;
   }
   else
   {
     QStringList test=KSData::instance()->getLanguageHandler()->processList("SELECT id FROM language;");
-    m_id=test.last().toInt()+1;
-    m_edit=false;
+    m_id = test.last().toInt()+1;
+    m_edit = false;
   }
 
   connect(m_mainWidget->addTypeButton, SIGNAL(clicked()), this, SLOT(slotAddType()));
@@ -76,10 +77,10 @@ KSLanguage::KSLanguage(QWidget *parent, const char *caption, const QString &lang
 
 void KSLanguage::populateTypeList()
 {
-  QStringList types=KSData::instance()->getLanguageHandler()->processList("SELECT id, name FROM type WHERE id_lang='"+QString::number(m_id+1)+"';", 2);
+  QStringList types = KSData::instance()->getLanguageHandler()->processList("SELECT id, name FROM type WHERE id_lang='"+QString::number(m_id+1)+"';", 2);
   if(!types.isEmpty())
   {
-    for(QStringList::iterator count=types.begin(); count!=types.end(); count++)
+    for(QStringList::iterator count = types.begin(); count != types.end(); count++)
     {
       QString text=*count;
       QString id=*count;
@@ -94,12 +95,12 @@ void KSLanguage::slotAddType()
   QListViewItem *last=m_mainWidget->typeList->lastItem();
   if(!last)
   {
-    item=new KSListViewItem(m_mainWidget->typeList, i18n("Name"));
+    item = new KSListViewItem(m_mainWidget->typeList, i18n("Name"));
     item->setId(1);
   }
   else
   {
-    item=new KSListViewItem(m_mainWidget->typeList, last, i18n("Name"));
+    item = new KSListViewItem(m_mainWidget->typeList, last, i18n("Name"));
     item->setId(static_cast<KSListViewItem*> (last)->getId().toInt()+1);
   }
 }
@@ -140,16 +141,32 @@ bool KSLanguage::save()
 {
   if(m_edit)
   {
-    if(!KSData::instance()->getLanguageHandler()->processQuery("UPDATE language SET name='"+m_mainWidget->nameEdit->text()+"' WHERE id='"+QString::number(m_id)+"'; DELETE FROM type WHERE id_lang='"+QString::number(m_id)+"';"))
+    if(!KSData::instance()->getLanguageHandler()->processQuery("UPDATE language SET name='"+m_mainWidget->nameEdit->text()+"' WHERE id='"+QString::number(m_id)+"';"))
     {
       return false;
     }
-    for(QListViewItem *count=m_mainWidget->typeList->firstChild();count;count=count->nextSibling())
+    QStringList existing = KSData::instance()->getLanguageHandler()->processList("SELECT id FROM type WHERE id_lang='"+QString::number(m_id)+"';");
+    for(QListViewItem *count = m_mainWidget->typeList->firstChild(); count; count = count->nextSibling())
     {
-      KSListViewItem *temp=static_cast<KSListViewItem*> (count);
+      bool skip = false;
+      KSListViewItem *temp = static_cast<KSListViewItem*> (count);
+      for(QStringList::iterator typeCount = existing.begin(); typeCount != existing.end(); typeCount++)
+      {
+        if(temp->getId() == *typeCount)
+        {
+          if(!KSData::instance()->getLanguageHandler()->processQuery("UPDATE type SET name='"+temp->text(0)+"' , id_lang='"+QString::number(m_id)+"' WHERE id='"+*typeCount+"';"))
+          {
+            return false;
+          }
+          skip = true;
+        }
+      }
+      if(!skip)
+      {
       if(!KSData::instance()->getLanguageHandler()->processQuery("INSERT INTO type ( name , id_lang ) VALUES ( '"+temp->text(0)+"' , '"+QString::number(m_id)+"' );"))
       {
         return false;
+      }
       }
     }
   }
@@ -159,9 +176,9 @@ bool KSLanguage::save()
     {
       return false;
     }
-    for(QListViewItem *count=m_mainWidget->typeList->firstChild();count;count=count->nextSibling())
+    for(QListViewItem *count = m_mainWidget->typeList->firstChild(); count; count = count->nextSibling())
     {
-      KSListViewItem *temp=static_cast<KSListViewItem*> (count);
+      KSListViewItem *temp = static_cast<KSListViewItem*> (count);
       if(!KSData::instance()->getLanguageHandler()->processQuery("INSERT INTO type ( name , id_lang ) VALUES ( '"+temp->text(0)+"' , '"+QString::number(m_id)+"' );"))
       {
         return false;
