@@ -30,7 +30,7 @@
 #include <libxslt/transform.h>
 
 #include <qfile.h>
-#include <qstring.h>
+//#include <qstring.h>
 #include <qstringlist.h>
 #include <qregexp.h>
 
@@ -139,7 +139,7 @@ QCString KSXSLHandler::openXSL(QString path, QString style)
     input.close();
   }
 
-  if(style == "null")
+  if(style.isNull())
   {
     style = Configuration::dictionaryStyle();
   }

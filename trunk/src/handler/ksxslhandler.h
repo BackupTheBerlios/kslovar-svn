@@ -20,9 +20,9 @@
 #ifndef KSXMLHANDLER_H
 #define KSXMLHANDLER_H
 
-
-class QString;
 class QCString;
+
+#include <qstring.h>
 
 /**
  * @short Class for merging XML and XSLT into HTML.
@@ -39,9 +39,9 @@ class KSXSLHandler{
     /**
      * Changes the XSLT style.
      * @param document Path to the XSLT document (style).
-     * @param style Currently used style. Used for correct parsing (replacing {...} strings). DEFAULT: "null"
+     * @param style Currently used style. Used for correct parsing (replacing {...} strings). DEFAULT: QString::null
      */
-    void setXSL(const QString &document, QString style = "null");
+    void setXSL(const QString &document, QString style = QString::null);
     /**
      * Merges XML and XSLT and produces HTML.
      * @param xmlString XML string to merge.
