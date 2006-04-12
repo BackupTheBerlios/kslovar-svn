@@ -270,17 +270,18 @@ void KSPhrase::save()
     if(!KSData::instance()->getDictionary()->saveWord(m_mainWidget->wordEdit->text(), xml, false, m_id))
     {
       KMessageBox::error(this, i18n("Cannot edit phrase!"));
+      return;
     }
-    KSlovar::KSInstance()->refresh();
   }
   else
   {
     if(!KSData::instance()->getDictionary()->saveWord(m_mainWidget->wordEdit->text(), xml, true, 0L))
     {
       KMessageBox::error(this, i18n("Cannot add new phrase!"));
+      return;
     }
     m_id = QString::number(KSData::instance()->getDictionary()->getId());
-    KSlovar::KSInstance()->openFile(KSData::instance()->getDictionaryPath());
+    //KSlovar::KSInstance()->openFile(KSData::instance()->getDictionaryPath());
   }
 
   if(!KSData::instance()->getType()) //Two different types of dictionary...
@@ -328,6 +329,8 @@ void KSPhrase::save()
     }
   }
 
+  KSlovar::KSInstance()->refresh();
+
   delete m_XMLHandler;
   m_XMLHandler=0;
 
@@ -367,30 +370,30 @@ void KSPhrase::setWord(QString text, const QString &id)
   {
     m_mainWidget->typeBox->setCurrentItem(KSData::instance()->getPartOfSpeechName(m_XMLHandler->readString("type").toInt()));
 
-    QValueList<KSExplanation> explanations=m_XMLHandler->readExplanation();
-    for(QValueList<KSExplanation>::iterator count=explanations.begin();count!=explanations.end();count++)
+    QValueList<KSExplanation> explanations = m_XMLHandler->readExplanation();
+    for(QValueList<KSExplanation>::iterator count = explanations.begin(); count != explanations.end(); count++)
     {
       new KListViewItem(m_mainWidget->explanationList, (*count).explanation, (*count).example);
     }
 
-    QMap<QString,QString> synonym=m_XMLHandler->readQMapList("synonym");
-    for(QMap<QString,QString>::iterator count=synonym.begin();count!=synonym.end();count++)
+    QMap<QString,QString> synonym = m_XMLHandler->readQMapList("synonym");
+    for(QMap<QString,QString>::iterator count = synonym.begin(); count != synonym.end(); count++)
     {
       new KSListViewItem(m_mainWidget->selectedSynonymList, count.data(), count.key());
       m_mainWidget->availableAntonymList->addFilter(count.key().toInt());
       m_mainWidget->availableSynonymList->addFilter(count.key().toInt());
     }
 
-    QMap<QString,QString> antonym=m_XMLHandler->readQMapList("antonym");
-    for(QMap<QString,QString>::iterator count=antonym.begin();count!=antonym.end();count++)
+    QMap<QString,QString> antonym = m_XMLHandler->readQMapList("antonym");
+    for(QMap<QString,QString>::iterator count = antonym.begin(); count != antonym.end(); count++)
     {
       new KSListViewItem(m_mainWidget->selectedAntonymList, count.data(), count.key());
       m_mainWidget->availableAntonymList->addFilter(count.key().toInt());
       m_mainWidget->availableSynonymList->addFilter(count.key().toInt());
     }
 
-    QMap<QString,QString>family=m_XMLHandler->readQMapList("word-family");
-    for(QMap<QString,QString>::iterator count=family.begin();count!=family.end();count++)
+    QMap<QString,QString> family = m_XMLHandler->readQMapList("word-family");
+    for(QMap<QString,QString>::iterator count = family.begin(); count != family.end(); count++)
     {
       new KSListViewItem(m_mainWidget->selectedFamilyList, count.data(), count.key());
       m_mainWidget->availableFamilyList->addFilter(count.key().toInt());

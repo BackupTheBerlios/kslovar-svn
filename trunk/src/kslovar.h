@@ -19,8 +19,8 @@
  ***************************************************************************/
 
 
-#ifndef _KSLOVAR_H_
-#define _KSLOVAR_H_
+#ifndef KSLOVAR_H_
+#define KSLOVAR_H_
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

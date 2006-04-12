@@ -7,6 +7,7 @@ Eye candy:
 
 Internal changes:
 -Includes are changed. (no more ../)
+-Define names are now updated to the current class names
 
 0.2.1 => 0.2.2
 
@@ -14,8 +15,9 @@ Bugfixes:
 -Undefined compile error fixed
 -Better notifications (Spellcheck, Upgrade manager)
 -Minor redesign of Upgrade manager
--Vertical scroolbar is enabled by default
--Mouse navigation is disabled by default
+-Words, that are selected through links are possible to delete
+-Synonyms, antonyms and word familys are now removed when a word is deleted
+-When adding a word, the list of searched items is not cleared
 
 0.2.0 => 0.2.1
 

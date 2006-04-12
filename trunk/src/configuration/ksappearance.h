@@ -17,8 +17,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef APPERANCESRC_H
-#define APPERANCESRC_H
+#ifndef KSAPPEARANCE_H
+#define KSAPPEARANCE_H
 
 #include "ui/ksappearancewdt.h"
 

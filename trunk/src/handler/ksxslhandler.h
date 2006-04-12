@@ -17,8 +17,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KSXMLHANDLER_H
-#define KSXMLHANDLER_H
+#ifndef KSXSLHANDLER_H
+#define KSXSLHANDLER_H
 
 class QCString;
 
@@ -28,7 +28,8 @@ class QCString;
  * @short Class for merging XML and XSLT into HTML.
  * @author Gregor Kališnik <gregor@podnapisi.net>
  */
-class KSXSLHandler{
+class KSXSLHandler
+{
   public:
     /**
      * Constructor that makes the KSXSLHandler.

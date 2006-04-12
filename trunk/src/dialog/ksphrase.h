@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef _ADDPHRASE_H_
-#define _ADDPHRASE_H_
+#ifndef KSPHRASE_H_
+#define KSPHRASE_H_
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

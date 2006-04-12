@@ -33,6 +33,7 @@
 
 #include "handler/ksdbhandler.h"
 #include "handler/ksxslhandler.h"
+#include "handler/ksxmlhandler.h"
 #include "handler/ksoutputhandler.h"
 
 #include "misc/ksdata.h"
@@ -494,13 +495,67 @@ void KSlovar::slotEditPhrase()
 
 void KSlovar::slotRemovePhrase()
 {
-  if(KMessageBox::questionYesNo(this, i18n("Are you really sure you want to delete this word?"), i18n("Confirm deletion"), i18n("Delete"))==KMessageBox::No)
+  bool generated = false;
+  KSListViewItem *temp;
+  if(m_list->selectedItem())
   {
+    temp = static_cast<KSListViewItem*> (m_list->selectedItem());
+  }
+  else
+  {
+    generated = true;
+    temp = new KSListViewItem(m_list, KSData::instance()->getDictionary()->processString("SELECT name FROM phrases WHERE id='" + m_selectedPhrase + "' LIMIT 1;"), m_selectedPhrase, KSData::instance()->getDictionary()->processString("SELECT search FROM phrases WHERE id='" + m_selectedPhrase + "' LIMIT 1;"));
+  }
+
+  if(KMessageBox::questionYesNo(this, i18n("Are you really sure you want to delete " + temp->text(0) + "?"), i18n("Confirm deletion"), i18n("Delete")) == KMessageBox::No)
+  {
+    if(generated)
+    {
+      delete temp;
+    }
     return;
   }
-  KSListViewItem *temp=static_cast<KSListViewItem*> (m_list->selectedItem());
-  KSData::instance()->getDictionary()->processQuery("DELETE FROM phrases WHERE id='"+temp->getId()+"'; DELETE FROM dictionary WHERE id='"+temp->getId()+"';");
+
+  QString output = KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='" + temp->getId() + "' LIMIT 1;");
+
+  KSXMLHandler *XMLHandler = new KSXMLHandler(output.remove(QRegExp("<\\?.+\\?>")));
+  QMap<QString,QString> synonyms = XMLHandler->readQMapList("synonym");
+  for(QMap<QString,QString>::iterator count = synonyms.begin(); count != synonyms.end(); count++) //Removing synonyms
+  {
+    QString deleting = KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='" + count.key() + "' LIMIT 1;");
+    KSXMLHandler *deleteHandler = new KSXMLHandler(deleting);
+    deleteHandler->removeString("synonym", temp->text(0));
+    KSData::instance()->getDictionary()->saveWord(count.data(), deleteHandler->parse(), false, count.key());
+    delete deleteHandler;
+  }
+
+  QMap<QString,QString> antonyms = XMLHandler->readQMapList("antonym");
+  for(QMap<QString,QString>::iterator count = antonyms.begin(); count != antonyms.end(); count++) //Removing antonyms
+  {
+    QString deleting = KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='" + count.key() + "' LIMIT 1;");
+    KSXMLHandler *deleteHandler = new KSXMLHandler(deleting);
+    deleteHandler->removeString("antonym", temp->text(0));
+    KSData::instance()->getDictionary()->saveWord(count.data(), deleteHandler->parse(), false, count.key());
+    delete deleteHandler;
+  }
+
+  QMap<QString,QString> wordFamily = XMLHandler->readQMapList("word-family");
+  for(QMap<QString,QString>::iterator count = wordFamily.begin(); count != wordFamily.end(); count++) //Removing word family
+  {
+    QString deleting = KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='" + count.key() + "' LIMIT 1;");
+    KSXMLHandler *deleteHandler = new KSXMLHandler(deleting);
+    deleteHandler->removeString("word-family", temp->text(0));
+    KSData::instance()->getDictionary()->saveWord(count.data(), deleteHandler->parse(), false, count.key());
+    delete deleteHandler;
+  }
+
+  KSData::instance()->getDictionary()->processQuery("DELETE FROM phrases WHERE id='"+temp->getId()+"'; DELETE FROM dictionary WHERE id='" + temp->getId() + "';");
   delete temp;
+  delete XMLHandler;
+
+  m_selectedPhrase = "0";
+  showDictionary();
+
   m_editPhrase->setEnabled(false);
   m_removePhrase->setEnabled(false);
 }
