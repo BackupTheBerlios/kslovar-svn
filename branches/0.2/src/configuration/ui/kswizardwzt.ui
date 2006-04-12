@@ -242,7 +242,7 @@ Languages.ksl file is located in ~/.kde/share/apps/kslovar</string>
                             <string>Alt+M</string>
                         </property>
                         <property name="checked">
-                            <bool>true</bool>
+                            <bool>false</bool>
                         </property>
                     </widget>
                     <widget class="QCheckBox" row="1" column="0">
