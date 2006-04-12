@@ -4,12 +4,12 @@
   <group name="appearance">
     <entry name="MouseNavigation" type="Bool">
       <label>Scrolling with mouse movement.</label>
-      <default>true</default>
+      <default>false</default>
       <whatsthis>When this option is enabled, you can scroll all the lists by moving your mouse.(Thanks to Kopete Development Team)</whatsthis>
     </entry>
     <entry name="ScrollBar" type="Bool">
       <label>Enable vertical scroll bar.</label>
-      <default>false</default>
+      <default>true</default>
       <whatsthis>Makes vertical scroll bars in lists visible.</whatsthis>
     </entry>
     <entry name="DictionaryStyle" type="String">

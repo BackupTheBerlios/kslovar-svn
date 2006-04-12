@@ -674,6 +674,7 @@ KSlovar *KSlovar::KSInstance()
 void KSlovar::slotDownloadLanguage()
 {
   KSUpgradeManager *upgradeManager = new KSUpgradeManager(this, i18n("Upgrade"));
+  upgradeManager->resize(500, 500);
   upgradeManager->show();
 }
 

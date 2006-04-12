@@ -85,6 +85,11 @@ void KSUpgradeManager::slotCheckVersion()
     remoteVersion = input;
     remote.close();
   }
+  else
+  {
+    m_mainWidget->currentLabel->setText(i18n("Version file unavailable!"));
+    return;
+  }
 
   if(remoteVersion > localVersion)
   {
@@ -95,7 +100,7 @@ void KSUpgradeManager::slotCheckVersion()
   else
   {
     KSlovar::KSInstance()->loadLanguages();
-    close();
+    m_mainWidget->currentLabel->setText(i18n("Everything is up to date."));
   }
 }
 
@@ -149,7 +154,7 @@ void KSUpgradeManager::slotCheckDownload(KIO::Job*, const QString &download, con
     case(COMPLETE):
     {
       m_mainWidget->downloadProgress->setProgress(0);
-      m_mainWidget->currentLabel->setText(i18n("nothing"));
+      m_mainWidget->currentLabel->setText(i18n("Update successful"));
       m_completedDownloads++;
       m_downloadState = DELETE_VERSION;
       slotCheckDownload(0);

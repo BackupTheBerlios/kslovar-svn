@@ -12,6 +12,10 @@ Internal changes:
 
 Bugfixes:
 -Undefined compile error fixed
+-Better notifications (Spellcheck, Upgrade manager)
+-Minor redesign of Upgrade manager
+-Vertical scroolbar is enabled by default
+-Mouse navigation is disabled by default
 
 0.2.0 => 0.2.1
 

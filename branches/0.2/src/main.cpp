@@ -33,7 +33,7 @@
 static const char description[] =
     I18N_NOOP("A KDE dictionary application that can read, add, modify and download various dictionaries.");
 
-static const char version[] = "0.2.1"; //Published 08.4.2006
+static const char version[] = "0.2.2"; //Published 12.4.2006
 
 static KCmdLineOptions options[] =
 {

@@ -85,6 +85,11 @@ void KSUpgradeManager::slotCheckVersion()
     remoteVersion = input;
     remote.close();
   }
+  else
+  {
+    m_mainWidget->currentLabel->setText(i18n("Version file unavailable!"));
+    return;
+  }
 
   if(remoteVersion > localVersion)
   {
@@ -95,7 +100,7 @@ void KSUpgradeManager::slotCheckVersion()
   else
   {
     KSlovar::KSInstance()->loadLanguages();
-    close();
+    m_mainWidget->currentLabel->setText(i18n("Everything is up to date."));
   }
 }
 

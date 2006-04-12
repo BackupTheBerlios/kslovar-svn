@@ -197,6 +197,7 @@ void KSPhrase::slotEndCheck(const QString& checked)
   {
     m_mainWidget->explanationList->currentItem()->setText(1, check.last());
   }
+  KMessageBox::information(this, i18n("Spellcheck complete."));
 }
 
 void KSPhrase::save()
