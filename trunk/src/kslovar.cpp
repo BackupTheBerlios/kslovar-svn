@@ -77,6 +77,11 @@ KSlovar::KSlovar()
   KSlovar::m_instance=this;
   m_configDialog=new KSConfigDialog(this, "settings", Configuration::self());
 
+  if(Configuration::authorName().isEmpty())
+  {
+    KMessageBox::information(0, i18n("You can set your name and email in configuration."));
+  }
+
   new KStatusBar(this);
   statusBar()->insertItem(i18n("Ready."), 0);
 

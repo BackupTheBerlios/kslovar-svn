@@ -220,23 +220,6 @@ Languages.ksl file is located in ~/.kde/share/apps/kslovar</string>
                     </widget>
                 </grid>
             </widget>
-            <spacer row="3" column="0">
-                <property name="name">
-                    <cstring>spacer3</cstring>
-                </property>
-                <property name="orientation">
-                    <enum>Vertical</enum>
-                </property>
-                <property name="sizeType">
-                    <enum>Expanding</enum>
-                </property>
-                <property name="sizeHint">
-                    <size>
-                        <width>20</width>
-                        <height>140</height>
-                    </size>
-                </property>
-            </spacer>
             <widget class="QGroupBox" row="2" column="0">
                 <property name="name">
                     <cstring>groupBox3</cstring>
@@ -285,6 +268,68 @@ Languages.ksl file is located in ~/.kde/share/apps/kslovar</string>
                         </property>
                         <property name="checked">
                             <bool>true</bool>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+            <spacer row="4" column="0">
+                <property name="name">
+                    <cstring>spacer3</cstring>
+                </property>
+                <property name="orientation">
+                    <enum>Vertical</enum>
+                </property>
+                <property name="sizeType">
+                    <enum>Expanding</enum>
+                </property>
+                <property name="sizeHint">
+                    <size>
+                        <width>20</width>
+                        <height>70</height>
+                    </size>
+                </property>
+            </spacer>
+            <widget class="QGroupBox" row="3" column="0">
+                <property name="name">
+                    <cstring>groupBox4</cstring>
+                </property>
+                <property name="title">
+                    <string>Optional personal settings</string>
+                </property>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="KActiveLabel" row="0" column="0">
+                        <property name="name">
+                            <cstring>kActiveLabel14</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Your name (or nickname)</string>
+                        </property>
+                    </widget>
+                    <widget class="KActiveLabel" row="1" column="0">
+                        <property name="name">
+                            <cstring>kActiveLabel15</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Your email</string>
+                        </property>
+                    </widget>
+                    <widget class="KLineEdit" row="0" column="1">
+                        <property name="name">
+                            <cstring>m_authorName</cstring>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>What you write here, will be shown in the dictionary as author of the dictionary or phrase.</string>
+                        </property>
+                    </widget>
+                    <widget class="KLineEdit" row="1" column="1">
+                        <property name="name">
+                            <cstring>m_authorEmail</cstring>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>This email will be added with the name to the author list.</string>
                         </property>
                     </widget>
                 </grid>
@@ -341,6 +386,10 @@ Languages.ksl file is located in ~/.kde/share/apps/kslovar</string>
     <includehint>kactivelabel.h</includehint>
     <includehint>kactivelabel.h</includehint>
     <includehint>kactivelabel.h</includehint>
+    <includehint>kactivelabel.h</includehint>
+    <includehint>kactivelabel.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>klineedit.h</includehint>
     <includehint>kactivelabel.h</includehint>
     <includehint>kactivelabel.h</includehint>
     <includehint>kprogress.h</includehint>

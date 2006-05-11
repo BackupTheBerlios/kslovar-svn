@@ -37,6 +37,7 @@
 #include <kio/job.h>
 #include <kstandarddirs.h>
 #include <kmessagebox.h>
+#include <klineedit.h>
 #include <klocale.h>
 
 KSWizard::KSWizard(QWidget *parent, const char *name)
@@ -63,6 +64,8 @@ void KSWizard::slotFinish()
   Configuration::setScrollBar(m_scrollBar->isChecked());
   Configuration::setSmoothScroll(m_smoothScroll->isChecked());
   Configuration::setAutoUpdateLanguage(m_upgradeManager->isChecked());
+  Configuration::setAuthorName(m_authorName->text());
+  Configuration::setAuthorEmail(m_authorEmail->text());
   Configuration::writeConfig();
 
   if(m_remoteLanguages->isChecked())

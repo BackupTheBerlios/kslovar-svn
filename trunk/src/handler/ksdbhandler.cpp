@@ -68,7 +68,6 @@ bool KSDBHandler::query(const QString &sqlQuery, sqlite3_stmt ** output)
 
   statusCode=sqlite3_prepare(m_db, sqlQuery.utf8(), sqlQuery.length(), output, &tail);
 
-  //KSlovar::KSInstance()->showProgress(false);
   if(statusCode!=SQLITE_OK)
   {
     kdDebug() << "[KSDBHandler]->Query SQLITE err code: " << statusCode << endl
@@ -120,8 +119,8 @@ bool KSDBHandler::saveDictionary(const QString &text, const QString &lang, const
   QString rawQuery;
   if(create)
   {
-    rawQuery="BEGIN TRANSACTION; CREATE TABLE head ( lang INTEGER , type INTEGER , version TEXT ); CREATE TABLE media ( id INTEGER PRIMARY KEY AUTOINCREMENT , mime TEXT , data BLOB ); CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , modified INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT UNIQUE , search TEXT );";
-    rawQuery=rawQuery+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' );"+"INSERT INTO head ( lang , type ) VALUES ( '"+lang+"' , '"+type+"' ); CREATE INDEX dictionary_index ON dictionary (id); CREATE INDEX phrases_index ON phrases (id, name); COMMIT;";
+    rawQuery="BEGIN TRANSACTION; CREATE TABLE head ( lang INTEGER , type INTEGER , author TEXT , email TEXT ); CREATE TABLE media ( id INTEGER PRIMARY KEY AUTOINCREMENT , mime TEXT , data BLOB ); CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , modified INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT UNIQUE , search TEXT ); CREATE TABLE authors ( id INTEGER PRIMARY KEY AUTOINCREMENT , id_phrase INTEGER , name TEXT , email TEXT , first INTEGER );";
+    rawQuery=rawQuery+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' );"+"INSERT INTO head ( lang , type, author , email ) VALUES ( '"+lang+"' , '"+type+"' , '"+Configuration::authorName()+"' , '"+Configuration::authorEmail()+"' ); CREATE INDEX phrases_index ON phrases (search ASC); COMMIT;";
   }
   else
   {
@@ -145,7 +144,7 @@ bool KSDBHandler::saveWord(const QString &word, const QString &text, bool add, c
     rawQuery="INSERT INTO phrases ( name , search ) VALUES ( '"+word+"' , '"+search+"' );";
     if(output=query(rawQuery))
     {
-      rawQuery="INSERT INTO dictionary ( text ) VALUES ( \""+text+"\" );";
+      rawQuery="INSERT INTO dictionary ( text ) VALUES ( \""+text+"\" ); INSERT INTO authors ( id_phrase , name , email , first ) VALUES ( '"+QString::number(getId())+"' , '"+Configuration::authorName()+"' , '"+Configuration::authorEmail()+"' , '1' );";
       output=query(rawQuery);
     }
   }
@@ -154,7 +153,7 @@ bool KSDBHandler::saveWord(const QString &word, const QString &text, bool add, c
     rawQuery="UPDATE phrases SET name='"+word+"', search='"+search+"' WHERE id='"+id+"';";
     if(output=query(rawQuery))
     {
-      rawQuery="UPDATE dictionary SET text=\""+text+"\" WHERE id='"+id+"';";
+      rawQuery="UPDATE dictionary SET text=\""+text+"\" WHERE id='"+id+"'; INSERT INTO authors ( id_phrase , name , email , first ) VALUES ( '"+id+"' , '"+Configuration::authorName()+"' , '"+Configuration::authorEmail()+"' , '0' );";
       output=query(rawQuery);
     }
   }
@@ -319,7 +318,6 @@ void KSDBHandler::search(const QString &criteria)
 
 void KSDBHandler::addQueue(KSQuery query)
 {
-  //locker.tryLock();
   while(locker.tryLock())
   {
     usleep(10);
@@ -334,7 +332,6 @@ void KSDBHandler::addQueue(KSQuery query)
 
 void KSDBHandler::run()
 {
-  query("REINDEX phrases; REINDEX dictionary;");
   while(!m_terminate)
   {
     usleep(10);
@@ -370,7 +367,6 @@ void KSDBHandler::run()
       }
     }
   }
-  query("REINDEX phrases; REINDEX dictionary;");
   sqlite3_close(m_db);
 }
 
@@ -403,7 +399,6 @@ bool KSDBHandler::isSkiped()
 KSDBHandler::~KSDBHandler()
 {
   kdDebug() << "Deleting KSDBHandler that uses "+m_currentPath << endl;
-  //query("REINDEX phrases; REINDEX dictionary;");
   sqlite3_close(m_db);
 }
 

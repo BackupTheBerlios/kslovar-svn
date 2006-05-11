@@ -55,10 +55,11 @@ class KSConfigDialog : public KConfigDialog
 
   private slots:
     /**
-     * Slot executed when ok is pressed. (Saves the configuration)
+     * Slot executed when ok is pressed. (Saves the configuration and exits)
      */
     void slotLocalOk();
     /**
+     * Slot executed when apply is pressed. (Saves the configuration)
      * @see KSConfigDialog#slotLocalOk()
      */
     void slotLocalApply();

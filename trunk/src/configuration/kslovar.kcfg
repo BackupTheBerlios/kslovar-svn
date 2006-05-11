@@ -33,5 +33,13 @@
       <default>200</default>
       <whatsthis>This limits the shown words in searches.</whatsthis>
     </entry>
+    <entry name="AuthorName" type="String">
+      <label>Your name (or nickname)</label>
+      <whatsthis>What you write here, will be shown in the dictionary as author of the dictionary or phrase</whatsthis>
+    </entry>
+    <entry name="AuthorEmail" type="String">
+      <label>Your email</label>
+      <whatsthis>This email will be added with the name to the author list</whatsthis>
+    </entry>
   </group>
 </kcfg>
