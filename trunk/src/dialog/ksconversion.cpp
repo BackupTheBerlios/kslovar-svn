@@ -97,14 +97,10 @@ void KSConversion::slotSave(QListViewItem*, const QString &text, int col)
 
 void KSConversion::populateConversionList()
 {
-  QStringList conversionTable = KSData::instance()->getLanguageHandler()->processList("SELECT fromc, toc FROM conversion_table;", 2);
-  for(QStringList::iterator count = conversionTable.begin(); count != conversionTable.end(); count++)
+  QValueList<KSResult> conversionTable = KSData::instance()->getLanguageHandler()->processList("SELECT fromc, toc FROM conversion_table;");
+  for(QValueList<KSResult>::iterator count = conversionTable.begin(); count != conversionTable.end(); count++)
   {
-    QString fromc = *count;
-    QString toc = *count;
-    fromc.remove(QRegExp("/.+"));
-    toc.remove(fromc+"/");
-    new KListViewItem(m_mainWidget->conversionList, fromc, toc);
+    new KListViewItem(m_mainWidget->conversionList, (*count)["fromc"], (*count)["toc"]);
   }
 }
 

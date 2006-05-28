@@ -55,13 +55,13 @@ KSLanguage::KSLanguage(QWidget *parent, const char *caption, const QString &lang
   if(!language.isEmpty())
   {
     m_mainWidget->nameEdit->setText(language);
-    m_id = KSData::instance()->getLanguageHandler()->processString("SELECT id FROM language WHERE name='"+language+"';").toInt();
+    m_id = KSData::instance()->getLanguageHandler()->processString("SELECT id FROM language WHERE name='"+language+"';")["id"].toInt();
     populateTypeList();
     m_edit = true;
   }
   else
   {
-    m_id = KSData::instance()->getLanguageHandler()->processList("SELECT id FROM language;").last().toInt()+1;
+    m_id = KSData::instance()->getLanguageHandler()->processList("SELECT id FROM language;").last()["id"].toInt()+1;
     m_edit = false;
   }
 
@@ -76,16 +76,20 @@ KSLanguage::KSLanguage(QWidget *parent, const char *caption, const QString &lang
 
 void KSLanguage::populateTypeList()
 {
-  QStringList types = KSData::instance()->getLanguageHandler()->processList("SELECT id, name FROM type WHERE id_lang='"+QString::number(m_id)+"';", 2);
-  if(!types.isEmpty())
+  QValueList<KSResult> types = KSData::instance()->getLanguageHandler()->processList("SELECT id, name FROM type WHERE id_lang='"+QString::number(m_id)+"';");
+  for(QValueList<KSResult>::iterator count = types.begin(); count != types.end(); count++)
   {
-    for(QStringList::iterator count = types.begin(); count != types.end(); count++)
-    {
-      QString text=*count;
-      QString id=*count;
-      new KSListViewItem(m_mainWidget->typeList, text.remove(QRegExp(".+/")), id.remove(QRegExp("/.+")));
-    }
+    new KSListViewItem(m_mainWidget->typeList, (*count)["name"], (*count)["id"]);
   }
+  /*if(!types.isEmpty())
+  {
+  for(QStringList::iterator count = types.begin(); count != types.end(); count++)
+  {
+  QString text=*count;
+  QString id=*count;
+  new KSListViewItem(m_mainWidget->typeList, text.remove(QRegExp(".+/")), id.remove(QRegExp("/.+")));
+}
+}*/
 }
 
 void KSLanguage::slotAddType()
@@ -144,28 +148,39 @@ bool KSLanguage::save()
     {
       return false;
     }
-    QStringList existing = KSData::instance()->getLanguageHandler()->processList("SELECT id FROM type WHERE id_lang='"+QString::number(m_id)+"';");
+    QValueList<KSResult> existing = KSData::instance()->getLanguageHandler()->processList("SELECT id FROM type WHERE id_lang='"+QString::number(m_id)+"';");
     for(QListViewItem *count = m_mainWidget->typeList->firstChild(); count; count = count->nextSibling())
     {
       bool skip = false;
       KSListViewItem *temp = static_cast<KSListViewItem*> (count);
-      for(QStringList::iterator typeCount = existing.begin(); typeCount != existing.end(); typeCount++)
+      for(QValueList<KSResult>::iterator typeCount = existing.begin(); typeCount != existing.end(); typeCount++)
       {
-        if(temp->getId() == *typeCount)
+        if(temp->getId() == (*typeCount)["id"])
         {
-          if(!KSData::instance()->getLanguageHandler()->processQuery("UPDATE type SET name='"+temp->text(0)+"' , id_lang='"+QString::number(m_id)+"' WHERE id='"+*typeCount+"';"))
+          if(!KSData::instance()->getLanguageHandler()->processQuery("UPDATE type SET name='"+temp->text(0)+"' , id_lang='"+QString::number(m_id)+"' WHERE id='"+(*typeCount)["id"]+"';"))
           {
             return false;
           }
           skip = true;
         }
       }
+      /*for(QStringList::iterator typeCount = existing.begin(); typeCount != existing.end(); typeCount++)
+      {
+      if(temp->getId() == *typeCount)
+      {
+      if(!KSData::instance()->getLanguageHandler()->processQuery("UPDATE type SET name='"+temp->text(0)+"' , id_lang='"+QString::number(m_id)+"' WHERE id='"+*typeCount+"';"))
+      {
+      return false;
+    }
+      skip = true;
+    }
+    }*/
       if(!skip)
       {
-      if(!KSData::instance()->getLanguageHandler()->processQuery("INSERT INTO type ( name , id_lang ) VALUES ( '"+temp->text(0)+"' , '"+QString::number(m_id)+"' );"))
-      {
-        return false;
-      }
+        if(!KSData::instance()->getLanguageHandler()->processQuery("INSERT INTO type ( name , id_lang ) VALUES ( '"+temp->text(0)+"' , '"+QString::number(m_id)+"' );"))
+        {
+          return false;
+        }
       }
     }
   }

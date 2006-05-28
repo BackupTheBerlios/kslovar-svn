@@ -20,15 +20,17 @@
 #ifndef KSSEARCHLINE_H
 #define KSSEARCHLINE_H
 
-#include <klineedit.h>
+#include <qhbox.h>
 
 class KSListView;
+class KSListViewSearchLine;
+class QToolButton;
 
 /**
  * @short Class for searching.
  * @author Gregor Kališnik <gregor@podnapisi.net>
  */
-class KSSearchLine : public KLineEdit
+class KSSearchLine : public QHBox
 {
   Q_OBJECT
   public:
@@ -38,7 +40,7 @@ class KSSearchLine : public KLineEdit
      * @param name Name of the class.
      * @param list Pointer to the list.
      */
-    KSSearchLine(QWidget *parent = 0, const char *name = 0, KSListView *list = 0);
+    KSSearchLine(QWidget *parent = 0, const char *name = 0);
 
     /**
      * Sets the list.
@@ -46,9 +48,19 @@ class KSSearchLine : public KLineEdit
      */
     void setList(KSListView *list);
     /**
-     * Sends the search criteria to the KSDBHandler's thread.
+     * Clears the KSListViewSearchLine
      */
-    void processSearch();
+    void clear();
+    /**
+     * Wrapper method to set the text in KSListViewSearchLine.
+     * @param text The new text.
+     */
+    void setText(const QString &text);
+    /**
+     * Manually starts the search.
+     * @param criteria Criteria of the search.
+     */
+    void manualSearch(const QString &criteria);
 
     /**
      * An empty destructor.
@@ -57,20 +69,26 @@ class KSSearchLine : public KLineEdit
 
   private slots:
     /**
+     * Slot for creating the widget.
+     */
+    void createWidget();
+    /**
      * Slot for queueing search requests.
      * @param criteria Search criteria.
      */
-    void slotQueueSearch(const QString &criteria);
+    //void slotQueueSearch(const QString &criteria);
     /**
      * Continuetion slot for queueing search requests.
      * @see KSSearchLine#slotQueueSearch(const QString &criteria)
      */
-    void slotBeginSearch();
+    //void slotBeginSearch();
 
   private:
-    KSListView *m_outputList;
-    int m_searchQueue;
-    QString m_latestCriteria;
+    KSListViewSearchLine *m_search;
+    QToolButton *m_clearButton;
+    //int m_searchQueue;
+    //QString m_latestCriteria;
+
 
 };
 

@@ -45,7 +45,8 @@ class KSSearchLine;
 class KSListViewItem;
 class KSConfigDialog;
 class QPopupmenu;
-class KStatusBar;
+//class KStatusBar;
+class KProgress;
 class QEvent;
 
 
@@ -240,7 +241,8 @@ class KSlovar : public KMainWindow
     bool m_history;
     KSConfigDialog *m_configDialog;
     QPopupMenu *m_listPopup;
-    KStatusBar *m_statusBar;
+    //KStatusBar *m_statusBar;
+    KProgress *m_progress;
     unsigned int m_recievedPackages;
 
     static KSlovar *m_instance;

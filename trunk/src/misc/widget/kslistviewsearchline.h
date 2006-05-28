@@ -17,56 +17,29 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "ksoutputhandler.h"
+#ifndef KSLISTVIEWSEARCHLINE_H
+#define KSLISTVIEWSEARCHLINE_H
 
-#include "handler/ksdbhandler.h"
+#include <klistviewsearchline.h>
 
-KSOutputHandler::KSOutputHandler(int number)
-  : QCustomEvent(CONTROL), m_number(number)
+class KSListView;
+class QListViewItem;
+
+/**
+@author Gregor Kališnik
+ */
+class KSListViewSearchLine : public KListViewSearchLine
 {
-}
+  Q_OBJECT
+  public:
+    //KSListViewSearchLine(QWidget *parent = 0, KSListView *listView=0, const char *name = 0);
+    KSListViewSearchLine(QWidget *parent = 0, const char *name = 0);
 
-KSOutputHandler::KSOutputHandler(QValueList<KSResult> result)
-  : QCustomEvent(LIST), m_result(result)
-{
-}
+    ~KSListViewSearchLine();
 
-KSOutputHandler::KSOutputHandler(const QString &text)
-  : QCustomEvent(TEXT), m_text(text)
-{
-}
+  protected:
+    virtual bool itemMatches(const QListViewItem *item, const QString &s) const;
 
-QString KSOutputHandler::getName()
-{
-  return m_name;
-}
+};
 
-QString KSOutputHandler::getId()
-{
-  return m_id;
-}
-
-QString KSOutputHandler::getSearch()
-{
-  return m_search;
-}
-
-QValueList<KSResult> KSOutputHandler::getResult()
-{
-  return m_result;
-}
-
-QString KSOutputHandler::getText()
-{
-  return m_text;
-}
-
-int KSOutputHandler::getNumber()
-{
-  return m_number;
-}
-
-KSOutputHandler::~KSOutputHandler()
-{
-}
-
+#endif

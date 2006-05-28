@@ -3,12 +3,18 @@
 Features:
 -Added smooth scrolling
 -Added authors support
+-The whole dictionary is loaded at the opening of it
+-Added authors support (not fully implemented)
 
 Eye candy:
+-Progress bar in status bar when opening a dictionary
 
 Internal changes:
 -Includes are changed. (no more ../)
 -Define names are now updated to the current class names
+-Rewriten KSDBHandler
+-Rewriten KSSearchLine
+-Readded KSListViewSearchLine
 
 0.2.1 => 0.2.2
 

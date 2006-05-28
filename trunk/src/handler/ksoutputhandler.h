@@ -21,11 +21,15 @@
 #define KSOUTPUTHANDLER_H
 
 #include <qevent.h>
+#include "handler/ksdbhandler.h"
 
 #define LIST 1000
 #define CLEAR 1001
 #define NORESULT 1002
 #define TEXT 1003
+#define CONTROL 1004
+
+//typedef KSResult;
 
 /**
  * @short Class for handling output packages. (data)
@@ -35,9 +39,13 @@ class KSOutputHandler : public QCustomEvent
 {
   public:
     /**
+     * Constructor for outputing control packages
+     */
+    KSOutputHandler(int number = 0);
+    /**
      * Constructor for outputing packages for list of phrases. (Used with the search)
      */
-    KSOutputHandler(const QString &name, const QString &id, const QString &search);
+    KSOutputHandler(QValueList<KSResult> phrases);
     /**
      * Construct (currently unused) for outputing results of a normal string SELECT command. (It could replace processString())
      * @see KSDBHandler#processString()
@@ -61,6 +69,8 @@ class KSOutputHandler : public QCustomEvent
      */
     QString getSearch();
 
+    QValueList<KSResult> getResult();
+
     /**
      * For reading result from a query.
      * @return Result from query.
@@ -69,13 +79,21 @@ class KSOutputHandler : public QCustomEvent
     QString getText();
 
     /**
+     * For reading how many items has been processed.
+     * @return Number of processed items.
+     */
+    int getNumber();
+
+    /**
      * Empty destructor.
      */
     ~KSOutputHandler();
 
   private:
     QString m_name, m_id, m_search;
+    QValueList<KSResult> m_result;
     QString m_text;
+    int m_number;
 
 };
 

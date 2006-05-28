@@ -17,56 +17,53 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "ksoutputhandler.h"
+#include "kslistviewsearchline.h"
 
-#include "handler/ksdbhandler.h"
+#include "kslistview.h"
+#include "kslistviewitem.h"
 
-KSOutputHandler::KSOutputHandler(int number)
-  : QCustomEvent(CONTROL), m_number(number)
+#include "../ksdata.h"
+
+#include <kdebug.h>
+
+/*KSListViewSearchLine::KSListViewSearchLine(QWidget *parent, KSListView *listView, const char *name)
+  : KListViewSearchLine(parent, static_cast<KListView*> (listView), name)
+{
+}*/
+
+KSListViewSearchLine::KSListViewSearchLine(QWidget *parent, const char *name)
+  : KListViewSearchLine(parent, name)
 {
 }
 
-KSOutputHandler::KSOutputHandler(QValueList<KSResult> result)
-  : QCustomEvent(LIST), m_result(result)
+bool KSListViewSearchLine::itemMatches(const QListViewItem *item, const QString &s) const
+{
+  if(s.isEmpty())
+  {
+    return true;
+  }
+
+  if(!KSData::instance()->literalSearch())
+  {
+    if(static_cast<KSListViewItem*> (const_cast<QListViewItem*> (item))->getSearch().find(s, 0, 0) >= 0)
+    {
+      return true;
+    }
+  }
+  else
+  {
+    if(static_cast<KSListViewItem*> (const_cast<QListViewItem*> (item))->text(0).find(s, 0, 0) >= 0)
+    {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+KSListViewSearchLine::~KSListViewSearchLine()
 {
 }
 
-KSOutputHandler::KSOutputHandler(const QString &text)
-  : QCustomEvent(TEXT), m_text(text)
-{
-}
 
-QString KSOutputHandler::getName()
-{
-  return m_name;
-}
-
-QString KSOutputHandler::getId()
-{
-  return m_id;
-}
-
-QString KSOutputHandler::getSearch()
-{
-  return m_search;
-}
-
-QValueList<KSResult> KSOutputHandler::getResult()
-{
-  return m_result;
-}
-
-QString KSOutputHandler::getText()
-{
-  return m_text;
-}
-
-int KSOutputHandler::getNumber()
-{
-  return m_number;
-}
-
-KSOutputHandler::~KSOutputHandler()
-{
-}
-
+#include "kslistviewsearchline.moc"

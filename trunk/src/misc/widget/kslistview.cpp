@@ -364,10 +364,10 @@ void KSListView::customEvent(QCustomEvent *package)
   if(package->type() == LIST)
   {
     m_emptyText = i18n("No words found");
-    if(KSData::instance()->getDictionary()->isSkiped())
+/*    if(KSData::instance()->getDictionary()->isSkiped())
     {
       return;
-    }
+  }*/
 
     KSOutputHandler *input = static_cast<KSOutputHandler*> (package);
     for(QValueList<int>::iterator count = m_filter.begin(); count != m_filter.end(); count++)

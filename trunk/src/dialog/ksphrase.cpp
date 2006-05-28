@@ -45,6 +45,7 @@
 #include <kspell.h>
 #include <kcombobox.h>
 #include <kmessagebox.h>
+#include <kprogress.h>
 #include <kdebug.h>
 
 
@@ -288,42 +289,42 @@ void KSPhrase::save()
   {
     for(QValueList<KSElement>::iterator count = saveSynonyms.begin(); count != saveSynonyms.end(); count++) //Adding this word to its new synonyms
     {
-      m_XMLHandler = new KSXMLHandler(KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+QString::number((*count).id)+"';"));
+      m_XMLHandler = new KSXMLHandler(KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+QString::number((*count).id)+"';")["text"]);
       m_XMLHandler->appendString("synonym", m_mainWidget->wordEdit->text(), "id", m_id);
       KSData::instance()->getDictionary()->saveWord((*count).name, m_XMLHandler->parse(), false, QString::number((*count).id));
     }
 
     for(QValueList<KSElement>::iterator count = saveAntonyms.begin(); count!=saveAntonyms.end(); count++) //Adding this word to its new antonyms
     {
-      m_XMLHandler = new KSXMLHandler(KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+QString::number((*count).id)+"';"));
+      m_XMLHandler = new KSXMLHandler(KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+QString::number((*count).id)+"';")["text"]);
       m_XMLHandler->appendString("antonym", m_mainWidget->wordEdit->text(), "id", m_id);
       KSData::instance()->getDictionary()->saveWord((*count).name, m_XMLHandler->parse(), false, QString::number((*count).id));
     }
 
     for(QStringList::iterator count = m_deletedSynonyms.begin(); count != m_deletedSynonyms.end(); count++) //Remove this word from its former synonyms
     {
-      m_XMLHandler = new KSXMLHandler(KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSData::instance()->getDictionary()->getId(*count))+"';"));
+      m_XMLHandler = new KSXMLHandler(KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSData::instance()->getDictionary()->getId(*count))+"';")["text"]);
       m_XMLHandler->removeString("synonym", m_mainWidget->wordEdit->text());
       KSData::instance()->getDictionary()->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSData::instance()->getDictionary()->getId()));
     }
 
     for(QStringList::iterator count = m_deletedAntonyms.begin(); count != m_deletedAntonyms.end(); count++) //Remove this word from its former antonyms
     {
-      m_XMLHandler = new KSXMLHandler(KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSData::instance()->getDictionary()->getId(*count))+"';"));
+      m_XMLHandler = new KSXMLHandler(KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSData::instance()->getDictionary()->getId(*count))+"';")["text"]);
       m_XMLHandler->removeString("antonym", m_mainWidget->wordEdit->text());
       KSData::instance()->getDictionary()->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSData::instance()->getDictionary()->getId(*count)));
     }
 
     for(QValueList<KSElement>::iterator count = saveFamily.begin(); count != saveFamily.end(); count++) //Adding this word to its new word families
     {
-      m_XMLHandler = new KSXMLHandler(KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+QString::number((*count).id)+"';"));
+      m_XMLHandler = new KSXMLHandler(KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+QString::number((*count).id)+"';")["text"]);
       m_XMLHandler->appendString("word-family", m_mainWidget->wordEdit->text(), "id", m_id);
       KSData::instance()->getDictionary()->saveWord((*count).name, m_XMLHandler->parse(), false, QString::number((*count).id));
     }
 
     for(QStringList::iterator count = m_deletedFamily.begin(); count != m_deletedFamily.end(); count++) //Remove this word from its former word families
     {
-      m_XMLHandler = new KSXMLHandler(KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSData::instance()->getDictionary()->getId(*count))+"';"));
+      m_XMLHandler = new KSXMLHandler(KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+QString::number(KSData::instance()->getDictionary()->getId(*count))+"';")["text"]);
       m_XMLHandler->removeString("word-family", m_mainWidget->wordEdit->text());
       KSData::instance()->getDictionary()->saveWord(*count, m_XMLHandler->parse(), false, QString::number(KSData::instance()->getDictionary()->getId(*count)));
     }
@@ -368,6 +369,22 @@ void KSPhrase::setWord(QString text, const QString &id)
 
   if(!KSData::instance()->getType())
   {
+    /*KProgressDialog *progressDialog = new KProgressDialog(0, "loading", i18n("Loading phrases"), i18n("Please wait until all the words are processed."));
+    KProgress *progress = progressDialog->progressBar();*/
+    KSListView *mainList = KSData::instance()->getMainList();
+    //progress->setTotalSteps(mainList->childCount());
+    //int processed = 0;
+    //progressDialog->show();
+    for(QListViewItem *count = mainList->firstChild(); count; count = count->nextSibling())
+    {
+      //processed++;
+      //progress->setProgress(processed);
+      KSListViewItem *current = static_cast<KSListViewItem*> (count);
+      new KSListViewItem(m_mainWidget->availableSynonymList, current->text(0), current->getId(), current->getSearch());
+      new KSListViewItem(m_mainWidget->availableAntonymList, current->text(0), current->getId(), current->getSearch());
+      new KSListViewItem(m_mainWidget->availableFamilyList, current->text(0), current->getId(), current->getSearch());
+    }
+
     m_mainWidget->typeBox->setCurrentItem(KSData::instance()->getPartOfSpeechName(m_XMLHandler->readString("type").toInt()));
 
     QValueList<KSExplanation> explanations = m_XMLHandler->readExplanation();
@@ -380,28 +397,30 @@ void KSPhrase::setWord(QString text, const QString &id)
     for(QMap<QString,QString>::iterator count = synonym.begin(); count != synonym.end(); count++)
     {
       new KSListViewItem(m_mainWidget->selectedSynonymList, count.data(), count.key());
-      m_mainWidget->availableAntonymList->addFilter(count.key().toInt());
-      m_mainWidget->availableSynonymList->addFilter(count.key().toInt());
+      /*m_mainWidget->availableAntonymList->addFilter(count.key().toInt());
+      m_mainWidget->availableSynonymList->addFilter(count.key().toInt());*/
+      delete m_mainWidget->availableAntonymList->findItem(count.data(), 0);
+      delete m_mainWidget->availableSynonymList->findItem(count.data(), 0);
     }
 
     QMap<QString,QString> antonym = m_XMLHandler->readQMapList("antonym");
     for(QMap<QString,QString>::iterator count = antonym.begin(); count != antonym.end(); count++)
     {
       new KSListViewItem(m_mainWidget->selectedAntonymList, count.data(), count.key());
-      m_mainWidget->availableAntonymList->addFilter(count.key().toInt());
-      m_mainWidget->availableSynonymList->addFilter(count.key().toInt());
+      delete m_mainWidget->availableAntonymList->findItem(count.data(), 0);
+      delete m_mainWidget->availableSynonymList->findItem(count.data(), 0);
     }
 
     QMap<QString,QString> family = m_XMLHandler->readQMapList("word-family");
     for(QMap<QString,QString>::iterator count = family.begin(); count != family.end(); count++)
     {
       new KSListViewItem(m_mainWidget->selectedFamilyList, count.data(), count.key());
-      m_mainWidget->availableFamilyList->addFilter(count.key().toInt());
+      delete m_mainWidget->availableFamilyList->findItem(count.data(), 0);
     }
 
-    m_mainWidget->availableSynonymList->addFilter(m_id.toInt());
-    m_mainWidget->availableAntonymList->addFilter(m_id.toInt());
-    m_mainWidget->availableFamilyList->addFilter(m_id.toInt());
+    delete m_mainWidget->availableAntonymList->findItem(m_XMLHandler->readString("word"), 0);
+    delete m_mainWidget->availableSynonymList->findItem(m_XMLHandler->readString("word"), 0);
+    delete m_mainWidget->availableFamilyList->findItem(m_XMLHandler->readString("word"), 0);
   }
   else
   {
@@ -472,7 +491,7 @@ void KSPhrase::initialize()
     m_mainWidget->tabWidget->setTabEnabled(m_mainWidget->wordFamily, false);
 
     //Disable parts of speech
-    m_mainWidget->typeBox->setShown(true);
+    m_mainWidget->typeBox->setShown(false);
   }
   else
   {
@@ -485,9 +504,13 @@ void KSPhrase::initialize()
     m_mainWidget->antonymSearch->setList(m_mainWidget->availableAntonymList);
     m_mainWidget->familySearch->setList(m_mainWidget->availableFamilyList);
 
-    m_mainWidget->availableSynonymList->setEmptyText(i18n("Begin search by typing a\nword into the search bar."));
-    m_mainWidget->availableAntonymList->setEmptyText(i18n("Begin search by typing a\nword into the search bar."));
-    m_mainWidget->availableFamilyList->setEmptyText(i18n("Begin search by typing a\nword into the search bar."));
+    m_mainWidget->availableSynonymList->setEmptyText(i18n("There are no words."));
+    m_mainWidget->availableAntonymList->setEmptyText(i18n("There are no words."));
+    m_mainWidget->availableFamilyList->setEmptyText(i18n("There are no words."));
+
+    m_mainWidget->availableAntonymList->setSorting(-1);
+    m_mainWidget->availableSynonymList->setSorting(-1);
+    m_mainWidget->availableFamilyList->setSorting(-1);
 
     /*new KSListViewItem(m_mainWidget->availableSynonymList, i18n("Begin search by typing a"));
     new KSListViewItem(m_mainWidget->availableSynonymList, i18n("word into the search bar."));
