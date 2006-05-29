@@ -28,6 +28,8 @@
 
 #include "handler/ksdbhandler.h"
 
+#include "dialog/kscharselect.h"
+
 #include <kiconloader.h>
 #include <ktoolbar.h>
 #include <ktoolbarbutton.h>
@@ -49,14 +51,18 @@ KSSearchLine::KSSearchLine(QWidget *parent, const char *name)
 void KSSearchLine::createWidget()
 {
   m_clearButton = new QToolButton(this);
-  QIconSet icon = SmallIconSet(QApplication::reverseLayout() ? "clear_left" : "locationbar_erase");
-  m_clearButton->setIconSet(icon);
+  m_clearButton->setIconSet(SmallIconSet(QApplication::reverseLayout() ? "clear_left" : "locationbar_erase"));
   m_clearButton->show();
 
   m_search = new KSListViewSearchLine(this);
   m_search->show();
 
+  m_charButton = new QToolButton(this);
+  m_charButton->setIconSet(SmallIconSet("kcharselect"));
+  m_charButton->show();
+
   connect(m_clearButton, SIGNAL(clicked()), m_search, SLOT(clear()));
+  connect(m_charButton, SIGNAL(clicked()), this, SLOT(slotCharSelect()));
 }
 
 /*void KSSearchLine::processSearch()
@@ -119,6 +125,25 @@ void KSSearchLine::manualSearch(const QString &criteria)
   {
     m_search->updateSearch(criteria);
   }
+}
+
+void KSSearchLine::appendText(const QString &text)
+{
+  if(m_search)
+  {
+    m_search->setText(m_search->text() + text);
+  }
+}
+
+void KSSearchLine::slotCharSelect()
+{
+  KSCharSelect *charSelect = new KSCharSelect(this);
+  charSelect->show();
+}
+
+void KSSearchLine::slotAddChar(const QChar& selected)
+{
+  appendText(QString(selected));
 }
 
 KSSearchLine::~KSSearchLine()

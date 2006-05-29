@@ -108,7 +108,7 @@ bool KSDBHandler::saveDictionary(const QString &text, const QString &lang, const
   QString rawQuery;
   if(create)
   {
-    rawQuery="BEGIN TRANSACTION; CREATE TABLE head ( lang INTEGER , type INTEGER , author TEXT , email TEXT , number_phrases INTEGER ); CREATE TABLE media ( id INTEGER PRIMARY KEY AUTOINCREMENT , mime TEXT , data BLOB ); CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , modified INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT UNIQUE , search TEXT ); CREATE TABLE authors ( id INTEGER PRIMARY KEY AUTOINCREMENT , id_phrase INTEGER , name TEXT , email TEXT , first INTEGER );";
+    rawQuery="BEGIN TRANSACTION; CREATE TABLE head ( lang INTEGER , type INTEGER , author TEXT , email TEXT ); CREATE TABLE media ( id INTEGER PRIMARY KEY AUTOINCREMENT , mime TEXT , data BLOB ); CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , modified INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT UNIQUE , search TEXT ); CREATE TABLE authors ( id INTEGER PRIMARY KEY AUTOINCREMENT , id_phrase INTEGER , name TEXT , email TEXT , first INTEGER );";
     rawQuery=rawQuery+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' );"+"INSERT INTO head ( lang , type, author , email , number_phrases ) VALUES ( '"+lang+"' , '"+type+"' , '"+Configuration::authorName()+"' , '"+Configuration::authorEmail()+"' , '0' ); CREATE INDEX phrases_index ON phrases (search ASC); COMMIT;";
   }
   else

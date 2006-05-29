@@ -111,16 +111,16 @@ KSlovar::KSlovar()
   addMenu();
   addToolbar();
 
-  QHBox * horiz = new QHBox(this);
+  QHBox *horiz = new QHBox(this);
 
   m_split = new QSplitter(horiz);
 
-  QVBox * vert = new QVBox(m_split);
+  QVBox *vert = new QVBox(m_split);
   vert->setMaximumWidth(200);
   vert->setMinimumWidth(200);
 
   m_search = new KSSearchLine(vert);
-  m_list = new KSListView( vert );
+  m_list = new KSListView(vert);
   m_list->addColumn("name");
   m_list->setColumnWidth(0, 193);
   m_list->setFullWidth(true);
@@ -626,7 +626,7 @@ void KSlovar::processFileOpen(const QString &fileName)
 
     KSData::instance()->setDictionary(new KSDBHandler(fileName));
 
-    m_progress->setTotalSteps(KSData::instance()->getDictionary()->processString("SELECT number_phrases FROM head;")["number_phrases"].toInt());
+    m_progress->setTotalSteps(KSData::instance()->getDictionary()->processString("SELECT count(id) AS number_phrases FROM phrases;")["number_phrases"].toInt());
 
     KSData::instance()->getDictionary()->start();
 

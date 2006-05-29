@@ -5,6 +5,7 @@ Features:
 -Added authors support
 -The whole dictionary is loaded at the opening of it
 -Added authors support (not fully implemented)
+-Added character selection
 
 Eye candy:
 -Progress bar in status bar when opening a dictionary
@@ -15,6 +16,7 @@ Internal changes:
 -Rewriten KSDBHandler
 -Rewriten KSSearchLine
 -Readded KSListViewSearchLine
+-Added KSCharSelect class
 
 0.2.1 => 0.2.2
 

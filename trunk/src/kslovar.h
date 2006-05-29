@@ -62,7 +62,7 @@ class KSlovar : public KMainWindow
   Q_OBJECT
   public:
     /**
-   * Default Constructor
+     * Default Constructor
      */
     KSlovar();
 
@@ -268,6 +268,8 @@ class KSlovar : public KMainWindow
     KAction *m_conversion;
     KAction *m_update;
     KAction *m_wizard;
+
+    KAction *m_charTable;
 
     KSXSLHandler *XMLParser;
 

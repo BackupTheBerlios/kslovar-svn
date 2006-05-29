@@ -33,6 +33,13 @@ class QToolButton;
 class KSSearchLine : public QHBox
 {
   Q_OBJECT
+
+  public slots:
+    /**
+   * Slot that inserts the selected character.
+     */
+    void slotAddChar(const QChar& selected);
+
   public:
     /**
      * Constructor for creating KSSearchLine.
@@ -57,10 +64,16 @@ class KSSearchLine : public QHBox
      */
     void setText(const QString &text);
     /**
+     * To append a string to allready existing string.
+     * @param text The added text.
+     */
+    void appendText(const QString &text);
+    /**
      * Manually starts the search.
      * @param criteria Criteria of the search.
      */
     void manualSearch(const QString &criteria);
+
 
     /**
      * An empty destructor.
@@ -83,9 +96,15 @@ class KSSearchLine : public QHBox
      */
     //void slotBeginSearch();
 
+    /**
+     * Slot for showing KSCharSelect.
+     */
+    void slotCharSelect();
+
   private:
     KSListViewSearchLine *m_search;
     QToolButton *m_clearButton;
+    QToolButton *m_charButton;
     //int m_searchQueue;
     //QString m_latestCriteria;
 
