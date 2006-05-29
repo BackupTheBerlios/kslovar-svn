@@ -17,6 +17,11 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
+ /**************************************************************************
+*       Mayoraty of this code has been copied from Kopete's source code.   *
+*                          Thank you for the code.                         *
+ **************************************************************************/
 #include "kslistview.h"
 
 #include "kslistviewitem.h"
@@ -34,6 +39,7 @@
 #include <qtimer.h>
 #include <qheader.h>
 #include <qpainter.h>
+#include <qregexp.h>
 
 #include <klocale.h>
 
@@ -47,7 +53,7 @@ KSListView::KSListView(QWidget *parent, const char *name)
  m_mousePressed(false)
 {
   header()->hide();
-  connect( dynamic_cast<QObject*> (KSConfigDialog::instance()), SIGNAL(settingsChanged()), this, SLOT(slotUpdateConfiguration()) );
+  connect(dynamic_cast<QObject*> (KSConfigDialog::instance()), SIGNAL(settingsChanged()), this, SLOT(slotUpdateConfiguration()));
   slotUpdateConfiguration();
 }
 
@@ -424,8 +430,24 @@ void KSListView::drawContentsOffset(QPainter *p, int ox, int oy, int cx, int cy,
     QStringList::Iterator end(lines.end());
     for(QStringList::Iterator str(lines.begin()); str != end; str++)
     {
-      p->drawText((viewport()->width()/2)-(p->fontMetrics().width(*str)/2), ypos, *str);
-      ypos += p->fontMetrics().lineSpacing();
+      //Calculate if the width of the list is too small for the text
+      int stringWidth = p->fontMetrics().width(*str);
+
+      //Truncating the string, or just print it.
+      if(stringWidth > viewport()->width())
+      {
+        QStringList temp = QStringList::split(' ', *str);
+        for(QStringList::Iterator count = temp.begin(); count != temp.end(); count++)
+        {
+          p->drawText((viewport()->width()/2)-(p->fontMetrics().width(*count)/2), ypos, *count);
+          ypos += p->fontMetrics().lineSpacing();
+        }
+      }
+      else
+      {
+        p->drawText((viewport()->width()/2)-(p->fontMetrics().width(*str)/2), ypos, *str);
+        ypos += p->fontMetrics().lineSpacing();
+      }
     }
   }
 }

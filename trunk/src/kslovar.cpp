@@ -116,8 +116,8 @@ KSlovar::KSlovar()
   m_split = new QSplitter(horiz);
 
   QVBox *vert = new QVBox(m_split);
-  vert->setMaximumWidth(200);
-  vert->setMinimumWidth(200);
+  /*vert->setMaximumWidth(200);
+  vert->setMinimumWidth(200);*/
 
   m_search = new KSSearchLine(vert);
   m_list = new KSListView(vert);

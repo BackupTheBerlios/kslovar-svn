@@ -7,8 +7,9 @@ Features:
 -Added authors support (not fully implemented)
 -Added character selection
 
-Eye candy:
+Interface:
 -Progress bar in status bar when opening a dictionary
+-Word list is resizable
 
 Internal changes:
 -Includes are changed. (no more ../)
