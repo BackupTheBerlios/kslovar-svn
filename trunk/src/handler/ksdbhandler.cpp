@@ -109,7 +109,7 @@ bool KSDBHandler::saveDictionary(const QString &text, const QString &lang, const
   if(create)
   {
     rawQuery="BEGIN TRANSACTION; CREATE TABLE head ( lang INTEGER , type INTEGER , author TEXT , email TEXT ); CREATE TABLE media ( id INTEGER PRIMARY KEY AUTOINCREMENT , mime TEXT , data BLOB ); CREATE TABLE dictionary ( id INTEGER PRIMARY KEY AUTOINCREMENT , text TEXT , modified INTEGER ); CREATE TABLE phrases ( id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT UNIQUE , search TEXT ); CREATE TABLE authors ( id INTEGER PRIMARY KEY AUTOINCREMENT , id_phrase INTEGER , name TEXT , email TEXT , first INTEGER );";
-    rawQuery=rawQuery+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' );"+"INSERT INTO head ( lang , type, author , email , number_phrases ) VALUES ( '"+lang+"' , '"+type+"' , '"+Configuration::authorName()+"' , '"+Configuration::authorEmail()+"' , '0' ); CREATE INDEX phrases_index ON phrases (search ASC); COMMIT;";
+    rawQuery=rawQuery+"INSERT INTO dictionary ( id , text ) VALUES ( '0' , '"+text+"' );"+"INSERT INTO head ( lang , type, author , email ) VALUES ( '"+lang+"' , '"+type+"' , '"+Configuration::authorName()+"' , '"+Configuration::authorEmail()+"' ); CREATE INDEX phrases_index ON phrases (search ASC); COMMIT;";
   }
   else
   {
@@ -125,7 +125,7 @@ bool KSDBHandler::saveWord(const QString &word, const QString &text, bool add, c
   search=convertString(word);
   if(add)
   {
-    rawQuery="BEGIN TRANSACTION; INSERT INTO phrases ( name , search ) VALUES ( '"+word+"' , '"+search+"' ); INSERT INTO dictionary ( text ) VALUES ( \""+text+"\" ); INSERT INTO authors ( id_phrase , name , email , first ) VALUES ( '"+QString::number(getId())+"' , '"+Configuration::authorName()+"' , '"+Configuration::authorEmail()+"' , '1' ); UPDATE head SET number_phrases=number_phrases+1 COMMIT;";
+    rawQuery="BEGIN TRANSACTION; INSERT INTO phrases ( name , search ) VALUES ( '"+word+"' , '"+search+"' ); INSERT INTO dictionary ( text ) VALUES ( \""+text+"\" ); INSERT INTO authors ( id_phrase , name , email , first ) VALUES ( '"+QString::number(getId())+"' , '"+Configuration::authorName()+"' , '"+Configuration::authorEmail()+"' , '1' ); COMMIT;";
   }
   else
   {

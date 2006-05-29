@@ -559,7 +559,7 @@ void KSlovar::slotRemovePhrase()
     delete deleteHandler;
   }
 
-  KSData::instance()->getDictionary()->processQuery("BEGIN TRANSACTION; DELETE FROM phrases WHERE id='"+temp->getId()+"'; DELETE FROM dictionary WHERE id='" + temp->getId() + "'; UPDATE head SET number_phrases=number_phrases-1; COMMIT;");
+  KSData::instance()->getDictionary()->processQuery("BEGIN TRANSACTION; DELETE FROM phrases WHERE id='"+temp->getId()+"'; DELETE FROM dictionary WHERE id='" + temp->getId() + "'; COMMIT;");
   delete temp;
   delete XMLHandler;
 
@@ -626,7 +626,7 @@ void KSlovar::processFileOpen(const QString &fileName)
 
     KSData::instance()->setDictionary(new KSDBHandler(fileName));
 
-    m_progress->setTotalSteps(KSData::instance()->getDictionary()->processString("SELECT count(id) AS number_phrases FROM phrases;")["number_phrases"].toInt());
+    m_progress->setTotalSteps(KSData::instance()->getDictionary()->processString("SELECT COUNT(id) AS number_phrases FROM phrases;")["number_phrases"].toInt());
 
     KSData::instance()->getDictionary()->start();
 
