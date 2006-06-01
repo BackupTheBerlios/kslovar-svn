@@ -38,6 +38,7 @@ KSListViewSearchLine::KSListViewSearchLine(QWidget *parent, const char *name)
 
 bool KSListViewSearchLine::itemMatches(const QListViewItem *item, const QString &s) const
 {
+  QString searchString, rawString;
   if(s.isEmpty())
   {
     return true;
@@ -45,16 +46,84 @@ bool KSListViewSearchLine::itemMatches(const QListViewItem *item, const QString 
 
   if(!KSData::instance()->literalSearch())
   {
-    if(static_cast<KSListViewItem*> (const_cast<QListViewItem*> (item))->getSearch().find(s, 0, 0) >= 0)
+    searchString = static_cast<KSListViewItem*> (const_cast<QListViewItem*> (item))->getSearch();
+  }
+  else
+  {
+    searchString = static_cast<KSListViewItem*> (const_cast<QListViewItem*> (item))->text(0);
+  }
+
+  if(!KSData::instance()->backSearch())
+  {
+    if(match(searchString, s, false))
     {
       return true;
     }
   }
   else
   {
-    if(static_cast<KSListViewItem*> (const_cast<QListViewItem*> (item))->text(0).find(s, 0, 0) >= 0)
+    if(match(searchString, s, true))
     {
       return true;
+    }
+  }
+
+  return false;
+}
+
+bool KSListViewSearchLine::match(const QString& checked, const QString& theChecker, bool reverse, bool caseSensitive) const
+{
+  int sourceLength, searchLength;
+  QString source, search;
+
+  if(!caseSensitive)
+  {
+    source = checked.upper();
+    search = theChecker.upper();
+  }
+  else
+  {
+    source = checked;
+    search = theChecker;
+  }
+
+  if(!reverse)
+  {
+    sourceLength = checked.length() -1;
+    searchLength = theChecker.length() -1;
+    for(int count = 0; count <= sourceLength; count++)
+    {
+      if(source[count] != search[count])
+      {
+        return false;
+      }
+      else
+      {
+        if(count == searchLength)
+        {
+          return true;
+        }
+      }
+    }
+  }
+  else
+  {
+    sourceLength = checked.length();
+    searchLength = theChecker.length();
+    for(int count = sourceLength; count > 0; count--)
+    {
+      if(source[count] != search[searchLength])
+      {
+        return false;
+      }
+      else
+      {
+        if(searchLength == 0)
+        {
+          return true;
+        }
+        searchLength--;
+      }
     }
   }
 

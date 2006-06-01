@@ -49,6 +49,7 @@
 #include <qlayout.h>
 #include <qpopupmenu.h>
 #include <qfile.h>
+#include <qsize.h>
 
 #include <kpopupmenu.h>
 #include <kmenubar.h>
@@ -116,8 +117,6 @@ KSlovar::KSlovar()
   m_split = new QSplitter(horiz);
 
   QVBox *vert = new QVBox(m_split);
-  /*vert->setMaximumWidth(200);
-  vert->setMinimumWidth(200);*/
 
   m_search = new KSSearchLine(vert);
   m_list = new KSListView(vert);
@@ -132,14 +131,19 @@ KSlovar::KSlovar()
   m_browser=new KHTMLPart(m_split);
   m_browser->setEncoding("utf-8", true);
   m_browser->view()->viewport()->installEventFilter(this); //For searching with middle click
+
+  QValueList<int> sizes;
+  sizes << 200 << 800;
+
+  m_split->setSizes(sizes);
+
   slotClose();
 
-  connect( m_browser->browserExtension(), SIGNAL( openURLRequest( const KURL &, const KParts::URLArgs & ) ), this, SLOT( slotShowBrowser(const KURL &, const KParts::URLArgs &) ) );
-  connect(m_list, SIGNAL( selectionChanged(QListViewItem *)), this, SLOT( slotShowList(QListViewItem *) ) );
+  connect(m_browser->browserExtension(), SIGNAL(openURLRequest(const KURL &, const KParts::URLArgs &)), this, SLOT(slotShowBrowser(const KURL &, const KParts::URLArgs &)));
+  connect(m_list, SIGNAL(selectionChanged(QListViewItem *)), this, SLOT(slotShowList(QListViewItem *)));
   connect(m_list, SIGNAL(doubleClicked( QListViewItem *)), this, SLOT(slotEditPhrase()));
   connect(kapp, SIGNAL(shutDown()), this, SLOT(slotClose()));
   connect(m_list, SIGNAL(contextMenu(KListView*, QListViewItem*, const QPoint&)), this, SLOT(showPopup( KListView*, QListViewItem*, const QPoint& )));
-  connect(m_list, SIGNAL(recievedPackage(bool, bool)), this, SLOT(slotCountPackages(bool, bool)));
 
   setCentralWidget(horiz);
 }
@@ -341,8 +345,8 @@ void KSlovar::registerButtons()
 
   m_find = KStdAction::find(this, SLOT(slotFind()), actionCollection());
   m_findNext = KStdAction::findNext(this, SLOT(slotFindNext()), actionCollection());
-  m_literalSearch = new KToggleAction(i18n("&Literal search"), "filter", KShortcut(KKey("CTRL+l")), this, SLOT(slotToggleLiteral()), actionCollection(), "literalSearch");
-  m_backSearch = new KToggleAction(i18n("Ba&ck search"), "previous", KShortcut(KKey("CTRL+b")), this, SLOT(slotToggleBack()), actionCollection(), "backSearch");
+  /*m_literalSearch = new KToggleAction(i18n("&Literal search"), "filter", KShortcut(KKey("CTRL+l")), this, SLOT(slotToggleLiteral()), actionCollection(), "literalSearch");
+  m_backSearch = new KToggleAction(i18n("Ba&ck search"), "previous", KShortcut(KKey("CTRL+b")), this, SLOT(slotToggleBack()), actionCollection(), "backSearch");*/
 
   m_print=KStdAction::print(this, SLOT(slotPrint()), actionCollection());
   m_selectAll=KStdAction::selectAll(this, SLOT(slotSelectAll()), actionCollection());
@@ -383,8 +387,8 @@ void KSlovar::addMenu()
   editmenu->insertSeparator();
   m_find->plug(editmenu);
   m_findNext->plug(editmenu);
-  m_literalSearch->plug(editmenu);
-  m_backSearch->plug(editmenu);
+  /*m_literalSearch->plug(editmenu);
+  m_backSearch->plug(editmenu);*/
 
   KPopupMenu *gomenu=new KPopupMenu;
   m_back->plug(gomenu);
@@ -410,8 +414,8 @@ void KSlovar::addMenu()
 void KSlovar::addToolbar()
 {
   KToolBar *toolbar = new KToolBar(this);
-  m_literalSearch->plug(toolbar);
-  m_backSearch->plug(toolbar);
+  /*m_literalSearch->plug(toolbar);
+  m_backSearch->plug(toolbar);*/
   m_back->plug(toolbar);
   m_forward->plug(toolbar);
   m_home->plug(toolbar);
@@ -657,7 +661,7 @@ void KSlovar::processFileOpen(const QString &fileName)
       XMLParser=new KSXSLHandler(QString::fromUtf8(locate("appdata", "styles/"+Configuration::dictionaryStyle()+"/"+Configuration::dictionaryStyle()+"-transitional.xsl")));
     }
 
-    m_list->setEmptyText(i18n("There is no words."));
+    m_list->setEmptyText(i18n("Loading words.\nPlease wait..."));
     //m_list->clear();
     slotHome();
   }
@@ -755,16 +759,6 @@ void KSlovar::slotDownloadLanguage()
   upgradeManager->show();
 }
 
-void KSlovar::slotToggleLiteral()
-{
-  KSData::instance()->setLiteralSearch(m_literalSearch->isChecked());
-}
-
-void KSlovar::slotToggleBack()
-{
-  KSData::instance()->setBackSearch(m_backSearch->isChecked());
-}
-
 void KSlovar::slotFirstRunWizard()
 {
   KSWizard *firstRun = new KSWizard(this, "firstRunWizard");
@@ -808,6 +802,8 @@ void KSlovar::customEvent(QCustomEvent *package)
       statusBar()->changeItem(i18n("Ready"), 0);
       delete m_progress;
 
+      m_list->setEmptyText(i18n("There are no words."));
+
       break;
     }
     case(CONTROL):
@@ -822,26 +818,6 @@ void KSlovar::customEvent(QCustomEvent *package)
 
 }
 
-void KSlovar::slotCountPackages(bool found, bool completed)
-{
-  if(found)
-  {
-    m_recievedPackages++;
-    statusBar()->changeItem(i18n("%1 words loaded").arg(m_recievedPackages), 0);
-  }
-  else
-  {
-    m_recievedPackages = 0;
-    if(completed)
-    {
-      statusBar()->changeItem(i18n("No words present"), 0);
-    }
-    else
-    {
-      statusBar()->changeItem(i18n("Processing..."), 0);
-    }
-  }
-}
 
 KSlovar::~KSlovar()
 {

@@ -32,17 +32,17 @@
 
 #include <kiconloader.h>
 #include <ktoolbar.h>
-#include <ktoolbarbutton.h>
+//#include <ktoolbarbutton.h>
 
-#include <qtimer.h>
+//#include <qtimer.h>
 #include <qapplication.h>
-//#include <qiconset.h>
 #include <qtoolbutton.h>
+//#include <qiconset.h>
 
 KSSearchLine::KSSearchLine(QWidget *parent, const char *name)
   : QHBox(parent, name)
 {
-  setSpacing(5);
+  setSpacing(1);
   //QTimer::singleShot(0, this, SLOT(createWidget()));
   createWidget();
   //connect(this, SIGNAL(textChanged(const QString&)), this, SLOT(slotQueueSearch(const QString &)));
@@ -57,12 +57,24 @@ void KSSearchLine::createWidget()
   m_search = new KSListViewSearchLine(this);
   m_search->show();
 
+  m_backButton = new QToolButton(this);
+  m_backButton->setIconSet(SmallIconSet("previous"));
+  m_backButton->setToggleButton(true);
+  m_backButton->show();
+
+  m_literalButton = new QToolButton(this);
+  m_literalButton->setIconSet(SmallIconSet("filter"));
+  m_literalButton->setToggleButton(true);
+  m_literalButton->show();
+
   m_charButton = new QToolButton(this);
   m_charButton->setIconSet(SmallIconSet("kcharselect"));
   m_charButton->show();
 
   connect(m_clearButton, SIGNAL(clicked()), m_search, SLOT(clear()));
   connect(m_charButton, SIGNAL(clicked()), this, SLOT(slotCharSelect()));
+  connect(m_backButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleBack(bool)));
+  connect(m_literalButton, SIGNAL(toggled(bool)), this, SLOT(slotToggleLiteral(bool)));
 }
 
 /*void KSSearchLine::processSearch()
@@ -144,6 +156,16 @@ void KSSearchLine::slotCharSelect()
 void KSSearchLine::slotAddChar(const QChar& selected)
 {
   appendText(QString(selected));
+}
+
+void KSSearchLine::slotToggleLiteral(bool enabled)
+{
+  KSData::instance()->setLiteralSearch(enabled);
+}
+
+void KSSearchLine::slotToggleBack(bool enabled)
+{
+  KSData::instance()->setBackSearch(enabled);
 }
 
 KSSearchLine::~KSSearchLine()

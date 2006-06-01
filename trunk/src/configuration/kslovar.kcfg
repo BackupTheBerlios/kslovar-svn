@@ -28,11 +28,6 @@
       <default>false</default>
       <whatsthis>If enabled, the upgrade manager will run at startup.</whatsthis>
     </entry>
-    <entry name="SearchLimit" type="Int">
-      <label>Word limit in searches</label>
-      <default>200</default>
-      <whatsthis>This limits the shown words in searches.</whatsthis>
-    </entry>
     <entry name="AuthorName" type="String">
       <label>Your name (or nickname)</label>
       <whatsthis>What you write here, will be shown in the dictionary as author of the dictionary or phrase</whatsthis>

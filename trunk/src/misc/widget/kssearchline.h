@@ -101,10 +101,23 @@ class KSSearchLine : public QHBox
      */
     void slotCharSelect();
 
+    /**
+     * Slot that toggles betwen literal and non-literal search.
+     * @param enabled Argument that defines if the button is on or off.
+     */
+    void slotToggleLiteral(bool enabled);
+    /**
+     * Slot that toggles betwen normal and back search.
+     * @param enabled Argument that defines if the button is on or off.
+     */
+    void slotToggleBack(bool enabled);
+
   private:
     KSListViewSearchLine *m_search;
     QToolButton *m_clearButton;
     QToolButton *m_charButton;
+    QToolButton *m_backButton;
+    QToolButton *m_literalButton;
     //int m_searchQueue;
     //QString m_latestCriteria;
 

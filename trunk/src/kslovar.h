@@ -198,23 +198,9 @@ class KSlovar : public KMainWindow
      */
     void slotDownloadLanguage();
     /**
-     * Slot that toggles betwen literal and non-literal search.
-     */
-    void slotToggleLiteral();
-    /**
-     * Slot that toggles betwen normal and back search.
-     */
-    void slotToggleBack();
-    /**
      * Slot that inicialises and shows KSWizard.
      */
     void slotFirstRunWizard();
-    /**
-     * Slot that counts how many words has been found. Used for the neat ;) status bar.
-     * @param found If the word has been found.
-     * @param completed If the search has been completed. (KSDBHandler produces no more result)
-     */
-    void slotCountPackages(bool found, bool completed);
 
   private:
     /**
@@ -257,8 +243,8 @@ class KSlovar : public KMainWindow
     KAction *m_close;
     KAction *m_find;
     KAction *m_findNext;
-    KToggleAction *m_literalSearch;
-    KToggleAction *m_backSearch;
+    /*KToggleAction *m_literalSearch;
+    KToggleAction *m_backSearch;*/
     KAction *m_print;
     KAction *m_selectAll;
     KAction *m_addPhrase;

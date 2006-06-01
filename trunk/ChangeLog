@@ -6,10 +6,12 @@ Features:
 -The whole dictionary is loaded at the opening of it
 -Added authors support (not fully implemented)
 -Added character selection
+-Removed search limit (freedom! ;))
 
 Interface:
 -Progress bar in status bar when opening a dictionary
 -Word list is resizable
+-Literal and back search moved near to search line
 
 Internal changes:
 -Includes are changed. (no more ../)
@@ -18,6 +20,7 @@ Internal changes:
 -Rewriten KSSearchLine
 -Readded KSListViewSearchLine
 -Added KSCharSelect class
+-Created faster search
 
 0.2.1 => 0.2.2
 

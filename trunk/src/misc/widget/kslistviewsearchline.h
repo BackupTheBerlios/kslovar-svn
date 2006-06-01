@@ -40,6 +40,9 @@ class KSListViewSearchLine : public KListViewSearchLine
   protected:
     virtual bool itemMatches(const QListViewItem *item, const QString &s) const;
 
+  private:
+    bool match(const QString& checked, const QString& theChecker, bool reverse, bool caseSensitive = false) const;
+
 };
 
 #endif
