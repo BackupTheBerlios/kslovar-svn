@@ -452,6 +452,25 @@ void KSListView::drawContentsOffset(QPainter *p, int ox, int oy, int cx, int cy,
   }
 }
 
+KSListViewItem* KSListView::findItemId(int id)
+{
+  //We go through all the items.
+  for(QListViewItem *count = firstChild(); count; count = count->nextSibling())
+  {
+    //We convert the item.
+    KSListViewItem *convert = static_cast<KSListViewItem*> (count);
+
+    //We compare the IDs.
+    if(convert->getId().toInt() == id)
+    {
+      //And return the matching item.
+      return convert;
+    }
+  }
+  //Or we just return null.
+  return 0;
+}
+
 KSListView::~KSListView()
 {
 }

@@ -117,7 +117,7 @@ Languages.ksl file is located in ~/.kde/share/apps/kslovar</string>
                                     <cstring>m_localLanguages</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Create an empt&amp;y languages.ksl</string>
+                                    <string>Create an empt&amp;y languages.ldft</string>
                                 </property>
                                 <property name="accel">
                                     <string>Alt+Y</string>
@@ -128,7 +128,7 @@ Languages.ksl file is located in ~/.kde/share/apps/kslovar</string>
                                     <cstring>kActiveLabel3</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Will create an empty languages.ksl file, so you could make your own definitions of languages.</string>
+                                    <string>Will create an empty languages.ldft file, so you could make your own definitions of languages.</string>
                                 </property>
                             </widget>
                         </vbox>
@@ -146,7 +146,7 @@ Languages.ksl file is located in ~/.kde/share/apps/kslovar</string>
                                     <cstring>m_remoteLanguages</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Download languages.ksl fro&amp;m the Internet</string>
+                                    <string>Download languages.ldft fro&amp;m the Internet</string>
                                 </property>
                                 <property name="accel">
                                     <string>Alt+M</string>
@@ -160,7 +160,7 @@ Languages.ksl file is located in ~/.kde/share/apps/kslovar</string>
                                     <cstring>kActiveLabel4</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Download already made languages.ksl file. &lt;b&gt;*RECOMMENDED*&lt;/b&gt;</string>
+                                    <string>Download already made languages.ldft file. &lt;b&gt;*RECOMMENDED*&lt;/b&gt;</string>
                                 </property>
                             </widget>
                         </vbox>

@@ -12,6 +12,7 @@ Interface:
 -Progress bar in status bar when opening a dictionary
 -Word list is resizable
 -Literal and back search moved near to search line
+-Added simple javascript into the simple style
 
 Internal changes:
 -Includes are changed. (no more ../)
@@ -21,6 +22,7 @@ Internal changes:
 -Readded KSListViewSearchLine
 -Added KSCharSelect class
 -Created faster search
+-Ported to use SCMD and LDFT file formats.
 
 0.2.1 => 0.2.2
 

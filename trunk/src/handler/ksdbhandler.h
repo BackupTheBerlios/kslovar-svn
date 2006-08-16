@@ -105,6 +105,13 @@ class KSDBHandler : public QThread
      * @return @c -1 No word with the specified name found.
      */
     int getId(const QString& name);
+    /**
+     * Method that syncs parts of speech in languages.ldft and in the opened dictionary.
+     */
+    void syncTypes();
+    /**
+     * Tells the threaded part of KSDBHandler, that it needs to stop. The thread will before stopping, unlock and clear all the variables.
+     */
     void stopThread();
 
   protected:

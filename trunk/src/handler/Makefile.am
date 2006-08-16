@@ -8,4 +8,4 @@ libhandler_la_SOURCES = ksxslhandler.cpp ksxmlhandler.cpp 	ksoutputhandler.cpp \
 noinst_HEADERS = ksxslhandler.h ksxmlhandler.h ksoutputhandler.h ksdbhandler.h
 
 
-libhandler_la_LIBADD = $(LIBXML_LIBS) $(LIBXSLT_LIBS)
+libhandler_la_LIBADD = $(SQLITE3_LIB) $(LIBXML_LIBS) $(LIBXSLT_LIBS)

@@ -19,6 +19,8 @@
  ***************************************************************************/
 #include "kslistviewitem.h"
 
+#include "handler/ksdbhandler.h"
+
 #include "kslistview.h"
 
 KSListViewItem::KSListViewItem(KListView *parent, const QString &label1, const QString &id, const QString &search)
@@ -54,6 +56,12 @@ QString KSListViewItem::getSearch()
 void KSListViewItem::setId(int id)
 {
   m_id.setNum(id);
+}
+
+void KSListViewItem::setName(const QString &name)
+{
+  setText(0, name);
+  m_search = KSDBHandler::convertString(name);
 }
 
 KSListViewItem::~KSListViewItem()

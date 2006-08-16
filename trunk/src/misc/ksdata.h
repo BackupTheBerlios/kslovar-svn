@@ -80,10 +80,10 @@ class KSData : public QObject
     QString getDictionaryPath();
 
     /**
-     * Stores a pointer to the KSDBHandler, that handles with the dictionary.
-     * @param dictionaryHandler A pointer to the KSDBHandler.
+     * Stores a pointer to the KSDBHandler, that handles the dictionary.
+     * @param dictionaryHandler A pointer to the KSDBHandler. If set to 0, deletes the current dictionary handler.
      */
-    void setDictionary(KSDBHandler *dictionaryHandler);
+    void setDictionary(KSDBHandler *dictionaryHandler = 0);
     /**
      * Gives the pointer to KSDBHandler, that handles with the dictionary.
      *
@@ -181,6 +181,12 @@ class KSData : public QObject
      * @return Returns the ID.
      */
     int getPartOfSpeechId(const QString &name);
+    /**
+     * Method for retrieving parts of speech with their ID.
+     *
+     * @return List of KSElements.
+     */
+    QValueList<KSElement> getPartOfSpeechList();
     /**
      * Deletes all parts of speech.
      */

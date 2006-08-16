@@ -3,6 +3,43 @@
   <xsl:output method='html'/>
   <xsl:template match='phrase'>
     <html>
+      <head>
+        <script language="javascript" type="text/javascript">
+          function toggleSynonym()
+{
+if(document.getElementById('synonyms').style.visibility == 'visible')
+{
+document.getElementById('synonyms').style.visibility = 'hidden';
+}
+else
+{
+document.getElementById('synonyms').style.visibility = 'visible';
+}
+}
+function toggleAntonym()
+{
+if(document.getElementById('antonyms').style.visibility == 'visible')
+{
+document.getElementById('antonyms').style.visibility = 'hidden';
+}
+else
+{
+document.getElementById('antonyms').style.visibility = 'visible';
+}
+}
+function toggleFamily()
+{
+if(document.getElementById('family').style.visibility == 'visible')
+{
+document.getElementById('family').style.visibility = 'hidden';
+}
+else
+{
+document.getElementById('family').style.visibility = 'visible';
+}
+}
+</script>
+      </head>
       <body>
         <table width='100%' border='0'>
           <tr>
@@ -17,22 +54,26 @@
           </xsl:for-each>
         </p>
         <p>
-          <h2>{synonym}</h2>
+          <table>
+            <tr>
+              <td><h2><a href="javascript:toggleSynonym()">{synonym}</a></h2></td>
+              <td><h2><a href="javascript:toggleAntonym()">{antonym}</a></h2></td>
+              <td><h2><a href="javascript:toggleFamily()">{word-family}</a></h2></td>
+            </tr>
+            <tr>
+              <td><div id="synonyms" style="visibility: hidden">+
           <xsl:for-each select='synonym'>
             <li><a><xsl:attribute name='href'>http://<xsl:value-of select='@id'/></xsl:attribute><xsl:value-of select='.'/></a></li>
           </xsl:for-each>
-        </p>
-        <p>
-          <h2>{antonym}</h2>
-          <xsl:for-each select='antonym'>
+          </div></td>
+              <td><div id="antonyms" style="visibility: hidden">+<xsl:for-each select='antonym'>
             <li><a><xsl:attribute name='href'>http://<xsl:value-of select='@id'/></xsl:attribute><xsl:value-of select='.'/></a></li>
-          </xsl:for-each>
-        </p>
-        <p>
-          <h2>{word-family}</h2>
-          <xsl:for-each select='word-family'>
+          </xsl:for-each></div></td>
+              <td><div id="family" style="visibility: hidden">+<xsl:for-each select='word-family'>
             <li><a><xsl:attribute name='href'>http://<xsl:value-of select='@id'/></xsl:attribute><xsl:value-of select='.'/></a></li>
-          </xsl:for-each>
+          </xsl:for-each></div></td>
+            </tr>
+          </table>
         </p>
       </body>
     </html>

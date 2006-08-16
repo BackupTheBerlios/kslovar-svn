@@ -23,10 +23,15 @@ bin_PROGRAMS = kslovar
 # the application source, library search path, and link libraries
 kslovar_SOURCES = main.cpp kslovar.cpp
 kslovar_LDFLAGS = -no-undefined $(KDE_RPATH) $(all_libraries)
-kslovar_LDADD = $(top_builddir)/src/sqlite/libsqlite.la \
-	$(top_builddir)/src/misc/libmisc.la $(top_builddir)/src/handler/libhandler.la \
+kslovar_LDADD =	$(SQLITE3_LIB) $(top_builddir)/src/misc/libmisc.la $(top_builddir)/src/handler/libhandler.la \
 	$(top_builddir)/src/dialog/libdialog.la $(top_builddir)/src/configuration/libconfiguration.la -lkdeprint \
 	-lkhtml $(LIB_KDEUI)
+
+#if DO_NOT_COMPILE_SQLITE
+#kslovar_LDADD += -lsqlite3
+#else
+#kslovar_LDADD += $(top_builddir)/src/sqlite/libsqlite.la
+#endif
 
 # this is where the desktop file will go 
 shelldesktopdir = $(kde_appsdir)/Utilities
@@ -46,4 +51,9 @@ EXTRA_DIST = $(mime_DATA)
 
 
 
+#SUBDIRS = configuration handler misc dialog styles
+if DO_NOT_COMPILE_SQLITE
+SUBDIRS = configuration handler misc dialog styles
+else
 SUBDIRS = configuration handler sqlite misc dialog styles
+endif

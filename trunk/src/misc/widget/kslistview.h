@@ -25,6 +25,7 @@
 #include <qstyle.h>
 
 class QCustomEvent;
+class KSListViewItem;
 
 /**
  * @short Child class of KListView. Made for easier handling of lists.
@@ -70,6 +71,13 @@ class KSListView : public KListView
      * Deletes a word from the filter.
      */
     void delFilter(int id);
+    /**
+     * Searches the KSListView for an KSListViewItem with the matching id.
+     * @param id The search criteria.
+     *
+     * @return Returns the pointer to the result. Null if found nothing.
+     */
+    KSListViewItem* findItemId(int id);
 
   protected:
     /**

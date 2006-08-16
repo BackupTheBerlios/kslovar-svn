@@ -83,14 +83,18 @@ class KSlovar : public KMainWindow
      */
     void refresh();
     /**
-     * Method used for loading and stoing languages from languages.ksl to KSData. Used from outside in case we change the langage database. (KSLanguage)
+     * Method used for loading and storing languages from languages.ksl to KSData. Used from outside in case we change the langage database. (KSLanguage)
      */
     void loadLanguages();
     /**
-     * Method that reads parts of speech from languages.ksl and stores them into KSData.
+     * Method that reads parts of speech from languages.ldft and stores them into KSData.
      * @param id ID of language.
      */
     void loadPartOfSpeech(int id);
+    /**
+     * Method that reads parts of speech from the opened dictionary and stores them into KSData.
+     */
+    void loadPartOfSpeech();
 
     /**
      * Default Destructor
@@ -201,6 +205,10 @@ class KSlovar : public KMainWindow
      * Slot that inicialises and shows KSWizard.
      */
     void slotFirstRunWizard();
+    /**
+     * Slot that initiates the synchronisation of parts of speech in the opened dictionary.
+     */
+    void slotSyncDictionary();
 
   private:
     /**
@@ -236,6 +244,7 @@ class KSlovar : public KMainWindow
     KAction *m_newDictionary;
     KAction *m_openDictionary;
     KAction *m_editDictionary;
+    KAction *m_syncDictionary;
     KAction *m_quit;
     KAction *m_back;
     KAction *m_forward;

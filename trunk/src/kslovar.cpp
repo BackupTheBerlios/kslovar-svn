@@ -150,17 +150,21 @@ KSlovar::KSlovar()
 
 void KSlovar::slotFileOpen()
 {
-  processFileOpen(KFileDialog::getOpenFileName(":dictionary", "*.ksd|KSlovar dictionary file", this));
+  processFileOpen(KFileDialog::getOpenFileName(":dictionary", "*.scmd|Self-Contained Multimedia Dictionary", this));
 }
 
 void KSlovar::showDictionary()
 {
-  m_history=false;
+  QString content = KSData::instance()->getDictionary()->processString("SELECT greeting FROM head LIMIT 1;")["greeting"];;
+  if (m_selectedPhrase.toInt() != 0)
+    content = XMLParser->parse(KSData::instance()->getDictionary()->processString("SELECT text FROM phrases WHERE id_phrase='"+m_selectedPhrase+"' LIMIT 1;")["text"]);
+
+  m_history = false;
   m_browser->begin();
-  m_browser->write(XMLParser->parse(KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+m_selectedPhrase+"' LIMIT 1;")["text"]));
+  m_browser->write(content);
   m_browser->end();
 
-  if(!m_backHistory.isEmpty())
+  if (!m_backHistory.isEmpty())
   {
     m_back->setEnabled(true);
   }
@@ -219,19 +223,19 @@ void KSlovar::slotShowBrowser(const KURL &url, const KParts::URLArgs &)
 void KSlovar::slotPrevPhrase()
 {
   int temp = m_backHistory.first();
-  m_itForward = m_forwardHistory.prepend( m_selectedPhrase.toInt() );
+  m_itForward = m_forwardHistory.prepend(m_selectedPhrase.toInt());
 
   m_it = m_backHistory.remove(m_it);
 
-  if(m_backHistory.isEmpty())
+  if (m_backHistory.isEmpty())
   {
     m_back->setEnabled(false);
   }
   m_forward->setEnabled(true);
 
-  m_history=true;
+  m_history = true;
 
-  if(temp==0)
+  if (temp == 0)
   {
     m_list->clearSelection();
     m_editPhrase->setEnabled(false);
@@ -240,15 +244,15 @@ void KSlovar::slotPrevPhrase()
   }
   else
   {
-    QListViewItem *current=m_list->firstChild();
-    while(current)
+    QListViewItem *current = m_list->firstChild();
+    while (current)
     {
-      if(static_cast<KSListViewItem*> (current)->getId().toInt()==temp)
+      if (static_cast<KSListViewItem*> (current)->getId().toInt() == temp)
       {
         m_list->setSelected(current, true);
         break;
       }
-      current=current->nextSibling();
+      current = current->nextSibling();
     }
   }
 }
@@ -261,28 +265,38 @@ void KSlovar::slotNextPhrase()
 
   m_itForward = m_forwardHistory.remove(m_itForward);
 
-  if(m_forwardHistory.isEmpty())
+  if (m_forwardHistory.isEmpty())
   {
     m_forward->setEnabled(false);
   }
 
-  m_history=true;
+  m_history = true;
 
-  QListViewItem *current=m_list->firstChild();
-  while(current)
+  if (temp == 0)
   {
-    if(static_cast<KSListViewItem*> (current)->getId().toInt()==temp)
+    m_list->clearSelection();
+    m_editPhrase->setEnabled(false);
+    m_selectedPhrase.setNum(0);
+    showDictionary();
+  }
+  else
+  {
+    QListViewItem *current = m_list->firstChild();
+    while (current)
     {
-      m_list->setSelected(current, true);
-      break;
+      if (static_cast<KSListViewItem*> (current)->getId().toInt() == temp)
+      {
+        m_list->setSelected(current, true);
+        break;
+      }
+      current=current->nextSibling();
     }
-    current=current->nextSibling();
   }
 }
 
 void KSlovar::slotHome()
 {
-  if(m_selectedPhrase=="0")
+  if(m_selectedPhrase == "0")
   {
     return;
   }
@@ -319,7 +333,7 @@ void KSlovar::slotNewDictionary()
 
 void KSlovar::slotEditDictionary()
 {
-  QString text=KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='0' LIMIT 1;")["text"];
+  QString text=KSData::instance()->getDictionary()->processString("SELECT text FROM phrases WHERE id_phrase='0' LIMIT 1;")["text"];
   QString name=text;
 
   text.remove(QRegExp("<h1>.+</h1>"));
@@ -341,6 +355,7 @@ void KSlovar::registerButtons()
   m_home=KStdAction::home(this, SLOT(slotHome()), actionCollection());
 
   m_editDictionary = new KAction(i18n("&Edit dictionary"), "edit", KShortcut(KKey("CTRL+e")), this, SLOT(slotEditDictionary()), actionCollection(), "editDictionary");
+  m_syncDictionary = new KAction(i18n("Synchronise dictionary's &parts of speech"), "reload", KShortcut(KKey("CTRL+p")), this, SLOT(slotSyncDictionary()), actionCollection(), "syncDictionary");
   m_close=KStdAction::close(this, SLOT(slotClose()), actionCollection());
 
   m_find = KStdAction::find(this, SLOT(slotFind()), actionCollection());
@@ -379,6 +394,7 @@ void KSlovar::addMenu()
 
   KPopupMenu *editmenu=new KPopupMenu;
   m_editDictionary->plug(editmenu);
+  m_syncDictionary->plug(editmenu);
   m_selectAll->plug(editmenu);
   editmenu->insertSeparator();
   m_addPhrase->plug(editmenu);
@@ -447,6 +463,7 @@ void KSlovar::slotClose()
     KSData::instance()->getDictionary()->stopThread();
   }
   disableNavButtons();
+  m_syncDictionary->setDisabled(true);
   m_backHistory.clear();
   m_forwardHistory.clear();
   m_selectedPhrase="";
@@ -499,7 +516,7 @@ void KSlovar::slotEditPhrase()
   {
     return;
   }
-  QString output=KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='"+m_selectedPhrase+"' LIMIT 1;")["text"];
+  QString output=KSData::instance()->getDictionary()->processString("SELECT text FROM phrases WHERE id_phrase='"+m_selectedPhrase+"' LIMIT 1;")["text"];
   m_phrasedlg=new KSPhrase(this, "Edit word");
   m_phrasedlg->setWord(output, m_selectedPhrase);
   m_phrasedlg->resize(700, 700);
@@ -530,13 +547,13 @@ void KSlovar::slotRemovePhrase()
     return;
   }
 
-  QString output = KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='" + temp->getId() + "' LIMIT 1;")["text"];
+  QString output = KSData::instance()->getDictionary()->processString("SELECT text FROM phrases WHERE id_phrase='" + temp->getId() + "' LIMIT 1;")["text"];
 
   KSXMLHandler *XMLHandler = new KSXMLHandler(output.remove(QRegExp("<\\?.+\\?>")));
   QMap<QString,QString> synonyms = XMLHandler->readQMapList("synonym");
   for(QMap<QString,QString>::iterator count = synonyms.begin(); count != synonyms.end(); count++) //Removing synonyms
   {
-    QString deleting = KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='" + count.key() + "' LIMIT 1;")["text"];
+    QString deleting = KSData::instance()->getDictionary()->processString("SELECT text FROM phrases WHERE id_phrase='" + count.key() + "' LIMIT 1;")["text"];
     KSXMLHandler *deleteHandler = new KSXMLHandler(deleting);
     deleteHandler->removeString("synonym", temp->text(0));
     KSData::instance()->getDictionary()->saveWord(count.data(), deleteHandler->parse(), false, count.key());
@@ -546,7 +563,7 @@ void KSlovar::slotRemovePhrase()
   QMap<QString,QString> antonyms = XMLHandler->readQMapList("antonym");
   for(QMap<QString,QString>::iterator count = antonyms.begin(); count != antonyms.end(); count++) //Removing antonyms
   {
-    QString deleting = KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='" + count.key() + "' LIMIT 1;")["text"];
+    QString deleting = KSData::instance()->getDictionary()->processString("SELECT text FROM phrases WHERE id_phrase='" + count.key() + "' LIMIT 1;")["text"];
     KSXMLHandler *deleteHandler = new KSXMLHandler(deleting);
     deleteHandler->removeString("antonym", temp->text(0));
     KSData::instance()->getDictionary()->saveWord(count.data(), deleteHandler->parse(), false, count.key());
@@ -556,14 +573,14 @@ void KSlovar::slotRemovePhrase()
   QMap<QString,QString> wordFamily = XMLHandler->readQMapList("word-family");
   for(QMap<QString,QString>::iterator count = wordFamily.begin(); count != wordFamily.end(); count++) //Removing word family
   {
-    QString deleting = KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='" + count.key() + "' LIMIT 1;")["text"];
+    QString deleting = KSData::instance()->getDictionary()->processString("SELECT text FROM phrases WHERE id_phrase='" + count.key() + "' LIMIT 1;")["text"];
     KSXMLHandler *deleteHandler = new KSXMLHandler(deleting);
     deleteHandler->removeString("word-family", temp->text(0));
     KSData::instance()->getDictionary()->saveWord(count.data(), deleteHandler->parse(), false, count.key());
     delete deleteHandler;
   }
 
-  KSData::instance()->getDictionary()->processQuery("BEGIN TRANSACTION; DELETE FROM phrases WHERE id='"+temp->getId()+"'; DELETE FROM dictionary WHERE id='" + temp->getId() + "'; COMMIT;");
+  KSData::instance()->getDictionary()->processQuery("BEGIN TRANSACTION; DELETE FROM phrases WHERE id_phrase='" + temp->getId() + "'; COMMIT;");
   delete temp;
   delete XMLHandler;
 
@@ -630,7 +647,14 @@ void KSlovar::processFileOpen(const QString &fileName)
 
     KSData::instance()->setDictionary(new KSDBHandler(fileName));
 
-    m_progress->setTotalSteps(KSData::instance()->getDictionary()->processString("SELECT COUNT(id) AS number_phrases FROM phrases;")["number_phrases"].toInt());
+    if(KSData::instance()->getDictionary()->processString("SELECT version FROM head;")["version"] != "0.1-rc3")
+    {
+      KMessageBox::error(this, i18n("The dictionary is too old. There is no converter available yet."));
+      KSData::instance()->setDictionary();
+      return;
+    }
+
+    m_progress->setTotalSteps(KSData::instance()->getDictionary()->processString("SELECT COUNT(id_phrase) AS number_phrases FROM phrases;")["number_phrases"].toInt());
 
     KSData::instance()->getDictionary()->start();
 
@@ -645,11 +669,13 @@ void KSlovar::processFileOpen(const QString &fileName)
     m_editDictionary->setEnabled(true);
     m_close->setEnabled(true);
     m_addPhrase->setEnabled(true);
+    m_syncDictionary->setEnabled(true);
 
 
     m_backHistory.clear();
     KSData::instance()->setDictionaryPath(fileName);
-    loadPartOfSpeech(KSData::instance()->getDictionary()->processString("SELECT lang FROM head;")["lang"].toInt());
+    KSData::instance()->setLanguage(KSData::instance()->getLanguageId(KSData::instance()->getDictionary()->processString("SELECT lang FROM head;")["lang"]));
+    loadPartOfSpeech();
     int type = KSData::instance()->getDictionary()->processString("SELECT type FROM head;")["type"].toInt();
     KSData::instance()->setType(type);
     if(!type)
@@ -669,23 +695,23 @@ void KSlovar::processFileOpen(const QString &fileName)
 
 void KSlovar::loadLanguages()
 {
-  if(!QFile::exists(locateLocal("appdata", "languages.ksl", false))) //Check if Languages.ksl exists. If not, run the upgrade manager to download it.
+  if(!QFile::exists(locateLocal("appdata", "languages.ldft", false))) //Check if Languages.ldft exists. If not, run the upgrade manager to download it.
   {
-    if(QFile::exists(locateLocal("appdata", "languages.ksl", false)+"~")) //Check if Languages.ksl exists. If not, run the upgrade manager to download it.
+    if(QFile::exists(locateLocal("appdata", "languages.ldft", false)+"~")) //Check if Languages.ldft exists. If not, run the upgrade manager to download it.
     {
-      KIO::move(KURL(locateLocal("appdata", "languages.ksl", false)+"~"), KURL(locateLocal("appdata", "languages.ksl", false)), false)->setInteractive(false);
+      KIO::move(KURL(locateLocal("appdata", "languages.ldft", false)+"~"), KURL(locateLocal("appdata", "languages.ldft", false)), false)->setInteractive(false);
       KIO::del(KURL(locateLocal("appdata", "version", false)), false, false)->setInteractive(false);
-      KMessageBox::information(this, i18n("Could not find languages.ksl. But found it's backup and using it."));
+      KMessageBox::information(this, i18n("Could not find languages.ldft. But found it's backup and using it."));
     }
     else
     {
       KIO::del(KURL(locateLocal("appdata", "version", false)), false, false)->setInteractive(false);
-      KMessageBox::error(this, i18n("Could not find languages.ksl. Run Upgrade manager to download it.\n\nIf you do not have any internet connection, you can download it from http://kslovar.berlios.de/languages.ksl and put it into ~/.kde/share/apps/kslovar/."));
+      KMessageBox::error(this, i18n("Could not find languages.ldft. Run Upgrade manager to download it.\n\nIf you do not have any internet connection, you can download it from http://kslovar.berlios.de/languages.ldft and put it into ~/.kde/share/apps/kslovar/."));
       return;
     }
   }
-  KSData::instance()->setLanguageHandler(new KSDBHandler(QString::fromUtf8(locateLocal("appdata", "languages.ksl", false))));
-  QValueList<KSResult> input=KSData::instance()->getLanguageHandler()->processList("SELECT id, name FROM language;");
+  KSData::instance()->setLanguageHandler(new KSDBHandler(QString::fromUtf8(locateLocal("appdata", "languages.ldft", false))));
+  QValueList<KSResult> input=KSData::instance()->getLanguageHandler()->processList("SELECT id_lang, name FROM language;");
   if(!input.isEmpty())
   {
     //QString id, name;
@@ -693,7 +719,7 @@ void KSlovar::loadLanguages()
     {
       /*id=*count;
       name=*count;*/
-      KSData::instance()->addLanguage((*count)["name"], (*count)["id"].toInt());
+      KSData::instance()->addLanguage((*count)["name"], (*count)["id_lang"].toInt());
     }
   }
 
@@ -719,8 +745,9 @@ void KSlovar::loadLanguages()
 void KSlovar::loadPartOfSpeech(int id)
 {
   KSData::instance()->clearPartOfSpeech();
-  KSData::instance()->setLanguage(id);
-  QValueList<KSResult> input = KSData::instance()->getLanguageHandler()->processList("SELECT id, name FROM type WHERE id_lang='"+QString::number(id)+"';");
+  //KSData::instance()->setLanguage(id);
+  QValueList<KSResult> input = KSData::instance()->getLanguageHandler()->processList("SELECT id_type, name FROM type WHERE id_lang='"+QString::number(id)+"';");
+  //QValueList<KSResult> input = KSData::instance()->getDictionary()->processList("SELECT id_type, name FROM type;");
   if(!input.isEmpty())
   {
     //QString id, name;
@@ -728,7 +755,25 @@ void KSlovar::loadPartOfSpeech(int id)
     {
       /*id=*count;
       name=*count;*/
-      KSData::instance()->addPartOfSpeech((*count)["name"], (*count)["id"].toInt());
+      KSData::instance()->addPartOfSpeech((*count)["name"], (*count)["id_type"].toInt());
+    }
+  }
+}
+
+void KSlovar::loadPartOfSpeech()
+{
+  KSData::instance()->clearPartOfSpeech();
+  //KSData::instance()->setLanguage(id);
+  //QValueList<KSResult> input = KSData::instance()->getLanguageHandler()->processList("SELECT id_type, name FROM type WHERE id_lang='"+QString::number(id)+"';");
+  QValueList<KSResult> input = KSData::instance()->getDictionary()->processList("SELECT id_type, name FROM type;");
+  if(!input.isEmpty())
+  {
+    //QString id, name;
+    for(QValueList<KSResult>::iterator count = input.begin(); count != input.end(); count++)
+    {
+      /*id=*count;
+      name=*count;*/
+      KSData::instance()->addPartOfSpeech((*count)["name"], (*count)["id_type"].toInt());
     }
   }
 }
@@ -796,7 +841,7 @@ void KSlovar::customEvent(QCustomEvent *package)
       QValueList<KSResult>::const_iterator end = phrases.end();
       for(QValueList<KSResult>::const_iterator count = phrases.begin(); count != end; count++)
       {
-        new KSListViewItem(m_list, (*count)["name"], (*count)["id"], (*count)["search"]);
+        new KSListViewItem(m_list, (*count)["name"], (*count)["id_phrase"], (*count)["search"]);
       }
       m_search->setDisabled(false);
       statusBar()->changeItem(i18n("Ready"), 0);
@@ -818,6 +863,10 @@ void KSlovar::customEvent(QCustomEvent *package)
 
 }
 
+void KSlovar::slotSyncDictionary()
+{
+  KSData::instance()->getDictionary()->syncTypes();
+}
 
 KSlovar::~KSlovar()
 {

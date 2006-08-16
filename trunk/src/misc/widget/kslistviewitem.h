@@ -75,6 +75,11 @@ class KSListViewItem : public KListViewItem
      * @param id ID of the word.
      */
     void setId(int id);
+    /**
+     * Changes the name of the word. And also adds the search string using KSDBHandler's method convertString().
+     * @param name New name for the word (item).
+     */
+    void setName(const QString &name);
 
   private:
     QString m_id;

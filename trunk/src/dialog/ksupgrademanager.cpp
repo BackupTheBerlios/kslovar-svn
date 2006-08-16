@@ -64,7 +64,7 @@ void KSUpgradeManager::slotCheckVersion()
 {
   QString localVersion = "000", remoteVersion = "000";
   QString versionFile = locateLocal("appdata", "version");
-  QString languageFile = locateLocal("appdata", "languages.ksl", false);
+  QString languageFile = locateLocal("appdata", "languages.ldft", false);
 
   QFile local(versionFile);
   if(local.exists())
@@ -93,7 +93,7 @@ void KSUpgradeManager::slotCheckVersion()
 
   if(remoteVersion > localVersion)
   {
-    new KListViewItem(m_mainWidget->downloadList, "Languages.ksl", languageFile, "http://kslovar.berlios.de/languages.ksl");
+    new KListViewItem(m_mainWidget->downloadList, "Languages.ldft", languageFile, "http://kslovar.berlios.de/languages.ldft");
     enableButtonOK(true);
     m_mainWidget->currentLabel->setText(i18n("nothing"));
   }

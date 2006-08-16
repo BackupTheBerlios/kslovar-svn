@@ -145,6 +145,10 @@ class KSPhrase : public KDialogBase
      * Saves the phrase into KSD.
      */
     void save();
+    /**
+     * Populates the list of available words.
+     */
+    void populateAvailableWords();
 };
 
 #endif

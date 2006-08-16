@@ -42,7 +42,7 @@
 KSLanguage::KSLanguage(QWidget *parent, const char *caption, const QString &language, const char *name)
   : KDialogBase(parent, name, true, caption)
 {
-  m_path = locate("appdata", "languages.ksl");
+  m_path = locate("appdata", "languages.ldft");
   enableButtonApply(false);
 
   m_mainWidget = new KSLanguageWdt(this);
@@ -55,13 +55,13 @@ KSLanguage::KSLanguage(QWidget *parent, const char *caption, const QString &lang
   if(!language.isEmpty())
   {
     m_mainWidget->nameEdit->setText(language);
-    m_id = KSData::instance()->getLanguageHandler()->processString("SELECT id FROM language WHERE name='"+language+"';")["id"].toInt();
+    m_id = KSData::instance()->getLanguageHandler()->processString("SELECT id_lang FROM language WHERE name='"+language+"';")["id_lang"].toInt();
     populateTypeList();
     m_edit = true;
   }
   else
   {
-    m_id = KSData::instance()->getLanguageHandler()->processList("SELECT id FROM language;").last()["id"].toInt()+1;
+    m_id = KSData::instance()->getLanguageHandler()->processList("SELECT id_lang FROM language;").last()["id_lang"].toInt()+1;
     m_edit = false;
   }
 
@@ -76,10 +76,10 @@ KSLanguage::KSLanguage(QWidget *parent, const char *caption, const QString &lang
 
 void KSLanguage::populateTypeList()
 {
-  QValueList<KSResult> types = KSData::instance()->getLanguageHandler()->processList("SELECT id, name FROM type WHERE id_lang='"+QString::number(m_id)+"';");
+  QValueList<KSResult> types = KSData::instance()->getLanguageHandler()->processList("SELECT id_type, name FROM type WHERE id_lang='"+QString::number(m_id)+"';");
   for(QValueList<KSResult>::iterator count = types.begin(); count != types.end(); count++)
   {
-    new KSListViewItem(m_mainWidget->typeList, (*count)["name"], (*count)["id"]);
+    new KSListViewItem(m_mainWidget->typeList, (*count)["name"], (*count)["id_type"]);
   }
   /*if(!types.isEmpty())
   {
@@ -144,20 +144,20 @@ bool KSLanguage::save()
 {
   if(m_edit)
   {
-    if(!KSData::instance()->getLanguageHandler()->processQuery("UPDATE language SET name='"+m_mainWidget->nameEdit->text()+"' WHERE id='"+QString::number(m_id)+"';"))
+    if(!KSData::instance()->getLanguageHandler()->processQuery("UPDATE language SET name='"+m_mainWidget->nameEdit->text()+"' WHERE id_lang='"+QString::number(m_id)+"';"))
     {
       return false;
     }
-    QValueList<KSResult> existing = KSData::instance()->getLanguageHandler()->processList("SELECT id FROM type WHERE id_lang='"+QString::number(m_id)+"';");
+    QValueList<KSResult> existing = KSData::instance()->getLanguageHandler()->processList("SELECT id_type FROM type WHERE id_lang='"+QString::number(m_id)+"';");
     for(QListViewItem *count = m_mainWidget->typeList->firstChild(); count; count = count->nextSibling())
     {
       bool skip = false;
       KSListViewItem *temp = static_cast<KSListViewItem*> (count);
       for(QValueList<KSResult>::iterator typeCount = existing.begin(); typeCount != existing.end(); typeCount++)
       {
-        if(temp->getId() == (*typeCount)["id"])
+        if(temp->getId() == (*typeCount)["id_type"])
         {
-          if(!KSData::instance()->getLanguageHandler()->processQuery("UPDATE type SET name='"+temp->text(0)+"' , id_lang='"+QString::number(m_id)+"' WHERE id='"+(*typeCount)["id"]+"';"))
+          if(!KSData::instance()->getLanguageHandler()->processQuery("UPDATE type SET name='"+temp->text(0)+"' , id_lang='"+QString::number(m_id)+"' WHERE id_type='"+(*typeCount)["id_type"]+"';"))
           {
             return false;
           }

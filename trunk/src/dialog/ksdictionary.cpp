@@ -171,8 +171,7 @@ bool KSDictionary::save()
   }
   m_mainWidget->mainEdit->setTextFormat(Qt::RichText);
   QString text="<h1>"+m_mainWidget->nameEdit->text()+"</h1>"+m_mainWidget->mainEdit->text();
-  QString id=QString::number(KSData::instance()->getLanguageId(m_mainWidget->languageSelect->currentText()));
-  QString lang=id;
+  QString lang = m_mainWidget->languageSelect->currentText();
 
   QString type;
   if(m_mainWidget->typeSelect->currentText() == i18n("Transitional"))
@@ -195,7 +194,7 @@ bool KSDictionary::save()
   }
   else
   {
-    QString path=KFileDialog::getSaveFileName("~/"+m_mainWidget->nameEdit->text(), "*.ksd|KSlovar dictionary file", this);
+    QString path=KFileDialog::getSaveFileName("~/"+m_mainWidget->nameEdit->text(), "*.scmd|Self-Contained Multimedia Dictionary", this);
     if(path.isEmpty())
     {
       return false;

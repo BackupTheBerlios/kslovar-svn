@@ -21,6 +21,8 @@
 
 #include "configuration/configuration.h"
 
+#include "handler/ksdbhandler.h"
+
 #include <kstaticdeleter.h>
 
 KSData *KSData::m_instance = 0;
@@ -52,7 +54,18 @@ QString KSData::getDictionaryPath()
 
 void KSData::setDictionary(KSDBHandler *dictionaryHandler)
 {
-  m_dictionaryHandler = dictionaryHandler;
+  if(dictionaryHandler)
+  {
+    m_dictionaryHandler = dictionaryHandler;
+  }
+  else
+  {
+    if(m_dictionaryHandler)
+    {
+      delete m_dictionaryHandler;
+      m_dictionaryHandler = 0;
+    }
+  }
 }
 
 KSDBHandler *KSData::getDictionary()
@@ -130,6 +143,11 @@ QStringList KSData::getPartOfSpeech()
     temp << (*count).name;
   }
   return temp;
+}
+
+QValueList<KSElement> KSData::getPartOfSpeechList()
+{
+  return m_partOfSpeech;
 }
 
 int KSData::getPartOfSpeechId(const QString &name)
