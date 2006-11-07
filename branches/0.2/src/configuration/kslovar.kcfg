@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg> <kcfgfile name="kslovarrc"/>
+  <group name="appearance">
+    <entry name="MouseNavigation" type="Bool">
+      <label>Scrolling with mouse movement.</label>
+      <default>false</default>
+      <whatsthis>When this option is enabled, you can scroll all the lists by moving your mouse.(Thanks to Kopete Development Team)</whatsthis>
+    </entry>
+    <entry name="ScrollBar" type="Bool">
+      <label>Enable vertical scroll bar.</label>
+      <default>true</default>
+      <whatsthis>Makes vertical scroll bars in lists visible.</whatsthis>
+    </entry>
+    <entry name="SmoothScroll" type="Bool">
+      <label>Enable smooth scrolling.</label>
+      <default>true</default>
+      <whatsthis>Makes scrolling in lists smoother.</whatsthis>
+    </entry>
+    <entry name="DictionaryStyle" type="String">
+      <label>Selected dictionary style.</label>
+      <default>simple</default>
+    </entry>
+  </group>
+  <group name="behaviour">
+    <entry name="AutoUpdateLanguage" type="Bool">
+      <label>Run upgrade manager at startup</label>
+      <default>false</default>
+      <whatsthis>If enabled, the upgrade manager will run at startup.</whatsthis>
+    </entry>
+  </group>
+</kcfg>

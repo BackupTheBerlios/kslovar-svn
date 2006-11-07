@@ -1,0 +1,16 @@
+Begin3
+Title:          KSlovar -- Some description
+Version:        0.1
+Entered-date:   
+Description:    
+Keywords:       KDE Qt
+Author:         Gregor Kališnik <gregor@podnapisi.net>
+Maintained-by:  Gregor Kališnik <gregor@podnapisi.net>
+Home-page:      
+Alternate-site: 
+Primary-site:   ftp://ftp.kde.org/pub/kde/unstable/apps/utils
+                xxxxxx  kslovar-0.1.tar.gz
+                xxx     kslovar-0.1.lsm
+Platform:       Linux. Needs KDE
+Copying-policy: GPL
+End

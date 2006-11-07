@@ -1,0 +1,77 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>KSBehaviourWdt</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>KSBehaviourWdt</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>600</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>KSBehaviourWdt</string>
+    </property>
+    <property name="whatsThis" stdset="0">
+        <string>This email will be added with the name to the author list.</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QTabWidget" row="0" column="0">
+            <property name="name">
+                <cstring>tabWidget5</cstring>
+            </property>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>&amp;General</string>
+                </attribute>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QCheckBox" row="0" column="0">
+                        <property name="name">
+                            <cstring>kcfg_AutoUpdateLanguage</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Run &amp;upgrade manager at start</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+U</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>If enabled, languages.ksl will be updated at every start of KSlovar. Needs connection to the internet. If you do not have connection to the internet, it's advised to deactivate it.</string>
+                        </property>
+                    </widget>
+                    <spacer row="4" column="0">
+                        <property name="name">
+                            <cstring>spacer2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>31</width>
+                                <height>180</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </grid>
+            </widget>
+        </widget>
+    </grid>
+</widget>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

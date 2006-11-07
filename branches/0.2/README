@@ -1,0 +1,36 @@
+Little more detailed instructions are in INSTALL
+
+Installing under Linux:
+
+For both methods of compiling, you need libxml2 and libxslt!
+
+-Compiling from SVN repository:
+
+  You need all the necessary tools for compiling source from SVN repository.
+  Autoconf, gcc, make etc.
+
+  When you have everything you need, you compile and install it with these steps:
+
+  1. make -f Makefile.cvs
+  2. ./configure
+  3. make
+  4. su -c "make install" or sudo make install
+
+-Compiling from distributed source tarball:
+
+  You need compiling tools like gcc, make etc.
+
+  When you have everything you need, you compile and install it with these steps:
+
+  1. ./configure
+  2. make
+  3. su -c "make install" or sudo make install
+
+-Using binary package:
+
+  Not yet available!
+
+
+Installing under Windows:
+
+  Not available. Possibly after KDE 4 release.
