@@ -19,8 +19,12 @@
  ***************************************************************************/
 
 #include "kslovar.h"
+#include "misc/ksdata.h"
+#include "handler/ksdbhandler.h"
 
 #include <qpixmap.h>
+#include <qdir.h>
+#include <qregexp.h>
 
 #include <kapplication.h>
 #include <kaboutdata.h>
@@ -29,10 +33,12 @@
 #include <kstandarddirs.h>
 #include <ksplashscreen.h>
 
+#include <kdebug.h>
+
 static const char description[] =
     I18N_NOOP("A KDE dictionary application that can read, add, modify and download various dictionaries.");
 
-static const char version[] = "0.3.0 01062006"; //Published 1.6.2006
+static const char version[] = "0.2.5 07112006"; // Published 7.11.2006
 
 static KCmdLineOptions options[] =
 {
@@ -44,34 +50,56 @@ int main(int argc, char **argv)
 {
     KAboutData about("kslovar", I18N_NOOP("KSlovar"), version, description,
          KAboutData::License_GPL, "(C) 2005-2006 Gregor Kališnik", 0, 0, "gregor@podnapisi.net");
-    about.addAuthor( "Gregor Kališnik", I18N_NOOP("Lead developer"), "gregor@podnapisi.net" );
+    about.addAuthor("Gregor Kališnik", I18N_NOOP("Lead developer"), "gregor@podnapisi.net");
     about.addCredit("Kopete development team", I18N_NOOP("Mouse navigation in lists"), "kopete-devel@kde.org", "http://kopete.kde.org");
     about.addCredit("Grega Štajer", I18N_NOOP("Creator of icons, logo and splash screen"), "grega.stajer@email.si", "http://blender.kicks-ass.net");
     KCmdLineArgs::init(argc, argv, &about);
-    KCmdLineArgs::addCmdLineOptions( options );
-    KCmdLineArgs *args=KCmdLineArgs::parsedArgs();
+    KCmdLineArgs::addCmdLineOptions(options);
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
     KApplication app;
     QPixmap splash(locate("appdata", "splash.png"));
     KSplashScreen *splashScreen=new KSplashScreen(splash);
     splashScreen->show();
 
+    // Decided not to go to version 0.3.0 !
+    /*splashScreen->message(I18N_NOOP("Creating dcitionary list..."));
+
+    QDir dictionaries(locate("appdata", "dictionaries/"));
+    QDir dictionariesLocal(locateLocal("appdata", "dictionaries/", true));
+
+    if (dictionaries.exists()) {
+      QStringList files(dictionaries.entryList("*.scmd", QDir::Files));
+      QStringList::const_iterator end = files.constEnd();
+
+      for (QStringList::const_iterator count = files.constBegin(); count != end; count++) {
+        KSDBHandler *dictionary = new KSDBHandler(dictionariesLocal.absFilePath(*count));
+        KSResult result = dictionary->processString("SELECT greeting, type FROM head;");
+
+        QString text = result["greeting"];
+        QString name = result["greeting"];
+        text.remove(QRegExp("<h1>.+</h1>"));
+        name.remove(text).remove("<h1>").remove("</h1>");
+
+        KSData::instance()->addDictionaryData(name, text, true, result["type"]);
+        //kdDebug() << dictionaries.absFilePath(*count) << endl;
+        delete dictionary;
+      }
+    }*/
+
+    splashScreen->message("Launching application...");
+
     KSlovar *mainWin = 0;
 
-    if (app.isRestored())
-    {
+    if (app.isRestored()) {
         RESTORE(KSlovar);
-    }
-    else
-    {
+    } else {
         // no session.. just start up normally
 
         mainWin = new KSlovar();
 
         //Opening file from command line
         if(args->count())
-        {
           mainWin->openFile(QString::fromUtf8(args->arg(0)));
-        }
 
         app.setMainWidget( mainWin );
         mainWin->resize(1000, 800);

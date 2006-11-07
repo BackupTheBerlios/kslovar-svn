@@ -51,71 +51,6 @@
                             <string>If enabled, languages.ksl will be updated at every start of KSlovar. Needs connection to the internet. If you do not have connection to the internet, it's advised to deactivate it.</string>
                         </property>
                     </widget>
-                    <widget class="QLayoutWidget" row="2" column="0">
-                        <property name="name">
-                            <cstring>layout2</cstring>
-                        </property>
-                        <hbox>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="KActiveLabel">
-                                <property name="name">
-                                    <cstring>kActiveLabel2</cstring>
-                                </property>
-                                <property name="sizePolicy">
-                                    <sizepolicy>
-                                        <hsizetype>7</hsizetype>
-                                        <vsizetype>0</vsizetype>
-                                        <horstretch>0</horstretch>
-                                        <verstretch>0</verstretch>
-                                    </sizepolicy>
-                                </property>
-                                <property name="text">
-                                    <string>Your name (or nickname)</string>
-                                </property>
-                            </widget>
-                            <widget class="KLineEdit">
-                                <property name="name">
-                                    <cstring>kcfg_AuthorName</cstring>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>What you write here, will be shown in the dictionary as author of the dictionary or phrase.</string>
-                                </property>
-                            </widget>
-                        </hbox>
-                    </widget>
-                    <widget class="QLayoutWidget" row="3" column="0">
-                        <property name="name">
-                            <cstring>layout3</cstring>
-                        </property>
-                        <hbox>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <widget class="KActiveLabel">
-                                <property name="name">
-                                    <cstring>kActiveLabel3</cstring>
-                                </property>
-                                <property name="sizePolicy">
-                                    <sizepolicy>
-                                        <hsizetype>7</hsizetype>
-                                        <vsizetype>0</vsizetype>
-                                        <horstretch>0</horstretch>
-                                        <verstretch>0</verstretch>
-                                    </sizepolicy>
-                                </property>
-                                <property name="text">
-                                    <string>Your email</string>
-                                </property>
-                            </widget>
-                            <widget class="KLineEdit">
-                                <property name="name">
-                                    <cstring>kcfg_AuthorEmail</cstring>
-                                </property>
-                            </widget>
-                        </hbox>
-                    </widget>
                     <spacer row="4" column="0">
                         <property name="name">
                             <cstring>spacer2</cstring>
@@ -139,10 +74,4 @@
     </grid>
 </widget>
 <layoutdefaults spacing="6" margin="11"/>
-<includehints>
-    <includehint>kactivelabel.h</includehint>
-    <includehint>klineedit.h</includehint>
-    <includehint>kactivelabel.h</includehint>
-    <includehint>klineedit.h</includehint>
-</includehints>
 </UI>

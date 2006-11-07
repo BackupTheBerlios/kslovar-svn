@@ -259,6 +259,21 @@ int KSData::getType()
   return m_typeId;
 }
 
+void KSData::addDictionaryData(const KSDictionaryData &entry)
+{
+  m_dictionaryVector.append(entry);
+}
+
+void KSData::addDictionaryData(const QString &name, const QString &description, bool writable, const QString &type)
+{
+  m_dictionaryVector.append(KSDictionaryData(name, description, writable, type));
+}
+
+KSDictionaryData KSData::getDictionary(int id)
+{
+  return m_dictionaryVector.at(id);
+}
+
 KSData::~KSData()
 {
   if(m_instance == this)

@@ -21,6 +21,88 @@
 #define KSDATA_H
 
 #include <qobject.h>
+#include <qvaluevector.h>
+#include <qvariant.h>
+
+/**
+ * @short Class that has dictionary's basic data.
+ * @author Gregor Kališnik <gregor@podnapisi.net>
+ */
+class KSDictionaryData
+{
+  public:
+     /**
+     * A constructor.
+     */
+    KSDictionaryData()
+    {
+    }
+
+    /**
+     * A constructor.
+     * @param name Name of the dictionary.
+     * @param description Description of the dictionary.
+     * @param writable Is the dictionary writable or not.
+     * @param type Type of the dictionary.
+     */
+    KSDictionaryData(const QString &name, const QString &description, bool writable, const QString &type = "Default")
+      : m_name(name),
+        m_description(description),
+        m_type(type),
+        m_writable(writable)
+    {
+    }
+
+    /**
+     * Method for setting a value.
+     * @param name Type of the value.
+     * @param value Value to set to.
+     */
+    void setValue(const QString &name, const QVariant &value)
+    {
+      if (name == "name")
+        m_name = value.toString();
+      else if (name == "description")
+        m_description = value.toString();
+      else if (name == "type")
+        m_type = value.toString();
+      else if (name == "writable")
+        m_writable = value.toBool();
+      else
+        qDebug("Value type doesn't exists.");
+    }
+
+    /**
+     * Method for retrieving data.
+     * @param name Type of the value.
+     * @param defaultValue The default value, if doesn't exists allready.
+     *
+     * @return Returns the data.
+     * @return @c QString() Data doesn't exists or the type is doesn't exists.
+     */
+    QVariant getValue(const QString &name, const QVariant &defaultValue)
+    {
+      Q_UNUSED(defaultValue)
+      if (name == "name") {
+        return m_name;
+      } else if (name == "description") {
+        return m_description;
+      } else if (name == "type") {
+        return m_type;
+      } else if (name == "writable") {
+        return m_writable;
+      } else {
+        return QVariant();
+        qDebug("Value type doesn't exists.");
+      }
+    }
+
+  private:
+    QString m_name;
+    QString m_description;
+    QString m_type;
+    bool m_writable;
+};
 
 /**
  * @short Structure for easy handling elements.
@@ -256,6 +338,28 @@ class KSData : public QObject
     bool backSearch();
 
     /**
+     * Adds a dictionary to the Dictionary vector.
+     * @param entry The data to include into the vector.
+     */
+    void addDictionaryData(const KSDictionaryData &entry);
+
+    /**
+     * Adds a dictionary to the Dictionary vector.
+     * @param name Name of the dictionary.
+     * @param description Description of the dictionary.
+     * @param type Type of the dictionary.
+     */
+    void addDictionaryData(const QString &name, const QString &description, bool writable, const QString &type);
+
+    /**
+     * Gets the dictionary data from ID.
+     * @param id ID of the dictionary data.
+     *
+     * @return Returns KSDictionaryData.
+     */
+    KSDictionaryData getDictionary(int id);
+
+    /**
      * An empty destructor.
      */
     ~KSData();
@@ -273,6 +377,7 @@ class KSData : public QObject
     KSListView *m_mainList;
     QString m_selectedStyle;
     QMap<QChar, QChar> m_convertTable;
+    QValueVector<KSDictionaryData> m_dictionaryVector;
     bool m_literalSearch;
     bool m_backSearch;
 

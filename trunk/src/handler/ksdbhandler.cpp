@@ -113,7 +113,7 @@ bool KSDBHandler::saveDictionary(const QString &text, const QString &lang, const
   if(create)
   {
     rawQuery = "BEGIN TRANSACTION; CREATE TABLE head ( lang VARCHAR(20) , type INTEGER , author VARCHAR(20) , email VARCHAR(20) , revision INTEGER DEFAULT 0, server VARCHAR(20) , version VARCHAR(20) , greeting TEXT ); CREATE TABLE phrases ( id_phrase INTEGER NOT NULL PRIMARY KEY , name VARCHAR(20) UNIQUE , search VARCHAR(20) , text TEXT , modified INTEGER ); CREATE TABLE media ( id_media INTEGER NOT NULL PRIMARY KEY , mime VARCHAR(20) , data Blob ); CREATE TABLE type ( id_type INTEGER NOT NULL PRIMARY KEY , name VARCHAR(20) UNIQUE ); CREATE TABLE authors ( id_author INTEGER NOT NULL PRIMARY KEY , name VARCHAR(20) UNIQUE ON CONFLICT IGNORE , email VARCHAR(20) ); CREATE TABLE modified ( id_phrase INTEGER NOT NULL , id_author INTEGER NOT NULL , last_modified INTEGER , PRIMARY KEY (id_phrase,id_author)); COMMIT;";
-    rawQuery = rawQuery + "INSERT INTO head ( lang , type, author , email , greeting , version ) VALUES ( '"+lang+"' , '"+type+"' , '"+Configuration::authorName()+"' , '"+Configuration::authorEmail()+"' , '"+text+"' , '0.1-rc3' ); CREATE INDEX phrases_index ON phrases (name DESC); BEGIN TRANSACTION;";
+    rawQuery = rawQuery + "INSERT INTO head ( lang , type, greeting , version ) VALUES ( '"+lang+"' , '"+type+"' , '"+text+"' , '0.1-rc3' ); CREATE INDEX phrases_index ON phrases (name DESC); BEGIN TRANSACTION;";
 
     //We make sure that the right parts of speech are loaded
     KSlovar::KSInstance()->loadPartOfSpeech(KSData::instance()->getLanguageId(lang));
@@ -140,11 +140,11 @@ bool KSDBHandler::saveWord(const QString &word, const QString &text, bool add, c
   search = convertString(word);
   if(add)
   {
-    rawQuery="INSERT INTO phrases ( name , search , text ) VALUES ( '"+word+"' , '"+search+"' , \""+text+"\" ); INSERT INTO authors ( name , email ) VALUES ( '"+Configuration::authorName()+"' , '"+Configuration::authorEmail()+"' );";
+    rawQuery="INSERT INTO phrases ( name , search , text ) VALUES ( '"+word+"' , '"+search+"' , \""+text+"\" );";
   }
   else
   {
-    rawQuery="UPDATE phrases SET name='"+word+"', search='"+search+"' , text=\""+text+"\" WHERE id_phrase='"+id+"'; INSERT INTO authors ( id_author , name , email ) VALUES ( '"+id+"' , '"+Configuration::authorName()+"' , '"+Configuration::authorEmail()+"' );";
+    rawQuery="UPDATE phrases SET name='"+word+"', search='"+search+"' , text=\""+text+"\" WHERE id_phrase='"+id+"';";
   }
   return query(rawQuery);
 }

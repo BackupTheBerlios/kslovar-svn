@@ -46,8 +46,8 @@ KSWizard::KSWizard(QWidget *parent, const char *name)
   m_mouseNavigation->setChecked(Configuration::mouseNavigation());
   m_scrollBar->setChecked(Configuration::scrollBar());
   m_smoothScroll->setChecked(Configuration::smoothScroll());
-  m_authorName->setText(Configuration::authorName());
-  m_authorEmail->setText(Configuration::authorEmail());
+//  m_authorName->setText(Configuration::authorName());
+//  m_authorEmail->setText(Configuration::authorEmail());
 
   locateLocal("appdata", "");
   m_downloadProgress->setShown(false);
@@ -67,8 +67,8 @@ void KSWizard::slotFinish()
   Configuration::setScrollBar(m_scrollBar->isChecked());
   Configuration::setSmoothScroll(m_smoothScroll->isChecked());
   Configuration::setAutoUpdateLanguage(m_upgradeManager->isChecked());
-  Configuration::setAuthorName(m_authorName->text());
-  Configuration::setAuthorEmail(m_authorEmail->text());
+//  Configuration::setAuthorName(m_authorName->text());
+//  Configuration::setAuthorEmail(m_authorEmail->text());
   Configuration::writeConfig();
 
   if(m_remoteLanguages->isChecked())

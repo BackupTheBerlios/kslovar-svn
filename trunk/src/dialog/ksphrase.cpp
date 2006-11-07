@@ -51,7 +51,7 @@
 
 
 KSPhrase::KSPhrase(QWidget *parent, const QString &caption)
-  : KDialogBase(parent, "KSPhrase", true, caption, Ok|Apply|Cancel), m_modified(false)
+  : KDialogBase(parent, "KSPhrase", true, caption, Ok|Apply|Cancel), m_edit(false), m_modified(false)
 {
   m_create=true;
   initialize();
