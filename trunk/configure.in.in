@@ -81,24 +81,24 @@ AC_SUBST(LIBXML_RPATH)
 
 # -- Determine pointer size for sqlite -------------------------
 
-KDE_FIND_PATH(sqlite3, SQLITE3_BIN, [${exec_prefix}/bin ${prefix}/bin], [
-AC_MSG_WARN([sqlite3 not found. It will be build with KSlovar])
-])
-if test -n "$SQLITE3_BIN"; then
-  AC_DEFINE(BUILD_SQLITE3, 0, [Use the system's SQLite])
+#KDE_FIND_PATH(sqlite3, SQLITE3_BIN, [${exec_prefix}/bin ${prefix}/bin], [
+#AC_MSG_WARN([sqlite3 not found. It will be build with KSlovar])
+#])
+#if test -n "$SQLITE3_BIN"; then
+#  AC_DEFINE(BUILD_SQLITE3, 0, [Use the system's SQLite])
   #AC_MSG([Using system's SQLite.])
-  SQLITE3_LIB="-lsqlite3"
-  DO_NOT_COMPILE="$DO_NOT_COMPILE src/sqlite"
-  compile_sqlite=true
-else
-  AC_DEFINE(BUILD_SQLITE3, 1, [Build the included SQLite])
+#  SQLITE3_LIB="-lsqlite3"
+#  DO_NOT_COMPILE="$DO_NOT_COMPILE src/sqlite"
+#  compile_sqlite=true
+#else
+#  AC_DEFINE(BUILD_SQLITE3, 1, [Build the included SQLite])
   #AC_MSG([Building the included SQLite])
-  SQLITE3_LIB="$(top_builddir)/src/sqlite/libsqlite.la"
-  compile_sqlite=false
-fi
+#  SQLITE3_LIB="$(top_builddir)/src/sqlite/libsqlite.la"
+#  compile_sqlite=false
+#fi
 
-AM_CONDITIONAL(DO_NOT_COMPILE_SQLITE, test x$compile_sqlite = xtrue)
-AC_SUBST(SQLITE3_LIB)
+#AM_CONDITIONAL(DO_NOT_COMPILE_SQLITE, test x$compile_sqlite = xtrue)
+#AC_SUBST(SQLITE3_LIB)
 
 
 KDE_CHECK_TYPES

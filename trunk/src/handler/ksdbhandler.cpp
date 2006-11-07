@@ -19,11 +19,7 @@
  ***************************************************************************/
 #include "ksdbhandler.h"
 
-#ifdef SQLITE3_BUILD
-#include "sqlite/sqlite3.h"
-#else
 #include <sqlite3.h>
-#endif
 
 #include "misc/ksdata.h"
 

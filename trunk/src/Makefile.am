@@ -33,7 +33,7 @@ kslovar_LDADD =	$(SQLITE3_LIB) $(top_builddir)/src/misc/libmisc.la $(top_builddi
 #kslovar_LDADD += $(top_builddir)/src/sqlite/libsqlite.la
 #endif
 
-# this is where the desktop file will go 
+# this is where the desktop file will go
 shelldesktopdir = $(kde_appsdir)/Utilities
 shelldesktop_DATA = kslovar.desktop
 
@@ -52,8 +52,8 @@ EXTRA_DIST = $(mime_DATA)
 
 
 #SUBDIRS = configuration handler misc dialog styles
-if DO_NOT_COMPILE_SQLITE
+#if DO_NOT_COMPILE_SQLITE
 SUBDIRS = configuration handler misc dialog styles
-else
-SUBDIRS = configuration handler sqlite misc dialog styles
-endif
+#else
+#SUBDIRS = configuration handler sqlite misc dialog styles
+#endif

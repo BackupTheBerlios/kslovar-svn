@@ -25,6 +25,7 @@ Internal changes:
 -Created faster search
 -Ported to use SCMD and LDFT file formats.
 -Added SCMD and LDFT mime types
+-Removed SQLite code
 
 0.2.1 => 0.2.2
 
