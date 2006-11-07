@@ -1,8 +1,0 @@
-[Desktop Entry]
-DefaultApp=
-Comment=KSlovar languages file
-Hidden=false
-Icon=kslovar.ksl
-MimeType=application/vnd.kslovar.ksl
-Patterns=*.ksl
-Type=MimeType
