@@ -96,6 +96,9 @@ void KSWizard::slotFinish()
     }
     delete languageHandler;
     languageHandler = 0;
+
+    KSlovar::KSInstance()->loadLanguages();
+
     close();
   }
 }

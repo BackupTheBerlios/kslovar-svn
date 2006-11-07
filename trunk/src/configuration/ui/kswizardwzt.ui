@@ -289,51 +289,6 @@ Languages.ksl file is located in ~/.kde/share/apps/kslovar</string>
                     </size>
                 </property>
             </spacer>
-            <widget class="QGroupBox" row="3" column="0">
-                <property name="name">
-                    <cstring>groupBox4</cstring>
-                </property>
-                <property name="title">
-                    <string>Optional personal settings</string>
-                </property>
-                <grid>
-                    <property name="name">
-                        <cstring>unnamed</cstring>
-                    </property>
-                    <widget class="KActiveLabel" row="0" column="0">
-                        <property name="name">
-                            <cstring>kActiveLabel14</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Your name (or nickname)</string>
-                        </property>
-                    </widget>
-                    <widget class="KActiveLabel" row="1" column="0">
-                        <property name="name">
-                            <cstring>kActiveLabel15</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Your email</string>
-                        </property>
-                    </widget>
-                    <widget class="KLineEdit" row="0" column="1">
-                        <property name="name">
-                            <cstring>m_authorName</cstring>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>What you write here, will be shown in the dictionary as author of the dictionary or phrase.</string>
-                        </property>
-                    </widget>
-                    <widget class="KLineEdit" row="1" column="1">
-                        <property name="name">
-                            <cstring>m_authorEmail</cstring>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>This email will be added with the name to the author list.</string>
-                        </property>
-                    </widget>
-                </grid>
-            </widget>
         </grid>
     </widget>
     <widget class="QWidget">
@@ -386,10 +341,6 @@ Languages.ksl file is located in ~/.kde/share/apps/kslovar</string>
     <includehint>kactivelabel.h</includehint>
     <includehint>kactivelabel.h</includehint>
     <includehint>kactivelabel.h</includehint>
-    <includehint>kactivelabel.h</includehint>
-    <includehint>kactivelabel.h</includehint>
-    <includehint>klineedit.h</includehint>
-    <includehint>klineedit.h</includehint>
     <includehint>kactivelabel.h</includehint>
     <includehint>kactivelabel.h</includehint>
     <includehint>kprogress.h</includehint>

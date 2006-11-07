@@ -42,7 +42,7 @@ shellrcdir = $(kde_datadir)/kslovar
 shellrc_DATA = kslovarui.rc splash.png
 
 mimedir = $(kde_mimedir)/application
-mime_DATA = vnd.kslovar.ksd.desktop vnd.kslovar.ksl.desktop
+mime_DATA = vnd.kslovar.ksd.desktop vnd.kslovar.ksl.desktop vnd.kslovar.scmd.desktop vnd.kslovar.ldft.desktop
 EXTRA_DIST = $(mime_DATA)
 
 

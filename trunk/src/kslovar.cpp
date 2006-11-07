@@ -150,7 +150,7 @@ KSlovar::KSlovar()
 
 void KSlovar::slotFileOpen()
 {
-  processFileOpen(KFileDialog::getOpenFileName(":dictionary", "*.scmd|Self-Contained Multimedia Dictionary", this));
+  processFileOpen(KFileDialog::getOpenFileName(":dictionary", "*.scmd|Self-Contained Multimedia Dictionary\n*.ksd|KSlovar Dictionary File (OLD)", this));
 }
 
 void KSlovar::showDictionary()
@@ -333,7 +333,7 @@ void KSlovar::slotNewDictionary()
 
 void KSlovar::slotEditDictionary()
 {
-  QString text=KSData::instance()->getDictionary()->processString("SELECT text FROM phrases WHERE id_phrase='0' LIMIT 1;")["text"];
+  QString text=KSData::instance()->getDictionary()->processString("SELECT greeting FROM head LIMIT 1;")["greeting"];
   QString name=text;
 
   text.remove(QRegExp("<h1>.+</h1>"));
@@ -641,18 +641,48 @@ void KSlovar::processFileOpen(const QString &fileName)
       return;
     }
     file.close();
-    m_progress = new KProgress();
-    statusBar()->changeItem("Opening dictionary", 0);
-    statusBar()->addWidget(m_progress, 0);
 
     KSData::instance()->setDictionary(new KSDBHandler(fileName));
 
     if(KSData::instance()->getDictionary()->processString("SELECT version FROM head;")["version"] != "0.1-rc3")
     {
-      KMessageBox::error(this, i18n("The dictionary is too old. There is no converter available yet."));
-      KSData::instance()->setDictionary();
+      KMessageBox::error(this, i18n("The dictionary is too old. KSlovar will try to convert it into newer dictionary. It can fail! And expect some language break."));
+
+      // We get the data out
+      QString type = KSData::instance()->getDictionary()->processString("SELECT type FROM head;")["version"];
+      QString lang = KSData::instance()->getDictionary()->processString("SELECT lang FROM head;")["lang"];
+
+      // We try to guess the language name
+      lang = KSData::instance()->getLanguageName(lang.toInt());
+      QString text = KSData::instance()->getDictionary()->processString("SELECT text FROM dictionary WHERE id='0';")["text"];
+      QValueList<KSResult> oldPhrases = KSData::instance()->getDictionary()->processList("SELECT a.id, a.name, a.search, b.text FROM phrases a, dictionary b WHERE a.id=b.id;");
+
+      // Open the new dictionary
+      QString newFileName = fileName;
+      KSData::instance()->setDictionary(new KSDBHandler(newFileName.replace(".ksd", ".scmd")));
+
+      // We insert the data
+      KSData::instance()->getDictionary()->saveDictionary(text, lang, type, true);
+
+      QValueList<KSResult>::const_iterator end = oldPhrases.constEnd();
+      for (QValueList<KSResult>::const_iterator count = oldPhrases.constBegin(); count != end; count++)
+      {
+        KSData::instance()->getDictionary()->saveWord((*count)["name"], (*count)["text"], true);
+      }
+
+      KSData::instance()->setDictionary(0);
+
+      // Reopen the new dictionary
+      processFileOpen(newFileName);
+
+      // We quit this method
       return;
     }
+
+    // Progress bar
+    m_progress = new KProgress();
+    statusBar()->changeItem("Opening dictionary", 0);
+    statusBar()->addWidget(m_progress, 0);
 
     m_progress->setTotalSteps(KSData::instance()->getDictionary()->processString("SELECT COUNT(id_phrase) AS number_phrases FROM phrases;")["number_phrases"].toInt());
 
@@ -706,7 +736,8 @@ void KSlovar::loadLanguages()
     else
     {
       KIO::del(KURL(locateLocal("appdata", "version", false)), false, false)->setInteractive(false);
-      KMessageBox::error(this, i18n("Could not find languages.ldft. Run Upgrade manager to download it.\n\nIf you do not have any internet connection, you can download it from http://kslovar.berlios.de/languages.ldft and put it into ~/.kde/share/apps/kslovar/."));
+      KMessageBox::error(this, i18n("Could not find languages.ldft. Running first time wizard."));
+      slotFirstRunWizard();
       return;
     }
   }

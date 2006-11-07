@@ -64,7 +64,7 @@ class KSDBHandler : public QThread
      * @param add True for adding a new word and false for modifying an existing word.
      * @param id Used only when modifying a word. ID of the word you wish to modify.
      * */
-    bool saveWord(const QString &word, const QString &text, bool add, const QString &id);
+    bool saveWord(const QString &word, const QString &text, bool add, const QString &id = 0);
     /**
      * Method for executing non SELECT SQL queries.
      * @param rawQuery The query to execute.

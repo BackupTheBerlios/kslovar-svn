@@ -1,0 +1,8 @@
+[Desktop Entry]
+DefaultApp=
+Comment=Language Definition Format
+Hidden=false
+Icon=kslovar.ldft
+MimeType=application/vnd.kslovar.ldft
+Patterns=*.ldft
+Type=MimeType

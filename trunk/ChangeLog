@@ -1,4 +1,4 @@
-0.2.2 => 0.2.5
+0.2.2 => 0.2.6
 
 Features:
 -Added smooth scrolling
@@ -7,6 +7,7 @@ Features:
 -Added authors support (not fully implemented)
 -Added character selection
 -Removed search limit (freedom! ;))
+-Importer for old KSlovar Dictionary (KSD)
 
 Interface:
 -Progress bar in status bar when opening a dictionary
@@ -23,6 +24,7 @@ Internal changes:
 -Added KSCharSelect class
 -Created faster search
 -Ported to use SCMD and LDFT file formats.
+-Added SCMD and LDFT mime types
 
 0.2.1 => 0.2.2
 

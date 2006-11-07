@@ -1,0 +1,8 @@
+[Desktop Entry]
+DefaultApp=kslovar
+Comment=Self Contained Multimedia Dictionary
+Hidden=false
+Icon=kslovar.scmd
+MimeType=application/vnd.kslovar.scmd
+Patterns=*.scmd
+Type=MimeType
