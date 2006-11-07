@@ -1,0 +1,4 @@
+File=kslovar.kcfg
+ClassName=Configuration
+Singleton=true
+Mutators=true

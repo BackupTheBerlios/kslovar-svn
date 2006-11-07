@@ -1,0 +1,348 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>KSWizardWzt</class>
+<widget class="QWizard">
+    <property name="name">
+        <cstring>KSWizardWzt</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>600</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>First Run Wizard</string>
+    </property>
+    <widget class="QWidget">
+        <property name="name">
+            <cstring>introduction</cstring>
+        </property>
+        <attribute name="title">
+            <string>Introduction</string>
+        </attribute>
+        <grid>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <widget class="KActiveLabel" row="0" column="0">
+                <property name="name">
+                    <cstring>kActiveLabel2</cstring>
+                </property>
+                <property name="text">
+                    <string>Welcome to the KSlovar's First Run wizard. To begin, click next.</string>
+                </property>
+            </widget>
+        </grid>
+    </widget>
+    <widget class="QWidget">
+        <property name="name">
+            <cstring>languages</cstring>
+        </property>
+        <attribute name="title">
+            <string>Languages</string>
+        </attribute>
+        <grid>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <widget class="KActiveLabel" row="0" column="0">
+                <property name="name">
+                    <cstring>kActiveLabel1</cstring>
+                </property>
+                <property name="sizePolicy">
+                    <sizepolicy>
+                        <hsizetype>7</hsizetype>
+                        <vsizetype>4</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                    </sizepolicy>
+                </property>
+                <property name="text">
+                    <string>For KSlovar to work properly, you need langagues.ksl file! You can download it, or the Wizard could make you a template, so you could make your own languages.ksl. Languages.ksl is used for defining which parts of speech a certain language has.&lt;br&gt;
+&lt;br&gt;
+Languages.ksl file is located in ~/.kde/share/apps/kslovar</string>
+                </property>
+            </widget>
+            <widget class="QButtonGroup" row="1" column="0">
+                <property name="name">
+                    <cstring>buttonGroup1</cstring>
+                </property>
+                <property name="sizePolicy">
+                    <sizepolicy>
+                        <hsizetype>5</hsizetype>
+                        <vsizetype>7</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                    </sizepolicy>
+                </property>
+                <property name="frameShape">
+                    <enum>NoFrame</enum>
+                </property>
+                <property name="title">
+                    <string></string>
+                </property>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <spacer row="1" column="0">
+                        <property name="name">
+                            <cstring>spacer1</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>41</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QLayoutWidget" row="0" column="0">
+                        <property name="name">
+                            <cstring>layout3</cstring>
+                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>m_localLanguages</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Create an empt&amp;y languages.ldft</string>
+                                </property>
+                                <property name="accel">
+                                    <string>Alt+Y</string>
+                                </property>
+                            </widget>
+                            <widget class="KActiveLabel">
+                                <property name="name">
+                                    <cstring>kActiveLabel3</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Will create an empty languages.ldft file, so you could make your own definitions of languages.</string>
+                                </property>
+                            </widget>
+                        </vbox>
+                    </widget>
+                    <widget class="QLayoutWidget" row="2" column="0">
+                        <property name="name">
+                            <cstring>layout1</cstring>
+                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>m_remoteLanguages</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Download languages.ldft fro&amp;m the Internet</string>
+                                </property>
+                                <property name="accel">
+                                    <string>Alt+M</string>
+                                </property>
+                                <property name="checked">
+                                    <bool>true</bool>
+                                </property>
+                            </widget>
+                            <widget class="KActiveLabel">
+                                <property name="name">
+                                    <cstring>kActiveLabel4</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Download already made languages.ldft file. &lt;b&gt;*RECOMMENDED*&lt;/b&gt;</string>
+                                </property>
+                            </widget>
+                        </vbox>
+                    </widget>
+                </grid>
+            </widget>
+        </grid>
+    </widget>
+    <widget class="QWidget">
+        <property name="name">
+            <cstring>configuration</cstring>
+        </property>
+        <attribute name="title">
+            <string>Basic configuration</string>
+        </attribute>
+        <grid>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <widget class="KActiveLabel" row="0" column="0">
+                <property name="name">
+                    <cstring>kActiveLabel5</cstring>
+                </property>
+                <property name="sizePolicy">
+                    <sizepolicy>
+                        <hsizetype>7</hsizetype>
+                        <vsizetype>1</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                    </sizepolicy>
+                </property>
+                <property name="text">
+                    <string>Chose your basic configuration for KSlovar.</string>
+                </property>
+            </widget>
+            <widget class="QGroupBox" row="1" column="0">
+                <property name="name">
+                    <cstring>groupBox2</cstring>
+                </property>
+                <property name="title">
+                    <string>Upgrade manager</string>
+                </property>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QCheckBox" row="0" column="0">
+                        <property name="name">
+                            <cstring>m_upgradeManager</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Run &amp;Upgrade manager at start.</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+U</string>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+            <widget class="QGroupBox" row="2" column="0">
+                <property name="name">
+                    <cstring>groupBox3</cstring>
+                </property>
+                <property name="title">
+                    <string>Lists</string>
+                </property>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QCheckBox" row="0" column="0">
+                        <property name="name">
+                            <cstring>m_mouseNavigation</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Enable &amp;mouse navigation</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+M</string>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="1" column="0">
+                        <property name="name">
+                            <cstring>m_scrollBar</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Enable vertical scr&amp;oll bar</string>
+                        </property>
+                        <property name="accel">
+                            <string>Alt+O</string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
+                        </property>
+                    </widget>
+                    <widget class="QCheckBox" row="2" column="0">
+                        <property name="name">
+                            <cstring>m_smoothScroll</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Enable smooth scrolling</string>
+                        </property>
+                        <property name="accel">
+                            <string></string>
+                        </property>
+                        <property name="checked">
+                            <bool>true</bool>
+                        </property>
+                    </widget>
+                </grid>
+            </widget>
+            <spacer row="4" column="0">
+                <property name="name">
+                    <cstring>spacer3</cstring>
+                </property>
+                <property name="orientation">
+                    <enum>Vertical</enum>
+                </property>
+                <property name="sizeType">
+                    <enum>Expanding</enum>
+                </property>
+                <property name="sizeHint">
+                    <size>
+                        <width>20</width>
+                        <height>70</height>
+                    </size>
+                </property>
+            </spacer>
+        </grid>
+    </widget>
+    <widget class="QWidget">
+        <property name="name">
+            <cstring>finish</cstring>
+        </property>
+        <attribute name="title">
+            <string>Finish</string>
+        </attribute>
+        <grid>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <widget class="KActiveLabel" row="1" column="0">
+                <property name="name">
+                    <cstring>m_downloadLabel</cstring>
+                </property>
+                <property name="sizePolicy">
+                    <sizepolicy>
+                        <hsizetype>7</hsizetype>
+                        <vsizetype>0</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                    </sizepolicy>
+                </property>
+                <property name="text">
+                    <string>Downloading languages.ksl...</string>
+                </property>
+            </widget>
+            <widget class="KActiveLabel" row="0" column="0">
+                <property name="name">
+                    <cstring>kActiveLabel6</cstring>
+                </property>
+                <property name="text">
+                    <string>The first run configuration is now complete. Click finish to end.</string>
+                </property>
+            </widget>
+            <widget class="KProgress" row="2" column="0">
+                <property name="name">
+                    <cstring>m_downloadProgress</cstring>
+                </property>
+            </widget>
+        </grid>
+    </widget>
+</widget>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>kactivelabel.h</includehint>
+    <includehint>kactivelabel.h</includehint>
+    <includehint>kactivelabel.h</includehint>
+    <includehint>kactivelabel.h</includehint>
+    <includehint>kactivelabel.h</includehint>
+    <includehint>kactivelabel.h</includehint>
+    <includehint>kactivelabel.h</includehint>
+    <includehint>kprogress.h</includehint>
+</includehints>
+</UI>
