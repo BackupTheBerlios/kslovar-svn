@@ -1,0 +1,812 @@
+# French localisation for KSlovar 0.2.6
+# This file is put under GPLv2.
+# Pierre-Marie PÉDROT <pedrotpmx@wanadoo.fr>, 2006.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: KSlovar 0.2.6\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-12-29 00:28+0100\n"
+"PO-Revision-Date: 2006-12-29 00:28+0100\n"
+"Last-Translator: Pierre-Marie PÉDROT <pedrotpmx@wanadoo.fr>\n"
+"Language-Team: French\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: configuration/ui/ksappearancewdt.cpp:141
+msgid "KSAppearanceWdt"
+msgstr "KSAppearanceWdt"
+
+#: configuration/ui/ksappearancewdt.cpp:142
+msgid "Styles"
+msgstr "Styles"
+
+#: configuration/ui/ksappearancewdt.cpp:143
+msgid "Style in which a dictionary will be shown."
+msgstr "Style dans lequel apparaitra un dictionnaire."
+
+#: configuration/ui/ksappearancewdt.cpp:144
+msgid "&Get new styles"
+msgstr "&Obtenir de nouveaux styles"
+
+#: configuration/ui/ksappearancewdt.cpp:145
+msgid "Alt+G"
+msgstr "Alt+O"
+
+#: configuration/ui/ksappearancewdt.cpp:146
+msgid "&Copy"
+msgstr "&Copier"
+
+#: configuration/ui/ksappearancewdt.cpp:147
+msgid "Alt+C"
+msgstr "Alt+C"
+
+#: configuration/ui/ksappearancewdt.cpp:148 dialog/ui/ksdictionarywdt.cpp:150
+#: kslovar.cpp:424
+msgid "&Edit"
+msgstr "&Éditer"
+
+#: configuration/ui/ksappearancewdt.cpp:149 dialog/ui/ksdictionarywdt.cpp:151
+msgid "Alt+E"
+msgstr "Alt+E"
+
+#: configuration/ui/ksappearancewdt.cpp:150
+msgid "&Remove"
+msgstr "Supp&rimer"
+
+#: configuration/ui/ksappearancewdt.cpp:151
+msgid "Alt+R"
+msgstr "Alt+R"
+
+#: configuration/ui/ksappearancewdt.cpp:152
+msgid "Preview of a normal dictionary."
+msgstr "Prévisualisation d'un dictionnaire normal."
+
+#: configuration/ui/ksappearancewdt.cpp:153
+msgid "Preview of a translation dictionary. (Not available)"
+msgstr "Prévisualisation d'un dictionnaire bilingue (non disponible)."
+
+#: configuration/ui/ksappearancewdt.cpp:154
+msgid "Dictionar&y"
+msgstr "Dictionnaire"
+
+#: configuration/ui/ksappearancewdt.cpp:155
+#: configuration/ui/kswizardwzt.cpp:191
+msgid "Lists"
+msgstr "Listes"
+
+#: configuration/ui/ksappearancewdt.cpp:156
+msgid "En&able mouse navigation"
+msgstr "&Activer la navigation à la souris"
+
+#: configuration/ui/ksappearancewdt.cpp:157 dialog/ui/ksconversionwdt.cpp:69
+#: dialog/ui/ksdictionarywdt.cpp:149 dialog/ui/kslanguagewdt.cpp:112
+#: dialog/ui/ksphrasewdt.cpp:271
+msgid "Alt+A"
+msgstr "Alt+A"
+
+#: configuration/ui/ksappearancewdt.cpp:158
+msgid ""
+"When this option is enabled, you can scroll all the lists only by your mouse."
+"<br>\n"
+"<br>\n"
+"<font size=\"-1\"><i>Thanks to Kopete Development Team.</i></font>"
+msgstr ""
+"Quand cette option est activée, vous pouvez faire défiler toutes les listes "
+"à la souris.\n"
+"\n"
+"Merci à l'équipe de développement de Kopete."
+
+#: configuration/ui/ksappearancewdt.cpp:161
+msgid "Ena&ble smooth scrolling"
+msgstr "Activer le dé&filement doux"
+
+#: configuration/ui/ksappearancewdt.cpp:162
+msgid "Alt+B"
+msgstr "Alt+F"
+
+#: configuration/ui/ksappearancewdt.cpp:163
+msgid "Makes scrolling in lists smoother."
+msgstr "Rend le défilement dans les listes plus doux."
+
+#: configuration/ui/ksappearancewdt.cpp:164
+msgid "E&nable vertical scroll bar"
+msgstr "Activer la barre de défileme&nt vertical"
+
+#: configuration/ui/ksappearancewdt.cpp:165
+msgid "Alt+N"
+msgstr "Alt+N"
+
+#: configuration/ui/ksappearancewdt.cpp:166
+msgid "Makes vertical scroll bars in lists visible."
+msgstr "Fait apparaître les barres de défilement vertical dans les listes."
+
+#: configuration/ui/ksappearancewdt.cpp:167
+msgid "&Misc"
+msgstr "&Autres"
+
+#: configuration/ui/ksbehaviourwdt.cpp:65
+msgid "KSBehaviourWdt"
+msgstr "KSBehaviourWdt"
+
+#: configuration/ui/ksbehaviourwdt.cpp:66
+msgid "This email will be added with the name to the author list."
+msgstr "Cet email sera ajouté au nom de la liste des auteurs."
+
+#: configuration/ui/ksbehaviourwdt.cpp:67
+msgid "Run &upgrade manager at start"
+msgstr "Lancer le gestionnaire de mise à jo&ur au démarrage"
+
+#: configuration/ui/ksbehaviourwdt.cpp:68 configuration/ui/kswizardwzt.cpp:190
+msgid "Alt+U"
+msgstr "Alt+U"
+
+#: configuration/ui/ksbehaviourwdt.cpp:69
+msgid ""
+"If enabled, languages.ksl will be updated at every start of KSlovar. Needs "
+"connection to the internet. If you do not have connection to the internet, "
+"it's advised to deactivate it."
+msgstr ""
+"Si cette option est activée, le fichier languages.ksl sera mis à jour à chaque démarrage de KSlovar. "
+"Nécessite une connection internet ; si vous n'êtes pas connecté, il vaut "
+"mieux désactiver cette option."
+
+#: configuration/ui/ksbehaviourwdt.cpp:70 dialog/ui/ksphrasewdt.cpp:276
+msgid "&General"
+msgstr "&Général"
+
+#: configuration/ui/kswizardwzt.cpp:173
+msgid "First Run Wizard"
+msgstr "Assistant de premier lancement"
+
+#: configuration/ui/kswizardwzt.cpp:174
+msgid "Welcome to the KSlovar's First Run wizard. To begin, click next."
+msgstr ""
+"Bienvenue à l'assistant de premier lancement de KSlovar. Appuyez sur suivant "
+"pour commencer."
+
+#: configuration/ui/kswizardwzt.cpp:175
+msgid "Introduction"
+msgstr "Introduction"
+
+#: configuration/ui/kswizardwzt.cpp:176
+msgid ""
+"For KSlovar to work properly, you need langagues.ksl file! You can download "
+"it, or the Wizard could make you a template, so you could make your own "
+"languages.ksl. Languages.ksl is used for defining which parts of speech a "
+"certain language has.<br>\n"
+"<br>\n"
+"Languages.ksl file is located in ~/.kde/share/apps/kslovar"
+msgstr ""
+"Pour que KSlovar fonctionne correctement, il vous faut le fichier languages."
+"ksl ! Vous pouvez le télécharger ou le créer vous-même avec l'assistant.\n"
+"\n"
+"Le fichier languages.ksl se trouve dans ~/.kde/share/apps/kslovar"
+
+#: configuration/ui/kswizardwzt.cpp:180
+msgid "Create an empt&y languages.ldft"
+msgstr "Créer un fichier languages.ksl v&ide"
+
+#: configuration/ui/kswizardwzt.cpp:181
+msgid "Alt+Y"
+msgstr "Alt+I"
+
+#: configuration/ui/kswizardwzt.cpp:182
+msgid ""
+"Will create an empty languages.ldft file, so you could make your own "
+"definitions of languages."
+msgstr ""
+"Crée un fichier languages.ksl vide, afin que vous puissiez faire vos propres "
+"définitions."
+
+#: configuration/ui/kswizardwzt.cpp:183
+msgid "Download languages.ldft fro&m the Internet"
+msgstr "Téléchar&ger le fichier languages.ldft depuis internet."
+
+#: configuration/ui/kswizardwzt.cpp:184 configuration/ui/kswizardwzt.cpp:193
+#: dialog/ui/ksphrasewdt.cpp:273
+msgid "Alt+M"
+msgstr "Alt+G"
+
+#: configuration/ui/kswizardwzt.cpp:185
+msgid "Download already made languages.ldft file. <b>*RECOMMENDED*</b>"
+msgstr "Télécharge un fichier languages.ldft déjà fait. <b>*RECOMMANDÉ*</b>"
+
+#: configuration/ui/kswizardwzt.cpp:186
+msgid "Languages"
+msgstr "Langues"
+
+#: configuration/ui/kswizardwzt.cpp:187
+msgid "Chose your basic configuration for KSlovar."
+msgstr "Choisissez votre configuration de base pour KSlovar."
+
+#: configuration/ui/kswizardwzt.cpp:188 dialog/ui/ksupgrademanagerwdt.cpp:78
+msgid "Upgrade manager"
+msgstr "Gestionnaire de mise à jour"
+
+#: configuration/ui/kswizardwzt.cpp:189
+msgid "Run &Upgrade manager at start."
+msgstr "Lancer le gestionnaire de mise à jo&ur au démarrage."
+
+#: configuration/ui/kswizardwzt.cpp:192
+msgid "Enable &mouse navigation"
+msgstr "Activer la &navigation à la souris"
+
+#: configuration/ui/kswizardwzt.cpp:194
+msgid "Enable vertical scr&oll bar"
+msgstr "Activer la barre de défilement verti&cal"
+
+#: configuration/ui/kswizardwzt.cpp:195
+msgid "Alt+O"
+msgstr "Alt+C"
+
+#: configuration/ui/kswizardwzt.cpp:196
+msgid "Enable smooth scrolling"
+msgstr "Activer le défilement doux"
+
+#: configuration/ui/kswizardwzt.cpp:198
+msgid "Basic configuration"
+msgstr "Configuration de base"
+
+#: configuration/ui/kswizardwzt.cpp:199
+msgid "Downloading languages.ksl..."
+msgstr "Téléchargement de languages.ksl..."
+
+#: configuration/ui/kswizardwzt.cpp:200
+msgid "The first run configuration is now complete. Click finish to end."
+msgstr ""
+"L'assistant de premier lancement a terminé. Cliquez sur terminer pour "
+"quitter."
+
+#: configuration/ui/kswizardwzt.cpp:201
+msgid "Finish"
+msgstr "Terminer"
+
+#: dialog/ui/ksconversionwdt.cpp:67 dialog/ksconversion.cpp:42
+msgid "Conversion table"
+msgstr "Table de conversion"
+
+#: dialog/ui/ksconversionwdt.cpp:68 dialog/ui/ksdictionarywdt.cpp:148
+#: dialog/ui/kslanguagewdt.cpp:111 dialog/ui/ksphrasewdt.cpp:270
+msgid "&Add"
+msgstr "&Ajouter"
+
+#: dialog/ui/ksconversionwdt.cpp:70 kslovar.cpp:541
+msgid "Delete"
+msgstr "Effacer"
+
+#: dialog/ui/ksdictionarywdt.cpp:136
+msgid "CreateDictionaryWdt"
+msgstr "CreateDictionaryWdt"
+
+#: dialog/ui/ksdictionarywdt.cpp:137
+msgid "First page"
+msgstr "Première page"
+
+#: dialog/ui/ksdictionarywdt.cpp:141 dialog/ui/kslanguagewdt.cpp:109
+#: dialog/kslanguage.cpp:101 dialog/kslanguage.cpp:106
+msgid "Name"
+msgstr "Nom"
+
+#: dialog/ui/ksdictionarywdt.cpp:142
+msgid "Type"
+msgstr "Type"
+
+#: dialog/ui/ksdictionarywdt.cpp:144
+msgid "Select type"
+msgstr "Choisissez le type"
+
+#: dialog/ui/ksdictionarywdt.cpp:145
+msgid "Language"
+msgstr "Langue"
+
+#: dialog/ui/ksdictionarywdt.cpp:147
+msgid "Select language"
+msgstr "Choisissez une langue"
+
+#: dialog/ui/kslanguagewdt.cpp:108
+msgid "LanguagesWdt"
+msgstr "LanguagesWdt"
+
+#: dialog/ui/kslanguagewdt.cpp:110 dialog/ui/ksphrasewdt.cpp:268
+msgid "Parts of speech"
+msgstr "Type d'entrée"
+
+#: dialog/ui/kslanguagewdt.cpp:113
+msgid "De&lete"
+msgstr "E&ffacer"
+
+#: dialog/ui/kslanguagewdt.cpp:114
+msgid "Alt+L"
+msgstr "Alt+F"
+
+#: dialog/ui/kslanguagewdt.cpp:115
+msgid "Aditional Options"
+msgstr "Autres options"
+
+#: dialog/ui/kslanguagewdt.cpp:116
+msgid "Not available yet"
+msgstr "Pas encore disponible"
+
+#: dialog/ui/ksphrasewdt.cpp:266
+msgid "AddPhraseWdt"
+msgstr "AddPhraseWdt"
+
+#: dialog/ui/ksphrasewdt.cpp:267
+msgid "Word"
+msgstr "Entrée"
+
+#: dialog/ui/ksphrasewdt.cpp:269 handler/ksxslhandler.cpp:148
+msgid "Explanations and examples"
+msgstr "Descriptions et exemples"
+
+#: dialog/ui/ksphrasewdt.cpp:272
+msgid "Re&move"
+msgstr "Su&pprimer"
+
+#: dialog/ui/ksphrasewdt.cpp:274
+msgid "Spell chec&k"
+msgstr "Véri&fication d'orthographe"
+
+#: dialog/ui/ksphrasewdt.cpp:275
+msgid "Alt+K"
+msgstr "Alt+F"
+
+#: dialog/ui/ksphrasewdt.cpp:279 dialog/ui/ksphrasewdt.cpp:286
+#: dialog/ui/ksphrasewdt.cpp:291
+msgid "Selected words"
+msgstr "Entrées sélectionnées"
+
+#: dialog/ui/ksphrasewdt.cpp:280 dialog/ui/ksphrasewdt.cpp:287
+#: dialog/ui/ksphrasewdt.cpp:292
+msgid "Available words"
+msgstr "Entrées disponibles"
+
+#: dialog/ui/ksphrasewdt.cpp:281
+msgid "S&ynonym"
+msgstr "S&ynonyme"
+
+#: dialog/ui/ksphrasewdt.cpp:288
+msgid "Ant&onym"
+msgstr "Ant&onyme"
+
+#: dialog/ui/ksphrasewdt.cpp:293
+msgid "Word fa&mily"
+msgstr "Réseau &lexical"
+
+#: dialog/ui/ksupgrademanagerwdt.cpp:79
+msgid "Files to upgrade"
+msgstr "Fichier à mettre à jour"
+
+#: dialog/ui/ksupgrademanagerwdt.cpp:80
+msgid "Downloading:"
+msgstr "Téléchargement :"
+
+#: dialog/ui/ksupgrademanagerwdt.cpp:81 dialog/ksupgrademanager.cpp:98
+msgid "nothing"
+msgstr "Rien"
+
+#: kslovar.cpp:89
+msgid "Ready."
+msgstr "Prêt"
+
+#: kslovar.cpp:108
+msgid ""
+"<h1>Welcome to KSlovar</h1> <p>This is an editor and viewer that is capable "
+"of creating, editing and showing diferent kinds of dictionaries.</p><p>If "
+"you encounter any bugs, please send a bug report to gregor@podnapisi.net.</p>"
+msgstr ""
+"<h1>Bienvenue dans KSlovar</h1><p>KSlovar est un éditeur de dictionnaires.</"
+"p><p>Si vous trouvez un bogue, prière d'envoyer un rapport de bogue à "
+"gregor@podnapisi.net.</p>"
+
+#: kslovar.cpp:349
+msgid "&New dictionary"
+msgstr "&Nouveau dictionnaire"
+
+#: kslovar.cpp:357
+msgid "&Edit dictionary"
+msgstr "&Éditer le dictionnaire"
+
+#: kslovar.cpp:358
+msgid "Synchronise dictionary's &parts of speech"
+msgstr "Synchroniser les types d'entrées"
+
+#: kslovar.cpp:369
+msgid "&Add phrase"
+msgstr "&Ajouter une entrée"
+
+#: kslovar.cpp:370
+msgid "Edi&t phrase"
+msgstr "Édi&ter une entrée"
+
+#: kslovar.cpp:371
+msgid "&Remove phrase"
+msgstr "Supp&rimer une entrée"
+
+#: kslovar.cpp:379
+msgid "Edit &conversion table"
+msgstr "Éditer la table de &conversion"
+
+#: kslovar.cpp:380
+msgid "Update &languages"
+msgstr "Mettre les &langues à jour"
+
+#: kslovar.cpp:381
+msgid "Run &First-time wizard"
+msgstr "Lancer l'assistant de &premier lancement"
+
+#: kslovar.cpp:423
+msgid "&File"
+msgstr "&Fichier"
+
+#: kslovar.cpp:425
+msgid "&Go"
+msgstr "Navi&gation"
+
+#: kslovar.cpp:426
+msgid "&Settings"
+msgstr "&Préférences"
+
+#: kslovar.cpp:427
+msgid "&Help"
+msgstr "&Aide"
+
+#: kslovar.cpp:473
+msgid "There is no dictionary loaded!"
+msgstr "Pas de dictionnaire chargé !"
+
+#: kslovar.cpp:478 kslovar.cpp:878
+msgid "Ready"
+msgstr "Prêt"
+
+#: kslovar.cpp:541
+msgid "Are you really sure you want to delete "
+msgstr "Voulez-vous vraiment supprimer cette entrée ?"
+
+#: kslovar.cpp:541
+msgid "Confirm deletion"
+msgstr "Confirmer la suppression"
+
+#: kslovar.cpp:603
+msgid "Appearance"
+msgstr "Apparence"
+
+#: kslovar.cpp:604
+msgid "Behaviour"
+msgstr "Comportement"
+
+#: kslovar.cpp:633
+msgid "This is not a valid dictionary!"
+msgstr "Ce n'est pas un dictionnaire valide !"
+
+#: kslovar.cpp:640
+msgid "Couldn't read the dictionary!"
+msgstr "Impossible de lire le dictionnaire !"
+
+#: kslovar.cpp:649
+msgid ""
+"The dictionary is too old. KSlovar will try to convert it into newer "
+"dictionary. It can fail! And expect some language break."
+msgstr ""
+"Ce dictionnaire est trop vieux. KSlovar va essayer de le convertir en type "
+"nouveau. Cela peut échouer, et attendez-vous à des erreurs !"
+
+#: kslovar.cpp:720
+msgid ""
+"Loading words.\n"
+"Please wait..."
+msgstr ""
+"Chargement des entrées.\n"
+"Patientez s'il vous plaît..."
+
+#: kslovar.cpp:734
+msgid "Could not find languages.ldft. But found it's backup and using it."
+msgstr ""
+"Impossible de trouver languages.ksl, mais une sauvegarde a été trouvée et "
+"est utilisée."
+
+#: kslovar.cpp:739
+msgid "Could not find languages.ldft. Running first time wizard."
+msgstr "Impossible de trouver languages.ldft. Lancement de l'assistant."
+
+#: kslovar.cpp:833 dialog/ksupgrademanager.cpp:47
+msgid "Upgrade"
+msgstr "Mise à jour"
+
+#: kslovar.cpp:881 dialog/ksphrase.cpp:543 dialog/ksphrase.cpp:544
+#: dialog/ksphrase.cpp:545
+msgid "There are no words."
+msgstr "Il n'y a pas d'entrées."
+
+#: configuration/kswizard.cpp:92
+msgid "Could not create languages.ldft!"
+msgstr "Impossible de créer languages.ldft !"
+
+#: configuration/ksappearance.cpp:139
+msgid "New style name"
+msgstr "Nom du nouveau style"
+
+#: configuration/ksappearance.cpp:139
+msgid "Name of the new style: "
+msgstr "Nom du nouveau style :"
+
+#: configuration/ksappearance.cpp:142
+msgid "You haven't entered a name for the copy!"
+msgstr "Vous n'avez pas donné de nom à la copie !"
+
+#: configuration/ksappearance.cpp:158
+msgid "Cannot delete selected style!"
+msgstr ""
+
+#: configuration/ksappearance.cpp:173
+msgid "Cannot edit selected style!"
+msgstr "Impossible d'éditer le style sélectionné !"
+
+#: dialog/kscharselect.cpp:35
+msgid "Select character"
+msgstr "Choisissez un caractère"
+
+#: dialog/kscharselect.cpp:42
+msgid "Table"
+msgstr "Table"
+
+#: dialog/ksconversion.cpp:48
+msgid "From"
+msgstr "Depuis"
+
+#: dialog/ksconversion.cpp:49
+msgid "To"
+msgstr "Vers"
+
+#: dialog/ksconversion.cpp:61 dialog/ksconversion.cpp:66
+msgid "From character"
+msgstr "Depuis le caractère"
+
+#: dialog/ksconversion.cpp:61 dialog/ksconversion.cpp:66
+msgid "To character"
+msgstr "Vers le caractère"
+
+#: dialog/ksconversion.cpp:63 dialog/ksconversion.cpp:86
+#: dialog/ksconversion.cpp:93
+msgid "Error saving conversion!"
+msgstr "Erreur de sauvegarde de la conversion !"
+
+#: dialog/ksconversion.cpp:73
+msgid "Error removing conversion!"
+msgstr "Erreur de suppression de la conversion !"
+
+#: dialog/ksdictionary.cpp:58
+msgid "Default"
+msgstr "Par défaut"
+
+#: dialog/ksdictionary.cpp:59 dialog/ksdictionary.cpp:177
+msgid "Transitional"
+msgstr "De transition"
+
+#: dialog/ksdictionary.cpp:135
+msgid "Edit language"
+msgstr "Éditer la langue"
+
+#: dialog/ksdictionary.cpp:141
+msgid "Add language"
+msgstr "Ajouter une langue"
+
+#: dialog/ksdictionary.cpp:159
+msgid "Cannot save dictionary!"
+msgstr "Impossible de sauver le dictionnaire !"
+
+#: dialog/ksdictionary.cpp:169
+msgid "Fill in all the fields."
+msgstr "Remplissez tous les champs."
+
+#: dialog/ksdictionary.cpp:205
+msgid "Do you really want to overwrite?"
+msgstr "Voulez-vous vraiment écraser ?"
+
+#: dialog/ksdictionary.cpp:205
+msgid "Overwrite?"
+msgstr "Écraser ?"
+
+#: dialog/ksdictionary.cpp:205
+msgid "Overwrite"
+msgstr "Écraser"
+
+#: dialog/ksdictionary.cpp:205
+msgid "Keep"
+msgstr "Conserver"
+
+#: dialog/ksdictionary.cpp:211
+msgid "File cannot be removed! Cannot save."
+msgstr "Le fichier n'a pas pu être supprimé ! Impossible de sauver."
+
+#: dialog/kslanguage.cpp:125 dialog/kslanguage.cpp:136
+msgid "Cannot save language!"
+msgstr "Impossible de sauvegarder la langue !"
+
+#: dialog/ksphrase.cpp:69
+msgid "Type an explanation."
+msgstr "Entrez une description."
+
+#: dialog/ksphrase.cpp:69
+msgid "Type an example."
+msgstr "Entrez un exemple."
+
+#: dialog/ksphrase.cpp:73
+msgid "Type an explanation for the first language."
+msgstr "Entrez une description pour la première langue."
+
+#: dialog/ksphrase.cpp:73
+msgid "Type an example for the first language."
+msgstr "Entrez un exemple pour la première langue."
+
+#: dialog/ksphrase.cpp:73
+msgid "Type an explanation for the second language."
+msgstr "Entrez une description pour la seconde langue."
+
+#: dialog/ksphrase.cpp:73
+msgid "Type an example for the second language."
+msgstr "Entrez un exemple pour la seconde langue."
+
+#: dialog/ksphrase.cpp:207
+msgid "Spell Check"
+msgstr "Véri&fication d'orthographe"
+
+#: dialog/ksphrase.cpp:237
+msgid "Spellcheck complete."
+msgstr "Vérification d'orthographe terminée."
+
+#: dialog/ksphrase.cpp:309
+msgid "Cannot edit phrase!"
+msgstr "Impossible d'éditer l'entrée !"
+
+#: dialog/ksphrase.cpp:320
+msgid "Cannot add new phrase!"
+msgstr "Impossible d'ajouter de nouvelle entrée !"
+
+#: dialog/ksphrase.cpp:486
+msgid "Click the Add button to start adding explanations and examples"
+msgstr ""
+"Cliquez sur le bouton ajouter pour commencer à ajouter des descriptions et "
+"des exemples."
+
+#: dialog/ksphrase.cpp:517
+msgid "Explanation one"
+msgstr "Description une"
+
+#: dialog/ksphrase.cpp:518
+msgid "Example one"
+msgstr "Exemple un"
+
+#: dialog/ksphrase.cpp:520
+msgid "Explanation two"
+msgstr "Description deux"
+
+#: dialog/ksphrase.cpp:522
+msgid "Example two"
+msgstr "Exemple deux"
+
+#: dialog/ksphrase.cpp:534
+msgid "Explanation"
+msgstr "Description"
+
+#: dialog/ksphrase.cpp:535
+msgid "Example"
+msgstr "Exemple"
+
+#: dialog/ksupgrademanager.cpp:48
+msgid "Close"
+msgstr "Fermer"
+
+#: dialog/ksupgrademanager.cpp:53
+msgid "File"
+msgstr "Fichier"
+
+#: dialog/ksupgrademanager.cpp:56
+msgid "Version files"
+msgstr "Fichier de version"
+
+#: dialog/ksupgrademanager.cpp:90
+msgid "Version file unavailable!"
+msgstr "Fichier de version indisponible !"
+
+#: dialog/ksupgrademanager.cpp:103
+msgid "Everything is up to date."
+msgstr "Tout est à jour."
+
+#: dialog/ksupgrademanager.cpp:157
+msgid "Update successful"
+msgstr "Mise à jour réussie"
+
+#: handler/ksdbhandler.cpp:53
+msgid "No query defined in KSDBHandler."
+msgstr "Pas de requête définie dans KSDBHandler."
+
+#: handler/ksdbhandler.cpp:53
+msgid "Critical bug"
+msgstr "Bug critique"
+
+#: handler/ksdbhandler.cpp:70
+msgid "Phrase allready exists."
+msgstr "L'entrée existe déjà."
+
+#: handler/ksdbhandler.cpp:75
+msgid "Unknown SQL error."
+msgstr "Erreur SQL inconnue."
+
+#: handler/ksdbhandler.cpp:305
+msgid ""
+"If you proceed with this update, some of the words will loose their part of "
+"speech. Are you sure you want to do this?"
+msgstr ""
+"Si vous activez cette mise à jour, certains mots vont perdre leur type "
+"d'entrée. Êtes-vous sûr de vouloir continuer ?"
+
+#: handler/ksdbhandler.cpp:305
+msgid "Warning possible unexpected loss of data"
+msgstr "Attention, possible perte de données"
+
+#: handler/ksdbhandler.cpp:305
+msgid "Remove"
+msgstr "Supprimer"
+
+#: handler/ksdbhandler.cpp:318
+msgid "Synchronisation successful."
+msgstr "Synchronisation réussie."
+
+#: handler/ksxslhandler.cpp:149
+msgid "Explanations"
+msgstr "Descriptions"
+
+#: handler/ksxslhandler.cpp:150
+msgid "Examples"
+msgstr "Exemples"
+
+#: handler/ksxslhandler.cpp:151
+msgid "Synonym"
+msgstr "Synonyme"
+
+#: handler/ksxslhandler.cpp:152
+msgid "Antonym"
+msgstr "Antonyme"
+
+#: handler/ksxslhandler.cpp:153
+msgid "Word family"
+msgstr "Réseau lexical"
+
+#: misc/widget/kslistview.cpp:372 misc/widget/kslistview.cpp:399
+msgid "No words found"
+msgstr "Pas d'entrées trouvées"
+
+#: misc/widget/kslistview.cpp:393
+msgid "Search in progress..."
+msgstr "Recherche en cours..."
+
+#: main.cpp:39
+msgid ""
+"A KDE dictionary application that can read, add, modify and download various "
+"dictionaries."
+msgstr "Une application KDE pour lire, créer, modifier et télécharger de nombreux "
+"dictionnaires."
+
+#: main.cpp:45
+msgid "Document to open"
+msgstr "Document à ouvrir"
+
+#: main.cpp:51
+msgid "KSlovar"
+msgstr "KSlovar"
+
+#: main.cpp:53
+msgid "Lead developer"
+msgstr "Développeur en chef"
+
+#: main.cpp:54
+msgid "Mouse navigation in lists"
+msgstr "Navigation à la souris dans les listes"
+
+#: main.cpp:55
+msgid "Creator of icons, logo and splash screen"
+msgstr "Créateur des icônes, du logo et mainteneur des paquets (K)Ubuntu"
