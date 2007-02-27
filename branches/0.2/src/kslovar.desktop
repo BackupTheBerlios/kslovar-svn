@@ -1,6 +1,6 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=KSlovar
+Encoding=UTF-8
 GenericName=Dictionary viewer and editor
 GenericName[sl]=Pregledovalnik in urejevalnik slovarjev
 Exec=kslovar
@@ -8,5 +8,5 @@ Icon=kslovar
 Type=Application
 Comment=Dictionary for KDE
 Comment[sl]=Slovar za KDE
-Categories=Qt;KDE;Education;Languages
+Categories=Qt;KDE;Education;Languages;
 MimeType=application/vnd.kslovar.scmd;application/vnd.kslovar.ksd;
